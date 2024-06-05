@@ -51,25 +51,15 @@ public class PythonMain {
                 Py_file_input()
             );
             if (code.equals(MemorySegment.NULL)) {
-                rethrowPythonException();
+                throw PythonException.moveFromPython();
             }
 
             result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
         }
         Py_DecRef(code);
         if (result.equals(MemorySegment.NULL)) {
-            rethrowPythonException();
+            throw PythonException.moveFromPython();
         }
         Py_DecRef(result);
-    }
-
-    public static void rethrowPythonException() {
-        final MemorySegment exception = PyErr_GetRaisedException();
-        if (exception.equals(MemorySegment.NULL)) {
-            throw new IllegalStateException("rethrowPythonException called without exception");
-        }
-        final PythonException toThrow = PythonException.of(exception);
-        Py_DecRef(exception);
-        throw toThrow;
     }
 }

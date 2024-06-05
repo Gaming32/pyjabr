@@ -1,5 +1,6 @@
 package io.github.gaming32.pythonfiddle;
 
+import org.jetbrains.annotations.Nullable;
 import org.python.PyObject;
 import org.python.PyTypeObject;
 
@@ -19,20 +20,31 @@ public class PythonException extends RuntimeException {
     private final String pythonClass;
     private final String pythonMessage;
     private final String pythonTraceback;
+    private MemorySegment originalException;
 
-    public PythonException(String pythonClass, String pythonMessage, String pythonTraceback) {
+    public PythonException(String pythonClass, String pythonMessage, String pythonTraceback, MemorySegment originalException) {
         super(pythonClass + ": " + pythonMessage);
         this.pythonClass = pythonClass;
         this.pythonMessage = pythonMessage;
         this.pythonTraceback = pythonTraceback;
+        this.originalException = originalException;
     }
 
     public static PythonException of(MemorySegment pythonException) {
         return new PythonException(
             getPythonClass(pythonException),
             getPythonMessage(pythonException),
-            getPythonTraceback(pythonException)
+            getPythonTraceback(pythonException),
+            pythonException
         );
+    }
+
+    public static PythonException moveFromPython() {
+        final MemorySegment exception = PyErr_GetRaisedException();
+        if (exception.equals(MemorySegment.NULL)) {
+            throw new IllegalStateException("PythonException.currentlyRaised called without raised");
+        }
+        return of(exception);
     }
 
     private static String getPythonClass(MemorySegment pythonException) {
@@ -49,6 +61,7 @@ public class PythonException extends RuntimeException {
         }
         final MemorySegment argsUtf8String = PyUnicode_AsUTF8(messageString);
         if (argsUtf8String.equals(MemorySegment.NULL)) {
+            Py_DecRef(messageString);
             PyErr_Clear();
             return "<failed to convert message to Java string>";
         }
@@ -105,6 +118,24 @@ public class PythonException extends RuntimeException {
 
     public String getPythonTraceback() {
         return pythonTraceback;
+    }
+
+    @Nullable
+    public MemorySegment getOriginalException() {
+        return originalException;
+    }
+
+    public void clearOriginalException() {
+        if (originalException == null) return;
+        Py_DecRef(originalException);
+        originalException = null;
+    }
+
+    @Nullable
+    public MemorySegment acquireOriginalException() {
+        final MemorySegment result = originalException;
+        originalException = null;
+        return result;
     }
 
     @Override

@@ -1,6 +1,17 @@
-from java.io.github.gaming32.pythonfiddle.interop import JavaObjectIndex
-from java.java.lang import System
+from java.io.github.gaming32.pythonfiddle import TestClass
 
-print(System.currentTimeMillis)
-print(JavaObjectIndex.NO_ID)
-# print(System.out)
+
+def print_fields() -> None:
+    print(TestClass.intField)
+    print(TestClass.stringField)
+    print(TestClass.charField)
+
+
+print_fields()
+TestClass.intField = 5
+TestClass.stringField = 'bye'
+TestClass.charField = 'f'
+print_fields()
+
+TestClass.charField = 33
+print(TestClass.charField)

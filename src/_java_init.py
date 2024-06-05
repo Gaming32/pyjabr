@@ -11,6 +11,8 @@ CONSTRUCTOR_NAME = '<init>'
 
 
 class _JavaAttributeNotFoundType:
+    __slots__ = ()
+
     def __repr__(self) -> str:
         return 'JavaAttributeNotFound'
 
@@ -19,6 +21,8 @@ JavaAttributeNotFound = _JavaAttributeNotFoundType()
 
 
 class FakeJavaStaticMethod:
+    __slots__ = ('owner', 'name', '_id')
+
     owner: 'FakeJavaClass'
     name: str
     _id: int
@@ -36,6 +40,8 @@ class FakeJavaStaticMethod:
 
 
 class FakeJavaClass:
+    __slots__ = ('name', '_id', 'attributes')
+
     name: str
     _id: int
     attributes: dict[str, FakeJavaStaticMethod | int]
@@ -48,7 +54,7 @@ class FakeJavaClass:
     def __repr__(self) -> str:
         return f'<Java class {self.name}>'
 
-    def __del__(self):
+    def __del__(self) -> None:
         _java.remove_class(self._id)
         for attr in self.attributes.values():
             if isinstance(attr, int):
@@ -56,8 +62,22 @@ class FakeJavaClass:
         self.attributes.clear()
 
     def __getattr__(self, name: str) -> FakeJavaStaticMethod | Any:
+        attr = self._get_attr(name)
+        if isinstance(attr, int):
+            attr = _java.get_static_field(attr)
+        return attr
+
+    def __setattr__(self, key: str, value: Any) -> None:
+        if key in FakeJavaClass.__slots__:
+            return super().__setattr__(key, value)
+        attr = self._get_attr(key)
+        if not isinstance(attr, int):
+            raise TypeError(f'cannot assign to static method {self.name}.{key}')
+        _java.set_static_field(attr, value)
+
+    def _get_attr(self, name: str) -> FakeJavaStaticMethod | int:
         try:
-            attr = self.attributes[name]
+            return self.attributes[name]
         except KeyError:
             attr = _java.find_class_attribute(self, self._id, name)
             if isinstance(attr, _JavaAttributeNotFoundType):
@@ -71,15 +91,15 @@ class FakeJavaClass:
                     name=name, obj=self
                 ) from None
             self.attributes[name] = attr
-        if isinstance(attr, int):
-            attr = _java.get_static_field(attr)
-        return attr
+            return attr
 
     def __call__(self, *args: Any) -> Any:
         getattr(self, CONSTRUCTOR_NAME)(*args)
 
 
 class JavaImportLoader(Loader):
+    __slots__ = ('java_package',)
+
     java_package: str
 
     def __init__(self, java_package: str) -> None:
@@ -111,6 +131,8 @@ class JavaImportLoader(Loader):
 
 
 class JavaImportFinder(MetaPathFinder):
+    __slots__ = ()
+
     def find_spec(
             self,
             fullname: str,
