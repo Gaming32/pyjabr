@@ -22,12 +22,17 @@ public class JavaObjectIndex {
     private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
     private static final Map<Pair<Class<?>, String>, FieldOrExecutable> CLASS_ATTRIBUTES = new HashMap<>();
 
+    private static final Object STATIC_FIELDS_LOCK = new Object();
+    private static final Reference2IntMap<FieldOrExecutable.FieldWrapper> STATIC_FIELD_IDS = new Reference2IntOpenHashMap<>();
+    private static final Int2ObjectMap<FieldOrExecutable.FieldWrapper> FAKE_STATIC_FIELDS = new Int2ObjectOpenHashMap<>();
+
     private static final Object STATIC_EXECUTABLES_LOCK = new Object();
     private static final Reference2IntMap<FieldOrExecutable.ExecutablesWrapper> STATIC_EXECUTABLES_IDS = new Reference2IntOpenHashMap<>();
     private static final Int2ObjectMap<FieldOrExecutable.ExecutablesWrapper> FAKE_STATIC_EXECUTABLES = new Int2ObjectOpenHashMap<>();
 
     static {
         CLASS_IDS.defaultReturnValue(NO_ID);
+        STATIC_FIELD_IDS.defaultReturnValue(NO_ID);
         STATIC_EXECUTABLES_IDS.defaultReturnValue(NO_ID);
     }
 
@@ -83,6 +88,25 @@ public class JavaObjectIndex {
             STATIC_EXECUTABLES_IDS.put(executables, index);
             FAKE_STATIC_EXECUTABLES.put(index, executables);
             return index;
+        }
+    }
+
+    public static int getStaticFieldId(FieldOrExecutable.FieldWrapper field) {
+        synchronized (STATIC_FIELDS_LOCK) {
+            final int oldIndex = STATIC_FIELD_IDS.getInt(field);
+            if (oldIndex != NO_ID) {
+                return oldIndex;
+            }
+            final int index = STATIC_FIELD_IDS.size();
+            STATIC_FIELD_IDS.put(field, index);
+            FAKE_STATIC_FIELDS.put(index, field);
+            return index;
+        }
+    }
+
+    public static FieldOrExecutable.FieldWrapper getStaticField(int fieldId) {
+        synchronized (STATIC_FIELDS_LOCK) {
+            return FAKE_STATIC_FIELDS.get(fieldId);
         }
     }
 }

@@ -8,8 +8,6 @@ import _java
 
 JAVA_PACKAGE_PREFIX = 'java.'
 
-type JavaClassAttribute = FakeJavaStaticMethod | object
-
 
 class _JavaAttributeNotFoundType:
     def __repr__(self) -> str:
@@ -36,7 +34,7 @@ class FakeJavaStaticMethod:
 class FakeJavaClass:
     name: str
     _id: int
-    attributes: dict[str, JavaClassAttribute]
+    attributes: dict[str, FakeJavaStaticMethod | int]
 
     def __init__(self, name: str, id: int) -> None:
         self.name = name
@@ -49,17 +47,19 @@ class FakeJavaClass:
     def __del__(self):
         _java.remove_class(self._id)
 
-    def __getattr__(self, name: str) -> JavaClassAttribute:
+    def __getattr__(self, name: str) -> FakeJavaStaticMethod | Any:
         try:
             attr = self.attributes[name]
         except KeyError:
-            attr = _java.get_class_attribute(self, self._id, name)
-            if attr is JavaAttributeNotFound:
+            attr = _java.find_class_attribute(self, self._id, name)
+            if isinstance(attr, _JavaAttributeNotFoundType):
                 raise AttributeError(
                     f"static attribute '{name}' not found on Java class {self.name}",
                     name=name, obj=self
                 ) from None
             self.attributes[name] = attr
+        if isinstance(attr, int):
+            attr = _java.get_static_field(attr)
         return attr
 
 
