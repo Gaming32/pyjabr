@@ -1,9 +1,16 @@
 package io.github.gaming32.pythonfiddle.interop;
 
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class JavaObjectIndex {
     public static final int NO_ID = -1;
@@ -12,8 +19,16 @@ public class JavaObjectIndex {
     private static final Object2IntMap<String> CLASS_IDS = new Object2IntOpenHashMap<>();
     private static final Int2ObjectMap<Class<?>> FAKE_CLASSES = new Int2ObjectOpenHashMap<>();
 
+    private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
+    private static final Map<Pair<Class<?>, String>, FieldOrExecutable> CLASS_ATTRIBUTES = new HashMap<>();
+
+    private static final Object STATIC_EXECUTABLES_LOCK = new Object();
+    private static final Reference2IntMap<FieldOrExecutable.ExecutablesWrapper> STATIC_EXECUTABLES_IDS = new Reference2IntOpenHashMap<>();
+    private static final Int2ObjectMap<FieldOrExecutable.ExecutablesWrapper> FAKE_STATIC_EXECUTABLES = new Int2ObjectOpenHashMap<>();
+
     static {
         CLASS_IDS.defaultReturnValue(NO_ID);
+        STATIC_EXECUTABLES_IDS.defaultReturnValue(NO_ID);
     }
 
     public static Integer findClass(String className) {
@@ -41,6 +56,33 @@ public class JavaObjectIndex {
             if (clazz != null) {
                 CLASS_IDS.removeInt(clazz.getName());
             }
+        }
+    }
+
+    public static Class<?> getClassById(int classId) {
+        synchronized (CLASSES_LOCK) {
+            return FAKE_CLASSES.get(classId);
+        }
+    }
+
+    @Nullable
+    public static FieldOrExecutable findClassAttribute(int ownerId, String name) {
+        final Pair<Class<?>, String> key = Pair.of(getClassById(ownerId), name);
+        synchronized (CLASS_ATTRIBUTES_LOCK) {
+            return CLASS_ATTRIBUTES.computeIfAbsent(key, k -> FieldOrExecutable.lookup(k.left(), k.right(), true));
+        }
+    }
+
+    public static int getStaticExecutablesId(FieldOrExecutable.ExecutablesWrapper executables) {
+        synchronized (STATIC_EXECUTABLES_LOCK) {
+            final int oldIndex = STATIC_EXECUTABLES_IDS.getInt(executables);
+            if (oldIndex != NO_ID) {
+                return oldIndex;
+            }
+            final int index = STATIC_EXECUTABLES_IDS.size();
+            STATIC_EXECUTABLES_IDS.put(executables, index);
+            FAKE_STATIC_EXECUTABLES.put(index, executables);
+            return index;
         }
     }
 }

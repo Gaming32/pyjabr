@@ -43,7 +43,7 @@ public class PythonMain {
 
     public static void runCode(byte[] source, String filename, String moduleName) {
         final MemorySegment code;
-        final MemorySegment mainModule;
+        final MemorySegment result;
         try (Arena arena = Arena.ofConfined()) {
             code = Py_CompileString(
                 arena.allocateFrom(C_CHAR, Arrays.copyOf(source, source.length + 1)),
@@ -54,20 +54,8 @@ public class PythonMain {
                 rethrowPythonException();
             }
 
-            mainModule = PyImport_AddModule(arena.allocateFrom(moduleName));
+            result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
         }
-        if (mainModule.equals(MemorySegment.NULL)) {
-            Py_DecRef(code);
-            rethrowPythonException();
-        }
-
-        final MemorySegment dict = PyModule_GetDict(mainModule);
-        if (dict.equals(MemorySegment.NULL)) {
-            Py_DecRef(code);
-            rethrowPythonException();
-        }
-
-        final MemorySegment result = PyEval_EvalCode(code, dict, dict);
         Py_DecRef(code);
         if (result.equals(MemorySegment.NULL)) {
             rethrowPythonException();

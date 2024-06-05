@@ -1,3 +1,3 @@
 from java.java.lang import System
 
-print(System)
+print(System.currentTimeMillis)

@@ -2,26 +2,65 @@ import sys
 from importlib.abc import MetaPathFinder, Loader
 from importlib.machinery import ModuleSpec
 from types import ModuleType
-from typing import Sequence
+from typing import Sequence, Any
 
 import _java
 
 JAVA_PACKAGE_PREFIX = 'java.'
 
+type JavaClassAttribute = FakeJavaStaticMethod | object
 
-class FakeJavaClass:
+
+class _JavaAttributeNotFoundType:
+    def __repr__(self) -> str:
+        return 'JavaAttributeNotFound'
+
+
+JavaAttributeNotFound = _JavaAttributeNotFoundType()
+
+
+class FakeJavaStaticMethod:
+    owner: 'FakeJavaClass'
     name: str
     _id: int
 
-    def __init__(self, name: str, id: int) -> None:
+    def __init__(self, owner: 'FakeJavaClass', name: str, id: int) -> None:
+        self.owner = owner
         self.name = name
         self._id = id
 
     def __repr__(self) -> str:
-        return f'<java class {self.name}>'
+        return f'<static Java method {self.owner.name}.{self.name}>'
+
+
+class FakeJavaClass:
+    name: str
+    _id: int
+    attributes: dict[str, JavaClassAttribute]
+
+    def __init__(self, name: str, id: int) -> None:
+        self.name = name
+        self._id = id
+        self.attributes = {}
+
+    def __repr__(self) -> str:
+        return f'<Java class {self.name}>'
 
     def __del__(self):
         _java.remove_class(self._id)
+
+    def __getattr__(self, name: str) -> JavaClassAttribute:
+        try:
+            attr = self.attributes[name]
+        except KeyError:
+            attr = _java.get_class_attribute(self, self._id, name)
+            if attr is JavaAttributeNotFound:
+                raise AttributeError(
+                    f"static attribute '{name}' not found on Java class {self.name}",
+                    name=name, obj=self
+                ) from None
+            self.attributes[name] = attr
+        return attr
 
 
 class JavaImportLoader(Loader):
@@ -40,7 +79,7 @@ class JavaImportLoader(Loader):
             full_name = f'{self.java_package}.{name}'
             class_id = _java.find_class(full_name)
             if class_id is None:
-                raise AttributeError(name=name, obj=module)
+                raise AttributeError(f"Java class '{full_name}' not found", name=name, obj=module)
             clazz = FakeJavaClass(full_name, class_id)
             java_classes[name] = clazz
             return clazz

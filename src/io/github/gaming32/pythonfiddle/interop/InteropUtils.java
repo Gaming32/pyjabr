@@ -15,7 +15,7 @@ public class InteropUtils {
 
     public static boolean checkArity(MemorySegment[] args, int arity) {
         if (args.length != arity) {
-            raiseException(PyExc_TypeError(), "Expected " + arity + " arguments, got " + args.length);
+            raiseException(PyExc_TypeError(), "expected " + arity + " arguments, got " + args.length);
             return false;
         }
         return true;
