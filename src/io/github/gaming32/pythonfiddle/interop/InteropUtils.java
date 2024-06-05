@@ -1,15 +1,12 @@
 package io.github.gaming32.pythonfiddle.interop;
 
-import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static org.python.Python_h.*;
 
 public class InteropUtils {
     public static MemorySegment raiseException(MemorySegment exceptionClass, String message) {
-        try (Arena arena = Arena.ofConfined()) {
-            PyErr_SetString(exceptionClass, arena.allocateFrom(message));
-        }
+        PyErr_SetString(exceptionClass, InteropConversions.createPythonString(message));
         return MemorySegment.NULL;
     }
 
