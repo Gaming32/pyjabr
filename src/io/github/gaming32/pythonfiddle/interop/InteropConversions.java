@@ -120,7 +120,7 @@ public class InteropConversions {
             return result;
         }
         if (target == double.class || target == float.class) {
-            final double result = PyLong_AsDouble(obj);
+            final double result = PyFloat_AsDouble(obj);
             if (result == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
             }
