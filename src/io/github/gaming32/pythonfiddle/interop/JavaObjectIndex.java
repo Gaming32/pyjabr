@@ -91,6 +91,15 @@ public class JavaObjectIndex {
         }
     }
 
+    public static void removeStaticExecutables(int executablesId) {
+        synchronized (STATIC_EXECUTABLES_LOCK) {
+            final var executables = FAKE_STATIC_EXECUTABLES.remove(executablesId);
+            if (executables != null) {
+                STATIC_EXECUTABLES_IDS.removeInt(executables);
+            }
+        }
+    }
+
     public static int getStaticFieldId(FieldOrExecutable.FieldWrapper field) {
         synchronized (STATIC_FIELDS_LOCK) {
             final int oldIndex = STATIC_FIELD_IDS.getInt(field);
@@ -107,6 +116,15 @@ public class JavaObjectIndex {
     public static FieldOrExecutable.FieldWrapper getStaticField(int fieldId) {
         synchronized (STATIC_FIELDS_LOCK) {
             return FAKE_STATIC_FIELDS.get(fieldId);
+        }
+    }
+
+    public static void removeStaticField(int fieldId) {
+        synchronized (STATIC_FIELDS_LOCK) {
+            final var field = FAKE_STATIC_FIELDS.remove(fieldId);
+            if (field != null) {
+                STATIC_FIELD_IDS.removeInt(field);
+            }
         }
     }
 }

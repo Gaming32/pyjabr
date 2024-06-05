@@ -7,6 +7,7 @@ from typing import Sequence, Any
 import _java
 
 JAVA_PACKAGE_PREFIX = 'java.'
+CONSTRUCTOR_NAME = '<init>'
 
 
 class _JavaAttributeNotFoundType:
@@ -30,6 +31,9 @@ class FakeJavaStaticMethod:
     def __repr__(self) -> str:
         return f'<static Java method {self.owner.name}.{self.name}>'
 
+    def __del__(self):
+        _java.remove_static_method(self._id)
+
 
 class FakeJavaClass:
     name: str
@@ -46,6 +50,10 @@ class FakeJavaClass:
 
     def __del__(self):
         _java.remove_class(self._id)
+        for attr in self.attributes.values():
+            if isinstance(attr, int):
+                _java.remove_static_field(attr)
+        self.attributes.clear()
 
     def __getattr__(self, name: str) -> FakeJavaStaticMethod | Any:
         try:
@@ -53,6 +61,11 @@ class FakeJavaClass:
         except KeyError:
             attr = _java.find_class_attribute(self, self._id, name)
             if isinstance(attr, _JavaAttributeNotFoundType):
+                if name == CONSTRUCTOR_NAME:
+                    raise AttributeError(
+                        f'no public constructor for Java class {self.name}',
+                        name=name, obj=self
+                    ) from None
                 raise AttributeError(
                     f"static attribute '{name}' not found on Java class {self.name}",
                     name=name, obj=self
@@ -61,6 +74,9 @@ class FakeJavaClass:
         if isinstance(attr, int):
             attr = _java.get_static_field(attr)
         return attr
+
+    def __call__(self, *args: Any) -> Any:
+        getattr(self, CONSTRUCTOR_NAME)(*args)
 
 
 class JavaImportLoader(Loader):

@@ -12,9 +12,17 @@ public class InteropModule {
     public static final CustomPythonFunction REMOVE_CLASS = new CustomPythonFunction("remove_class", InteropModule::removeClass);
     public static final CustomPythonFunction FIND_CLASS_ATTRIBUTE = new CustomPythonFunction("find_class_attribute", InteropModule::findClassAttribute);
     public static final CustomPythonFunction GET_STATIC_FIELD = new CustomPythonFunction("get_static_field", InteropModule::getStaticField);
+    public static final CustomPythonFunction REMOVE_STATIC_METHOD = new CustomPythonFunction("remove_static_method", InteropModule::removeStaticMethod);
+    public static final CustomPythonFunction REMOVE_STATIC_FIELD = new CustomPythonFunction("remove_static_field", InteropModule::removeStaticField);
 
     public static final CustomPythonModule MODULE = new CustomPythonModule(
-        "_java", FIND_CLASS, REMOVE_CLASS, FIND_CLASS_ATTRIBUTE, GET_STATIC_FIELD
+        "_java",
+        FIND_CLASS,
+        REMOVE_CLASS,
+        FIND_CLASS_ATTRIBUTE,
+        GET_STATIC_FIELD,
+        REMOVE_STATIC_METHOD,
+        REMOVE_STATIC_FIELD
     );
 
     /**
@@ -89,5 +97,31 @@ public class InteropModule {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * {@code remove_static_method(id: int) -> None}
+     */
+    private static MemorySegment removeStaticMethod(MemorySegment self, MemorySegment... args) {
+        InteropUtils.checkArity(args, 1);
+        final Integer methodId = InteropUtils.getInt(args[0]);
+        if (methodId == null) {
+            return MemorySegment.NULL;
+        }
+        JavaObjectIndex.removeStaticExecutables(methodId);
+        return _Py_NoneStruct();
+    }
+
+    /**
+     * {@code remove_static_field(id: int) -> None}
+     */
+    private static MemorySegment removeStaticField(MemorySegment self, MemorySegment... args) {
+        InteropUtils.checkArity(args, 1);
+        final Integer fieldId = InteropUtils.getInt(args[0]);
+        if (fieldId == null) {
+            return MemorySegment.NULL;
+        }
+        JavaObjectIndex.removeStaticField(fieldId);
+        return _Py_NoneStruct();
     }
 }
