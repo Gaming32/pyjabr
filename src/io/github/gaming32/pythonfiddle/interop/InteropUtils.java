@@ -28,4 +28,12 @@ public class InteropUtils {
         }
         return utf8.getString(0L);
     }
+
+    public static Integer getInt(MemorySegment pyLong) {
+        final int asInt = PyLong_AsLong(pyLong);
+        if (asInt == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+            return null;
+        }
+        return asInt;
+    }
 }

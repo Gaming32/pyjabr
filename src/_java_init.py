@@ -20,6 +20,9 @@ class FakeJavaClass:
     def __repr__(self) -> str:
         return f'<java class {self.name}>'
 
+    def __del__(self):
+        _java.remove_class(self._id)
+
 
 class JavaImportLoader(Loader):
     java_package: str
