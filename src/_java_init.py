@@ -1,4 +1,5 @@
 import sys
+import os
 from importlib.abc import MetaPathFinder, Loader
 from importlib.machinery import ModuleSpec
 from types import ModuleType
@@ -159,3 +160,6 @@ class JavaImportFinder(MetaPathFinder):
 
 
 sys.meta_path.append(JavaImportFinder())
+
+# noinspection PyUnresolvedReferences,PyProtectedMember
+del os._exit
