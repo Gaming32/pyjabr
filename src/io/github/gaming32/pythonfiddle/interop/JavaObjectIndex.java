@@ -91,6 +91,12 @@ public class JavaObjectIndex {
         }
     }
 
+    public static FieldOrExecutable.ExecutablesWrapper getStaticExecutables(int methodId) {
+        synchronized (STATIC_EXECUTABLES_LOCK) {
+            return FAKE_STATIC_EXECUTABLES.get(methodId);
+        }
+    }
+
     public static void removeStaticExecutables(int executablesId) {
         synchronized (STATIC_EXECUTABLES_LOCK) {
             final var executables = FAKE_STATIC_EXECUTABLES.remove(executablesId);

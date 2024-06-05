@@ -27,6 +27,10 @@ public class PythonUtil {
         return PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_UNICODE_SUBCLASS());
     }
 
+    public static boolean PyTuple_Check(MemorySegment op) {
+        return PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_TUPLE_SUBCLASS());
+    }
+
     public static MemorySegment Py_TYPE(MemorySegment ob) {
         return PyObject.ob_type(ob);
     }

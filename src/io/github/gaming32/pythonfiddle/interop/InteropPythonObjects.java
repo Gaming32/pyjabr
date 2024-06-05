@@ -26,6 +26,16 @@ public class InteropPythonObjects {
         }
     });
 
+    public static final Supplier<MemorySegment> JAVA_ERROR = Suppliers.memoize(() -> {
+        final MemorySegment initModule = _JAVA_INIT.get();
+        if (initModule.equals(MemorySegment.NULL)) {
+            return MemorySegment.NULL;
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            return checkNotNull(PyObject_GetAttrString(initModule, arena.allocateFrom("JavaError")));
+        }
+    });
+
     public static final Supplier<MemorySegment> FAKE_JAVA_STATIC_METHOD = Suppliers.memoize(() -> {
         final MemorySegment initModule = _JAVA_INIT.get();
         if (initModule.equals(MemorySegment.NULL)) {

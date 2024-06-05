@@ -7,7 +7,7 @@ import java.util.Arrays;
 import static org.python.Python_h.*;
 
 public class TupleUtil {
-    private static final int MAX_FAST_TUPLE_SIZE = 4;
+    private static final int MAX_FAST_TUPLE_SIZE = 8;
     private static final PyTuple_Pack[] SMALL_PACKS = new PyTuple_Pack[MAX_FAST_TUPLE_SIZE];
 
     static {
@@ -20,13 +20,29 @@ public class TupleUtil {
         if (args.length == 0) {
             return PyTuple_New(0L);
         }
-        final PyTuple_Pack pack;
         if (args.length <= MAX_FAST_TUPLE_SIZE) {
-            pack = SMALL_PACKS[args.length - 1];
-        } else {
-            pack = makePack(args.length);
+            return SMALL_PACKS[args.length - 1].apply(args.length, (Object[])args);
         }
-        return pack.apply(args.length, (Object[])args);
+        final MemorySegment result = PyTuple_New(args.length);
+        for (int i = 0; i < args.length; i++) {
+            PyTuple_SetItem(result, i, args[i]);
+        }
+        return result;
+    }
+
+    public static MemorySegment[] unpackTuple(MemorySegment tuple) {
+        final long length = PyTuple_Size(tuple);
+        if (length > Integer.MAX_VALUE - 8) {
+            throw new IllegalArgumentException("Tuple has too many elements to unpack (" + length + ")");
+        }
+        final MemorySegment[] result = new MemorySegment[(int)length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = PyTuple_GetItem(tuple, i);
+            if (result[i].equals(MemorySegment.NULL)) {
+                return null;
+            }
+        }
+        return result;
     }
 
     private static PyTuple_Pack makePack(int size) {

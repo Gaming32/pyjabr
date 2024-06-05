@@ -82,7 +82,7 @@ public sealed interface FieldOrExecutable {
 
         public static ExecutablesWrapper findConstructors(Class<?> owner) throws NoSuchMethodException {
             final Constructor<?>[] constructors = owner.getConstructors();
-            if (constructors.length == 0) {
+            if (constructors.length == 0 || Modifier.isAbstract(owner.getModifiers())) {
                 throw new NoSuchMethodException(owner.getName() + '.' + CONSTRUCTOR_NAME);
             }
             return new ExecutablesWrapper(owner, CONSTRUCTOR_NAME, List.of(constructors));

@@ -20,6 +20,10 @@ class _JavaAttributeNotFoundType:
 JavaAttributeNotFound = _JavaAttributeNotFoundType()
 
 
+class JavaError(Exception):
+    pass
+
+
 class FakeJavaStaticMethod:
     __slots__ = ('owner', 'name', '_id')
 
@@ -35,8 +39,11 @@ class FakeJavaStaticMethod:
     def __repr__(self) -> str:
         return f'<static Java method {self.owner.name}.{self.name}>'
 
-    def __del__(self):
+    def __del__(self) -> None:
         _java.remove_static_method(self._id)
+
+    def __call__(self, *args: Any) -> Any:
+        return _java.invoke_static_method(self._id, args)
 
 
 class FakeJavaClass:
@@ -94,7 +101,7 @@ class FakeJavaClass:
             return attr
 
     def __call__(self, *args: Any) -> Any:
-        getattr(self, CONSTRUCTOR_NAME)(*args)
+        return getattr(self, CONSTRUCTOR_NAME)(*args)
 
 
 class JavaImportLoader(Loader):
