@@ -41,10 +41,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
+
         final String className = InteropUtils.getString(args[0]);
         if (className == null) {
             return MemorySegment.NULL;
         }
+
         final Integer index = JavaObjectIndex.findClass(className);
         if (index == null) {
             return _Py_NoneStruct();
@@ -59,10 +61,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
+
         final Integer classId = InteropUtils.getInt(args[0]);
         if (classId == null) {
             return MemorySegment.NULL;
         }
+
         JavaObjectIndex.removeClass(classId);
         return _Py_NoneStruct();
     }
@@ -127,7 +131,6 @@ public class InteropModule {
         if (method == null) {
             return InteropUtils.raiseException(PyExc_SystemError(), "method with id " + methodId + " doesn't exist");
         }
-
         final MemorySegment result;
         try {
             result = InvokeHandler.invoke(method, null, argsArray);
@@ -161,10 +164,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
+
         final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
         if (field == null) {
             return MemorySegment.NULL;
         }
+
         try {
             return InteropConversions.javaToPython(field.field().get(null));
         } catch (ReflectiveOperationException e) {
@@ -179,10 +184,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 2)) {
             return MemorySegment.NULL;
         }
+
         final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
         if (field == null) {
             return MemorySegment.NULL;
         }
+
         try {
             field.field().set(null, InteropConversions.pythonToJava(args[1], field.field().getType()));
         } catch (IllegalArgumentException e) {
@@ -220,10 +227,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
+
         final Integer methodId = InteropUtils.getInt(args[0]);
         if (methodId == null) {
             return MemorySegment.NULL;
         }
+
         JavaObjectIndex.STATIC_METHODS.remove(methodId);
         return _Py_NoneStruct();
     }
@@ -235,10 +244,12 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
+
         final Integer fieldId = InteropUtils.getInt(args[0]);
         if (fieldId == null) {
             return MemorySegment.NULL;
         }
+
         JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
         return _Py_NoneStruct();
     }
