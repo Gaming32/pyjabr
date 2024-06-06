@@ -35,7 +35,7 @@ public class InteropConversions {
             }
             final String result = InteropUtils.getString(obj);
             if (result == null) {
-                throw new IllegalArgumentException("Could not convert to String", PythonException.moveFromPython());
+                throw new IllegalArgumentException("Could not convert to String", PythonException.moveFromPython(true));
             }
             return result;
         }
@@ -96,7 +96,7 @@ public class InteropConversions {
         if (target == int.class || target == byte.class || target == short.class) {
             final int result = PyLong_AsLong(obj);
             if (result == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
-                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
+                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
             }
             if (target == byte.class) {
                 if ((byte)result != result) {
@@ -115,14 +115,14 @@ public class InteropConversions {
         if (target == long.class) {
             final long result = PyLong_AsLongLong(obj);
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
-                throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython());
+                throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython(true));
             }
             return result;
         }
         if (target == double.class || target == float.class) {
             final double result = PyFloat_AsDouble(obj);
             if (result == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
-                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
+                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
             }
             if (target == float.class) {
                 return (float)result;
@@ -136,7 +136,7 @@ public class InteropConversions {
             if (PyUnicode_Check(obj)) {
                 final String asString = InteropUtils.getString(obj);
                 if (asString == null) {
-                    throw new IllegalArgumentException("Could not convert str to String to parse as char", PythonException.moveFromPython());
+                    throw new IllegalArgumentException("Could not convert str to String to parse as char", PythonException.moveFromPython(true));
                 }
                 if (asString.length() != 1) {
                     if (asString.length() == 2 && Character.isSurrogatePair(asString.charAt(0), asString.charAt(1))) {
@@ -148,7 +148,7 @@ public class InteropConversions {
             } else {
                 final int result = PyLong_AsLong(obj);
                 if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
-                    throw new IllegalArgumentException("Could not convert to char", PythonException.moveFromPython());
+                    throw new IllegalArgumentException("Could not convert to char", PythonException.moveFromPython(true));
                 }
                 if ((char)result != result) {
                     throw new IllegalArgumentException("Could not fit " + result + " into a char");

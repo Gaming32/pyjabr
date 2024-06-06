@@ -1,4 +1,3 @@
-from java.java.lang import Float
+from java.java.lang import String
 
-print(Float.valueOf(55))
-print(Float.valueOf(56.5))
+print(String('hi'))

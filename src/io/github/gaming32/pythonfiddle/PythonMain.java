@@ -51,14 +51,14 @@ public class PythonMain {
                 Py_file_input()
             );
             if (code.equals(MemorySegment.NULL)) {
-                throw PythonException.moveFromPython();
+                throw PythonException.moveFromPython(false);
             }
 
             result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
         }
         Py_DecRef(code);
         if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
+            throw PythonException.moveFromPython(false);
         }
         Py_DecRef(result);
     }

@@ -1,5 +1,6 @@
 package io.github.gaming32.pythonfiddle;
 
+import io.github.gaming32.pythonfiddle.interop.InteropUtils;
 import org.jetbrains.annotations.Nullable;
 import org.python.PyObject;
 import org.python.PyTypeObject;
@@ -12,6 +13,7 @@ import static org.python.Python_h.*;
 import static io.github.gaming32.pythonfiddle.PythonUtil.*;
 
 public class PythonException extends RuntimeException {
+    private static final MemorySegment MODULE_ATTRIBUTE = Arena.global().allocateFrom("__module__");
     private static final MemorySegment TRACEBACK_MODULE = Arena.global().allocateFrom("traceback");
     private static final MemorySegment FORMAT_FUNCTION = Arena.global().allocateFrom("format_exception");
     private static final MemorySegment BLANK_STRING = Arena.global().allocateFrom("");
@@ -30,27 +32,41 @@ public class PythonException extends RuntimeException {
         this.originalException = originalException;
     }
 
-    public static PythonException of(MemorySegment pythonException) {
+    public static PythonException of(MemorySegment pythonException, boolean retainReference) {
         return new PythonException(
             getPythonClass(pythonException),
             getPythonMessage(pythonException),
             getPythonTraceback(pythonException),
-            pythonException
+            retainReference ? pythonException : null
         );
     }
 
-    public static PythonException moveFromPython() {
+    public static PythonException moveFromPython(boolean retainReference) {
         final MemorySegment exception = PyErr_GetRaisedException();
         if (exception.equals(MemorySegment.NULL)) {
             throw new IllegalStateException("PythonException.currentlyRaised called without raised");
         }
-        return of(exception);
+        return of(exception, retainReference);
     }
 
     private static String getPythonClass(MemorySegment pythonException) {
         final MemorySegment pythonType = PyObject.ob_type(pythonException);
+        final MemorySegment module = PyObject_GetAttrString(pythonType, MODULE_ATTRIBUTE);
+        final String prefix;
+        if (!module.equals(MemorySegment.NULL)) {
+            final String basePrefix = InteropUtils.getString(module);
+            if (basePrefix != null) {
+                prefix = basePrefix + '.';
+            } else {
+                PyErr_Clear();
+                prefix = "";
+            }
+        } else {
+            PyErr_Clear();
+            prefix = "";
+        }
         final MemorySegment typeName = PyTypeObject.tp_name(pythonType);
-        return typeName.getString(0L, StandardCharsets.UTF_8);
+        return prefix + typeName.getString(0L, StandardCharsets.UTF_8);
     }
 
     private static String getPythonMessage(MemorySegment pythonException) {
@@ -125,10 +141,13 @@ public class PythonException extends RuntimeException {
         return originalException;
     }
 
-    public void clearOriginalException() {
-        if (originalException == null) return;
+    public PythonException clearOriginalException() {
+        if (originalException == null) {
+            return this;
+        }
         Py_DecRef(originalException);
         originalException = null;
+        return this;
     }
 
     @Nullable
