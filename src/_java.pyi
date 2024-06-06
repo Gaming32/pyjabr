@@ -1,6 +1,6 @@
 from typing import Any
 
-from _java_init import FakeJavaClass, FakeJavaStaticMethod, _JavaAttributeNotFoundType
+from _java_init import FakeJavaStaticMethod, _JavaAttributeNotFoundType
 
 
 def find_class(name: str) -> int | None: ...
@@ -8,7 +8,7 @@ def find_class(name: str) -> int | None: ...
 def remove_class(id: int) -> None: ...
 
 def find_class_attribute(
-    owner: FakeJavaClass,
+    owner_name: str,
     owner_id: int,
     name: str
 ) -> FakeJavaStaticMethod | int | _JavaAttributeNotFoundType: ...

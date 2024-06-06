@@ -73,19 +73,19 @@ class FakeJavaObject:
 
 
 class FakeJavaStaticMethod:
-    __slots__ = ('owner', 'name', '_id')
+    __slots__ = ('owner_name', 'name', '_id')
 
-    owner: 'FakeJavaClass'
+    owner_name: str
     name: str
     _id: int
 
-    def __init__(self, owner: 'FakeJavaClass', name: str, id: int) -> None:
-        self.owner = owner
+    def __init__(self, owner_name: str, name: str, id: int) -> None:
+        self.owner_name = owner_name
         self.name = name
         self._id = id
 
     def __repr__(self) -> str:
-        return f'<static Java method {self.owner.name}.{self.name}>'
+        return f'<static Java method {self.owner_name}.{self.name}>'
 
     def __del__(self) -> None:
         _java.remove_static_method(self._id)
@@ -137,7 +137,7 @@ class FakeJavaClass:
         try:
             return self.attributes[name]
         except KeyError:
-            attr = _java.find_class_attribute(self, self._id, name)
+            attr = _java.find_class_attribute(self.name, self._id, name)
             if isinstance(attr, _JavaAttributeNotFoundType):
                 if name == CONSTRUCTOR_NAME:
                     raise AttributeError(

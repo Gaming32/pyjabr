@@ -74,21 +74,28 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 3)) {
             return MemorySegment.NULL;
         }
-        final MemorySegment owner = args[0];
+
+        final MemorySegment ownerName = args[0];
+        if (!PyUnicode_Check(ownerName)) {
+            return InteropUtils.raiseException(PyExc_TypeError(), "owner_name must be str");
+        }
+
         final Integer ownerId = InteropUtils.getInt(args[1]);
         if (ownerId == null) {
             return MemorySegment.NULL;
         }
+
         final MemorySegment nameObject = args[2];
         final String name = InteropUtils.getString(nameObject);
         if (name == null) {
             return MemorySegment.NULL;
         }
+
         return switch (JavaObjectIndex.findClassAttribute(ownerId, name)) {
             case null -> InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
             case FieldOrMethod.MethodWrapper method -> {
                 final int id = JavaObjectIndex.STATIC_METHODS.getId(method);
-                yield InteropPythonObjects.createFakeJavaStaticMethod(owner, nameObject, id);
+                yield InteropPythonObjects.createFakeJavaStaticMethod(ownerName, nameObject, id);
             }
             case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.STATIC_FIELDS.getId(field));
         };

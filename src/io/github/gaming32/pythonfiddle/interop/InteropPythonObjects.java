@@ -56,7 +56,6 @@ public class InteropPythonObjects {
             return MemorySegment.NULL;
         }
         final MemorySegment args = TupleUtil.createTuple(owner, nameObject, idObject);
-        Py_DecRef(idObject);
         if (args.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
