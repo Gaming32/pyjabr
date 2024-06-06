@@ -1,5 +1,6 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pythonfiddle.module;
 
+import com.google.common.base.CaseFormat;
 import org.jetbrains.annotations.Nullable;
 import org.python.PyMethodDef;
 import org.python.Python_h;
@@ -7,10 +8,29 @@ import org.python._PyCFunctionFast;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public record CustomPythonFunction(String name, Implementation impl, @Nullable String doc) {
     public CustomPythonFunction(String name, Implementation impl) {
         this(name, impl, null);
+    }
+
+    public static CustomPythonFunction fromMethod(MethodHandles.Lookup lookup, Method method) throws IllegalAccessException {
+        if (!Modifier.isStatic(method.getModifiers())) {
+            throw new IllegalArgumentException(method + " must be static");
+        }
+        final PythonFunction annotation = method.getAnnotation(PythonFunction.class);
+        if (annotation == null) {
+            throw new IllegalArgumentException(method + " must be annotated with @PythonFunction");
+        }
+        String functionName = annotation.value();
+        if (functionName.isEmpty()) {
+            functionName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, method.getName());
+        }
+        final Implementation implementation = FunctionAdapter.adapt(lookup, method);
+        return new CustomPythonFunction(functionName, implementation);
     }
 
     public MemorySegment createMethodDef(Arena arena) {

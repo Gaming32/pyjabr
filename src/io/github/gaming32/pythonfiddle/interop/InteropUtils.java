@@ -36,6 +36,30 @@ public class InteropUtils {
         return asInt;
     }
 
+    public static Long getLong(MemorySegment pyLong) {
+        final long asLong = PyLong_AsLongLong(pyLong);
+        if (asLong == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+            return null;
+        }
+        return asLong;
+    }
+
+    public static Double getDouble(MemorySegment pyFloat) {
+        final double asDouble = PyFloat_AsDouble(pyFloat);
+        if (asDouble == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+            return null;
+        }
+        return asDouble;
+    }
+
+    public static Float getFloat(MemorySegment pyFloat) {
+        final double asDouble = PyFloat_AsDouble(pyFloat);
+        if (asDouble == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+            return null;
+        }
+        return (float)asDouble;
+    }
+
     public static MemorySegment invokeCallable(MemorySegment callable, MemorySegment... args) {
         final MemorySegment argsTuple = TupleUtil.createTuple(args);
         if (argsTuple.equals(MemorySegment.NULL)) {

@@ -1,66 +1,26 @@
 package io.github.gaming32.pythonfiddle.interop;
 
-import io.github.gaming32.pythonfiddle.CustomPythonFunction;
-import io.github.gaming32.pythonfiddle.CustomPythonModule;
 import io.github.gaming32.pythonfiddle.PythonException;
 import io.github.gaming32.pythonfiddle.TupleUtil;
+import io.github.gaming32.pythonfiddle.module.PythonFunction;
+import io.github.gaming32.pythonfiddle.module.PythonModule;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static org.python.Python_h.*;
 import static io.github.gaming32.pythonfiddle.PythonUtil.*;
+import static org.python.Python_h.*;
 
+@PythonModule("_java")
 public class InteropModule {
-    public static final CustomPythonFunction FIND_CLASS = new CustomPythonFunction("find_class", InteropModule::findClass);
-    public static final CustomPythonFunction REMOVE_CLASS = new CustomPythonFunction("remove_class", InteropModule::removeClass);
-    public static final CustomPythonFunction FIND_CLASS_ATTRIBUTE = new CustomPythonFunction("find_class_attribute", InteropModule::findClassAttribute);
-    public static final CustomPythonFunction INVOKE_STATIC_METHOD = new CustomPythonFunction("invoke_static_method", InteropModule::invokeStaticMethod);
-    public static final CustomPythonFunction GET_STATIC_FIELD = new CustomPythonFunction("get_static_field", InteropModule::getStaticField);
-    public static final CustomPythonFunction SET_STATIC_FIELD = new CustomPythonFunction("set_static_field", InteropModule::setStaticField);
-    public static final CustomPythonFunction REMOVE_STATIC_METHOD = new CustomPythonFunction("remove_static_method", InteropModule::removeStaticMethod);
-    public static final CustomPythonFunction REMOVE_STATIC_FIELD = new CustomPythonFunction("remove_static_field", InteropModule::removeStaticField);
-    public static final CustomPythonFunction REFLECT_CLASS_OBJECT = new CustomPythonFunction("reflect_class_object", InteropModule::reflectClassObject);
-    public static final CustomPythonFunction REMOVE_OBJECT = new CustomPythonFunction("remove_object", InteropModule::removeObject);
-    public static final CustomPythonFunction TO_STRING = new CustomPythonFunction("to_string", InteropModule::toString);
-    public static final CustomPythonFunction HASH_CODE = new CustomPythonFunction("hash_code", InteropModule::hashCode);
-    public static final CustomPythonFunction IDENTITY_STRING = new CustomPythonFunction("identity_string", InteropModule::identityString);
-    public static final CustomPythonFunction IDENTITY_HASH = new CustomPythonFunction("identity_hash", InteropModule::identityHash);
-
-    public static final CustomPythonModule MODULE = new CustomPythonModule(
-        "_java",
-        FIND_CLASS,
-        REMOVE_CLASS,
-        FIND_CLASS_ATTRIBUTE,
-        INVOKE_STATIC_METHOD,
-        GET_STATIC_FIELD,
-        SET_STATIC_FIELD,
-        REMOVE_STATIC_METHOD,
-        REMOVE_STATIC_FIELD,
-        REFLECT_CLASS_OBJECT,
-        REMOVE_OBJECT,
-        TO_STRING,
-        HASH_CODE,
-        IDENTITY_STRING,
-        IDENTITY_HASH
-    );
-
     /**
      * {@code find_class(name: str) -> int | None}
      */
-    private static MemorySegment findClass(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final String className = InteropUtils.getString(args[0]);
-        if (className == null) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer index = JavaObjectIndex.findClass(className);
+    @PythonFunction
+    public static MemorySegment findClass(String name) {
+        final Integer index = JavaObjectIndex.findClass(name);
         if (index == null) {
             return _Py_NoneStruct();
         }
@@ -70,49 +30,30 @@ public class InteropModule {
     /**
      * {@code remove_class(id: int) -> None}
      */
-    private static MemorySegment removeClass(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer classId = InteropUtils.getInt(args[0]);
-        if (classId == null) {
-            return MemorySegment.NULL;
-        }
-
-        JavaObjectIndex.removeClass(classId);
-        return _Py_NoneStruct();
+    @PythonFunction
+    public static void removeClass(int id) {
+        JavaObjectIndex.removeClass(id);
     }
 
     /**
-     * {@code find_class_attribute(owner: FakeJavaClass, owner_id: int, name: str) -> FakeJavaStaticMethod | int | _JavaAttributeNotFoundType}
+     * {@code find_class_attribute(owner_name: str, owner_id: int, name: str) -> FakeJavaStaticMethod | int | _JavaAttributeNotFoundType}
      */
-    private static MemorySegment findClassAttribute(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 3)) {
-            return MemorySegment.NULL;
-        }
-
-        final MemorySegment ownerName = args[0];
+    @PythonFunction
+    public static MemorySegment findClassAttribute(MemorySegment ownerName, int ownerId, MemorySegment name) {
         if (!PyUnicode_Check(ownerName)) {
             return InteropUtils.raiseException(PyExc_TypeError(), "owner_name must be str");
         }
 
-        final Integer ownerId = InteropUtils.getInt(args[1]);
-        if (ownerId == null) {
+        final String attrName = InteropUtils.getString(name);
+        if (attrName == null) {
             return MemorySegment.NULL;
         }
 
-        final MemorySegment nameObject = args[2];
-        final String name = InteropUtils.getString(nameObject);
-        if (name == null) {
-            return MemorySegment.NULL;
-        }
-
-        return switch (JavaObjectIndex.findClassAttribute(ownerId, name)) {
+        return switch (JavaObjectIndex.findClassAttribute(ownerId, attrName)) {
             case null -> InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
             case FieldOrMethod.MethodWrapper method -> {
                 final int id = JavaObjectIndex.STATIC_METHODS.getId(method);
-                yield InteropPythonObjects.createFakeJavaStaticMethod(ownerName, nameObject, id);
+                yield InteropPythonObjects.createFakeJavaStaticMethod(ownerName, name, id);
             }
             case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.STATIC_FIELDS.getId(field));
         };
@@ -121,21 +62,12 @@ public class InteropModule {
     /**
      * {@code invoke_static_method(method_id: int, args: tuple[Any, ...]) -> Any}
      */
-    private static MemorySegment invokeStaticMethod(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 2)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer methodId = InteropUtils.getInt(args[0]);
-        if (methodId == null) {
-            return MemorySegment.NULL;
-        }
-
-        final MemorySegment argsTuple = args[1];
-        if (!PyTuple_Check(argsTuple)) {
+    @PythonFunction
+    public static MemorySegment invokeStaticMethod(int methodId, MemorySegment args) {
+        if (!PyTuple_Check(args)) {
             return InteropUtils.raiseException(PyExc_TypeError(), "expected tuple for args in invoke_static_method");
         }
-        final MemorySegment[] argsArray = TupleUtil.unpackTuple(argsTuple);
+        final MemorySegment[] argsArray = TupleUtil.unpackTuple(args);
         if (argsArray == null) {
             return MemorySegment.NULL;
         }
@@ -173,12 +105,9 @@ public class InteropModule {
     /**
      * {@code get_static_field(field_id: int) -> Any}
      */
-    private static MemorySegment getStaticField(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
+    @PythonFunction
+    public static MemorySegment getStaticField(int fieldId) {
+        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(fieldId);
         if (field == null) {
             return MemorySegment.NULL;
         }
@@ -193,18 +122,15 @@ public class InteropModule {
     /**
      * {@code set_static_field(field_id: int, value: Any) -> None}
      */
-    private static MemorySegment setStaticField(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 2)) {
-            return MemorySegment.NULL;
-        }
-
-        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
+    @PythonFunction
+    public static MemorySegment setStaticField(int fieldId, MemorySegment value) {
+        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(fieldId);
         if (field == null) {
             return MemorySegment.NULL;
         }
 
         try {
-            field.field().set(null, InteropConversions.pythonToJava(args[1], field.field().getType()));
+            field.field().set(null, InteropConversions.pythonToJava(value, field.field().getType()));
         } catch (IllegalArgumentException e) {
             InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
             if (e.getCause() instanceof PythonException pythonException && pythonException.getOriginalException() != null) {
@@ -216,15 +142,11 @@ public class InteropModule {
         } catch (IllegalAccessException e) {
             return InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
         }
-        return _PyNone_Type();
+        return _Py_NoneStruct();
     }
 
     @Nullable
-    private static FieldOrMethod.FieldWrapper getStaticFieldFromArg(MemorySegment idArg) {
-        final Integer fieldId = InteropUtils.getInt(idArg);
-        if (fieldId == null) {
-            return null;
-        }
+    private static FieldOrMethod.FieldWrapper getStaticFieldFromArg(int fieldId) {
         final FieldOrMethod.FieldWrapper field = JavaObjectIndex.STATIC_FIELDS.get(fieldId);
         if (field == null) {
             InteropUtils.raiseException(PyExc_SystemError(), "field with id " + fieldId + " doesn't exist");
@@ -236,131 +158,64 @@ public class InteropModule {
     /**
      * {@code remove_static_method(id: int) -> None}
      */
-    private static MemorySegment removeStaticMethod(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer methodId = InteropUtils.getInt(args[0]);
-        if (methodId == null) {
-            return MemorySegment.NULL;
-        }
-
-        JavaObjectIndex.STATIC_METHODS.remove(methodId);
-        return _Py_NoneStruct();
+    @PythonFunction
+    public static void removeStaticMethod(int id) {
+        JavaObjectIndex.STATIC_METHODS.remove(id);
     }
 
     /**
      * {@code remove_static_field(id: int) -> None}
      */
-    private static MemorySegment removeStaticField(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer fieldId = InteropUtils.getInt(args[0]);
-        if (fieldId == null) {
-            return MemorySegment.NULL;
-        }
-
-        JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
-        return _Py_NoneStruct();
+    @PythonFunction
+    public static void removeStaticField(int id) {
+        JavaObjectIndex.STATIC_FIELDS.remove(id);
     }
 
     /**
      * {@code reflect_class_object(id: int) -> FakeJavaObject}
      */
-    private static MemorySegment reflectClassObject(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer classId = InteropUtils.getInt(args[0]);
-        if (classId == null) {
-            return MemorySegment.NULL;
-        }
-
-        return InteropConversions.javaToPython(JavaObjectIndex.getClassById(classId));
+    @PythonFunction
+    public static Object reflectClassObject(int id) {
+        return JavaObjectIndex.getClassById(id);
     }
 
     /**
      * {@code remove_object(id: int) -> None}
      */
-    private static MemorySegment removeObject(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer objectId = InteropUtils.getInt(args[0]);
-        if (objectId == null) {
-            return MemorySegment.NULL;
-        }
-
-        JavaObjectIndex.OBJECTS.remove(objectId);
-        return _Py_NoneStruct();
+    @PythonFunction
+    private static void removeObject(int id) {
+        JavaObjectIndex.OBJECTS.remove(id);
     }
 
     /**
      * {@code to_string(id: int) -> str}
      */
-    private static MemorySegment toString(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer objectId = InteropUtils.getInt(args[0]);
-        if (objectId == null) {
-            return MemorySegment.NULL;
-        }
-
-        return InteropConversions.createPythonString(Objects.toString(JavaObjectIndex.OBJECTS.get(objectId)));
+    @PythonFunction
+    private static String toString(int id) {
+        return Objects.toString(JavaObjectIndex.OBJECTS.get(id));
     }
 
     /**
      * {@code hash_code(id: int) -> int}
      */
-    private static MemorySegment hashCode(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer objectId = InteropUtils.getInt(args[0]);
-        if (objectId == null) {
-            return MemorySegment.NULL;
-        }
-
-        return PyLong_FromLong(Objects.hashCode(JavaObjectIndex.OBJECTS.get(objectId)));
+    @PythonFunction
+    public static int hashCode(int id) {
+        return Objects.hashCode(JavaObjectIndex.OBJECTS.get(id));
     }
 
     /**
      * {@code identity_string(id: int) -> str}
      */
-    private static MemorySegment identityString(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer objectId = InteropUtils.getInt(args[0]);
-        if (objectId == null) {
-            return MemorySegment.NULL;
-        }
-
-        return InteropConversions.createPythonString(Objects.toIdentityString(JavaObjectIndex.OBJECTS.get(objectId)));
+    @PythonFunction
+    public static String identityString(int id) {
+        return Objects.toIdentityString(JavaObjectIndex.OBJECTS.get(id));
     }
 
     /**
      * {@code identity_hash(id: int) -> int}
      */
-    private static MemorySegment identityHash(MemorySegment self, MemorySegment... args) {
-        if (!InteropUtils.checkArity(args, 1)) {
-            return MemorySegment.NULL;
-        }
-
-        final Integer objectId = InteropUtils.getInt(args[0]);
-        if (objectId == null) {
-            return MemorySegment.NULL;
-        }
-
-        return PyLong_FromLong(System.identityHashCode(JavaObjectIndex.OBJECTS.get(objectId)));
+    @PythonFunction
+    public static int identityHash(int id) {
+        return System.identityHashCode(JavaObjectIndex.OBJECTS.get(id));
     }
 }

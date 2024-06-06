@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pythonfiddle.module;
 
 import org.jetbrains.annotations.Nullable;
 import org.python.PyImport_AppendInittab$initfunc;
@@ -9,10 +9,31 @@ import org.python._object;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public record CustomPythonModule(String name, @Nullable String doc, CustomPythonFunction... functions) {
     public CustomPythonModule(String name, CustomPythonFunction... functions) {
         this(name, null, functions);
+    }
+
+    public static CustomPythonModule fromClass(Class<?> clazz) throws IllegalAccessException {
+        return fromClass(MethodHandles.privateLookupIn(clazz, MethodHandles.lookup()), clazz);
+    }
+
+    public static CustomPythonModule fromClass(MethodHandles.Lookup lookup, Class<?> clazz) throws IllegalAccessException {
+        final PythonModule annotation = clazz.getAnnotation(PythonModule.class);
+        if (annotation == null) {
+            throw new IllegalArgumentException(clazz + " must be annotated with @PythonModule");
+        }
+        final List<CustomPythonFunction> functions = new ArrayList<>();
+        for (final Method method : clazz.getDeclaredMethods()) {
+            if (!method.isAnnotationPresent(PythonFunction.class)) continue;
+            functions.add(CustomPythonFunction.fromMethod(lookup, method));
+        }
+        return new CustomPythonModule(annotation.value(), functions.toArray(CustomPythonFunction[]::new));
     }
 
     public MemorySegment createModuleDef(Arena arena) {

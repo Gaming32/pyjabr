@@ -1,6 +1,7 @@
 package io.github.gaming32.pythonfiddle;
 
 import io.github.gaming32.pythonfiddle.interop.InteropModule;
+import io.github.gaming32.pythonfiddle.module.CustomPythonModule;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,8 +15,8 @@ import java.util.Arrays;
 import static org.python.Python_h.*;
 
 public class PythonMain {
-    public static void main(String[] args) throws IOException {
-        InteropModule.MODULE.registerAsBuiltin(Arena.global());
+    public static void main(String[] args) throws IOException, IllegalAccessException {
+        CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
 
         Py_Initialize();
         try {
