@@ -7,6 +7,7 @@ import io.github.gaming32.pythonfiddle.TupleUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 import static org.python.Python_h.*;
@@ -21,6 +22,12 @@ public class InteropModule {
     public static final CustomPythonFunction SET_STATIC_FIELD = new CustomPythonFunction("set_static_field", InteropModule::setStaticField);
     public static final CustomPythonFunction REMOVE_STATIC_METHOD = new CustomPythonFunction("remove_static_method", InteropModule::removeStaticMethod);
     public static final CustomPythonFunction REMOVE_STATIC_FIELD = new CustomPythonFunction("remove_static_field", InteropModule::removeStaticField);
+    public static final CustomPythonFunction REFLECT_CLASS_OBJECT = new CustomPythonFunction("reflect_class_object", InteropModule::reflectClassObject);
+    public static final CustomPythonFunction REMOVE_OBJECT = new CustomPythonFunction("remove_object", InteropModule::removeObject);
+    public static final CustomPythonFunction TO_STRING = new CustomPythonFunction("to_string", InteropModule::toString);
+    public static final CustomPythonFunction HASH_CODE = new CustomPythonFunction("hash_code", InteropModule::hashCode);
+    public static final CustomPythonFunction IDENTITY_STRING = new CustomPythonFunction("identity_string", InteropModule::identityString);
+    public static final CustomPythonFunction IDENTITY_HASH = new CustomPythonFunction("identity_hash", InteropModule::identityHash);
 
     public static final CustomPythonModule MODULE = new CustomPythonModule(
         "_java",
@@ -31,7 +38,13 @@ public class InteropModule {
         GET_STATIC_FIELD,
         SET_STATIC_FIELD,
         REMOVE_STATIC_METHOD,
-        REMOVE_STATIC_FIELD
+        REMOVE_STATIC_FIELD,
+        REFLECT_CLASS_OBJECT,
+        REMOVE_OBJECT,
+        TO_STRING,
+        HASH_CODE,
+        IDENTITY_STRING,
+        IDENTITY_HASH
     );
 
     /**
@@ -252,5 +265,102 @@ public class InteropModule {
 
         JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
         return _Py_NoneStruct();
+    }
+
+    /**
+     * {@code reflect_class_object(id: int) -> FakeJavaObject}
+     */
+    private static MemorySegment reflectClassObject(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer classId = InteropUtils.getInt(args[0]);
+        if (classId == null) {
+            return MemorySegment.NULL;
+        }
+
+        return InteropConversions.javaToPython(JavaObjectIndex.getClassById(classId));
+    }
+
+    /**
+     * {@code remove_object(id: int) -> None}
+     */
+    private static MemorySegment removeObject(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer objectId = InteropUtils.getInt(args[0]);
+        if (objectId == null) {
+            return MemorySegment.NULL;
+        }
+
+        JavaObjectIndex.OBJECTS.remove(objectId);
+        return _Py_NoneStruct();
+    }
+
+    /**
+     * {@code to_string(id: int) -> str}
+     */
+    private static MemorySegment toString(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer objectId = InteropUtils.getInt(args[0]);
+        if (objectId == null) {
+            return MemorySegment.NULL;
+        }
+
+        return InteropConversions.createPythonString(Objects.toString(JavaObjectIndex.OBJECTS.get(objectId)));
+    }
+
+    /**
+     * {@code hash_code(id: int) -> int}
+     */
+    private static MemorySegment hashCode(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer objectId = InteropUtils.getInt(args[0]);
+        if (objectId == null) {
+            return MemorySegment.NULL;
+        }
+
+        return PyLong_FromLong(Objects.hashCode(JavaObjectIndex.OBJECTS.get(objectId)));
+    }
+
+    /**
+     * {@code identity_string(id: int) -> str}
+     */
+    private static MemorySegment identityString(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer objectId = InteropUtils.getInt(args[0]);
+        if (objectId == null) {
+            return MemorySegment.NULL;
+        }
+
+        return InteropConversions.createPythonString(Objects.toIdentityString(JavaObjectIndex.OBJECTS.get(objectId)));
+    }
+
+    /**
+     * {@code identity_hash(id: int) -> int}
+     */
+    private static MemorySegment identityHash(MemorySegment self, MemorySegment... args) {
+        if (!InteropUtils.checkArity(args, 1)) {
+            return MemorySegment.NULL;
+        }
+
+        final Integer objectId = InteropUtils.getInt(args[0]);
+        if (objectId == null) {
+            return MemorySegment.NULL;
+        }
+
+        return PyLong_FromLong(System.identityHashCode(JavaObjectIndex.OBJECTS.get(objectId)));
     }
 }

@@ -1,5 +1,7 @@
 package io.github.gaming32.pythonfiddle.interop;
 
+import io.github.gaming32.pythonfiddle.TupleUtil;
+
 import java.lang.foreign.MemorySegment;
 
 import static org.python.Python_h.*;
@@ -32,5 +34,13 @@ public class InteropUtils {
             return null;
         }
         return asInt;
+    }
+
+    public static MemorySegment invokeCallable(MemorySegment callable, MemorySegment... args) {
+        final MemorySegment argsTuple = TupleUtil.createTuple(args);
+        if (argsTuple.equals(MemorySegment.NULL)) {
+            return MemorySegment.NULL;
+        }
+        return PyObject_CallObject(callable, argsTuple);
     }
 }

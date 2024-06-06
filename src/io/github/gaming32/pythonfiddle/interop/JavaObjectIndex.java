@@ -19,8 +19,9 @@ public class JavaObjectIndex {
     public static final int NO_ID = -1;
 
     private static final Object CLASSES_LOCK = new Object();
-    private static final Object2IntMap<String> CLASS_IDS = new Object2IntOpenHashMap<>();
-    private static final Int2ObjectMap<Class<?>> FAKE_CLASSES = new Int2ObjectOpenHashMap<>();
+    private static final Object2IntMap<String> CLASS_IDS_BY_NAME = new Object2IntOpenHashMap<>();
+    private static final Object2IntMap<Class<?>> CLASS_IDS_BY_CLASS = new Object2IntOpenHashMap<>();
+    private static final Int2ObjectMap<Class<?>> CLASSES_BY_ID = new Int2ObjectOpenHashMap<>();
     private static final Int2IntOpenHashMap CLASS_REFCOUNTS = new Int2IntOpenHashMap();
 
     private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
@@ -28,14 +29,16 @@ public class JavaObjectIndex {
 
     public static final ObjectIndex<FieldOrMethod.FieldWrapper> STATIC_FIELDS = new ObjectIndex<>();
     public static final ObjectIndex<FieldOrMethod.MethodWrapper> STATIC_METHODS = new ObjectIndex<>();
+    public static final ObjectIndex<Object> OBJECTS = new ObjectIndex<>();
 
     static {
-        CLASS_IDS.defaultReturnValue(NO_ID);
+        CLASS_IDS_BY_NAME.defaultReturnValue(NO_ID);
+        CLASS_IDS_BY_CLASS.defaultReturnValue(NO_ID);
     }
 
     public static Integer findClass(String className) {
         synchronized (CLASSES_LOCK) {
-            int id = CLASS_IDS.getInt(className);
+            int id = CLASS_IDS_BY_NAME.getInt(className);
             if (id == NO_ID) {
                 final Class<?> clazz;
                 try {
@@ -43,9 +46,24 @@ public class JavaObjectIndex {
                 } catch (ClassNotFoundException e) {
                     return null;
                 }
-                id = CLASS_IDS.size();
-                CLASS_IDS.put(className, id);
-                FAKE_CLASSES.put(id, clazz);
+                id = CLASS_IDS_BY_NAME.size();
+                CLASS_IDS_BY_NAME.put(className, id);
+                CLASS_IDS_BY_CLASS.put(clazz, id);
+                CLASSES_BY_ID.put(id, clazz);
+            }
+            CLASS_REFCOUNTS.addTo(id, 1);
+            return id;
+        }
+    }
+
+    public static int getClassId(Class<?> clazz) {
+        synchronized (CLASSES_LOCK) {
+            int id = CLASS_IDS_BY_CLASS.getInt(clazz);
+            if (id == NO_ID) {
+                id = CLASS_IDS_BY_CLASS.size();
+                CLASS_IDS_BY_NAME.put(clazz.getName(), id);
+                CLASS_IDS_BY_CLASS.put(clazz, id);
+                CLASSES_BY_ID.put(id, clazz);
             }
             CLASS_REFCOUNTS.addTo(id, 1);
             return id;
@@ -54,7 +72,7 @@ public class JavaObjectIndex {
 
     public static Class<?> getClassById(int classId) {
         synchronized (CLASSES_LOCK) {
-            return FAKE_CLASSES.get(classId);
+            return CLASSES_BY_ID.get(classId);
         }
     }
 
@@ -62,8 +80,9 @@ public class JavaObjectIndex {
         synchronized (CLASSES_LOCK) {
             final int oldRefCount = CLASS_REFCOUNTS.addTo(classId, -1);
             if (oldRefCount == 1) {
-                final Class<?> clazz = FAKE_CLASSES.remove(classId);
-                CLASS_IDS.removeInt(clazz.getName());
+                final Class<?> clazz = CLASSES_BY_ID.remove(classId);
+                CLASS_IDS_BY_NAME.removeInt(clazz.getName());
+                CLASS_IDS_BY_CLASS.removeInt(clazz);
                 CLASS_REFCOUNTS.remove(classId);
             } else if (oldRefCount < 1) {
                 throw new IllegalStateException("refcount for class " + classId + " became negative");

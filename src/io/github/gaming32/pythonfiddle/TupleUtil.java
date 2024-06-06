@@ -7,6 +7,12 @@ import static org.python.Python_h.*;
 public class TupleUtil {
     public static MemorySegment createTuple(MemorySegment... args) {
         final MemorySegment result = PyTuple_New(args.length);
+        if (result.equals(MemorySegment.NULL)) {
+            for (final MemorySegment arg : args) {
+                Py_DecRef(arg);
+            }
+            return MemorySegment.NULL;
+        }
         for (int i = 0; i < args.length; i++) {
             PyTuple_SetItem(result, i, args[i]);
         }

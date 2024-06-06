@@ -1,7 +1,6 @@
 package io.github.gaming32.pythonfiddle.interop;
 
 import com.google.common.base.Suppliers;
-import io.github.gaming32.pythonfiddle.TupleUtil;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -15,51 +14,54 @@ public class InteropPythonObjects {
             return checkNotNull(PyImport_ImportModule(arena.allocateFrom("_java_init")));
         }
     });
+    public static final Supplier<MemorySegment> JAVA_ATTRIBUTE_NOT_FOUND = Suppliers.memoize(() -> getInitAttr("JavaAttributeNotFound"));
+    public static final Supplier<MemorySegment> JAVA_ERROR = Suppliers.memoize(() -> getInitAttr("JavaError"));
+    public static final Supplier<MemorySegment> FAKE_JAVA_OBJECT = Suppliers.memoize(() -> getInitAttr("FakeJavaObject"));
+    public static final Supplier<MemorySegment> FAKE_JAVA_STATIC_METHOD = Suppliers.memoize(() -> getInitAttr("FakeJavaStaticMethod"));
 
-    public static final Supplier<MemorySegment> JAVA_ATTRIBUTE_NOT_FOUND = Suppliers.memoize(() -> {
-        final MemorySegment initModule = _JAVA_INIT.get();
-        if (initModule.equals(MemorySegment.NULL)) {
+    public static MemorySegment createFakeJavaObject(int id, MemorySegment classNameObject, int classId) {
+        final MemorySegment idObject = PyLong_FromLong(id);
+        if (idObject.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
-        try (Arena arena = Arena.ofConfined()) {
-            return checkNotNull(PyObject_GetAttrString(initModule, arena.allocateFrom("JavaAttributeNotFound")));
-        }
-    });
 
-    public static final Supplier<MemorySegment> JAVA_ERROR = Suppliers.memoize(() -> {
-        final MemorySegment initModule = _JAVA_INIT.get();
-        if (initModule.equals(MemorySegment.NULL)) {
+        final MemorySegment classIdObject = PyLong_FromLong(classId);
+        if (classIdObject.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
-        try (Arena arena = Arena.ofConfined()) {
-            return checkNotNull(PyObject_GetAttrString(initModule, arena.allocateFrom("JavaError")));
-        }
-    });
 
-    public static final Supplier<MemorySegment> FAKE_JAVA_STATIC_METHOD = Suppliers.memoize(() -> {
-        final MemorySegment initModule = _JAVA_INIT.get();
-        if (initModule.equals(MemorySegment.NULL)) {
+        final MemorySegment constructor = FAKE_JAVA_OBJECT.get();
+        if (constructor.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
-        try (Arena arena = Arena.ofConfined()) {
-            return checkNotNull(PyObject_GetAttrString(initModule, arena.allocateFrom("FakeJavaStaticMethod")));
-        }
-    });
+
+        Py_IncRef(classNameObject);
+        return InteropUtils.invokeCallable(constructor, idObject, classNameObject, classIdObject);
+    }
 
     public static MemorySegment createFakeJavaStaticMethod(MemorySegment owner, MemorySegment nameObject, int id) {
         final MemorySegment idObject = PyLong_FromLong(id);
         if (idObject.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
+
         final MemorySegment constructor = FAKE_JAVA_STATIC_METHOD.get();
         if (constructor.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
-        final MemorySegment args = TupleUtil.createTuple(owner, nameObject, idObject);
-        if (args.equals(MemorySegment.NULL)) {
+
+        Py_IncRef(nameObject);
+        return InteropUtils.invokeCallable(constructor, owner, nameObject, idObject);
+    }
+
+    private static MemorySegment getInitAttr(String attr) {
+        final MemorySegment initModule = _JAVA_INIT.get();
+        if (initModule.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
-        return PyObject_CallObject(constructor, args);
+        try (Arena arena = Arena.ofConfined()) {
+            return checkNotNull(PyObject_GetAttrString(initModule, arena.allocateFrom(attr)));
+        }
     }
 
     private static MemorySegment checkNotNull(MemorySegment segment) {

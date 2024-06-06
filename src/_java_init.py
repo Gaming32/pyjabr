@@ -28,22 +28,38 @@ class JavaError(RuntimeError):
 
 
 class FakeJavaObject:
-    __slots__ = ('_id', 'java_type')
+    __slots__ = ('_id', 'class_name', '_class_id')
 
     _id: int
-    java_type: 'FakeJavaClass'
+    class_name: str
+    _class_id: int
 
-    def __init__(self, id: int) -> None:
+    def __init__(self, id: int, class_name: str, class_id: int) -> None:
         self._id = id
+        self.class_name = class_name
+        self._class_id = class_id
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, FakeJavaObject):
+            return NotImplemented
+        return self.equals(other)
+
+    def identity_equals(self, other: 'FakeJavaObject') -> bool:
+        return self._id == other._id
+
+    def identity_hash(self) -> int:
+        return _java.identity_hash(self._id)
 
     def __del__(self) -> None:
-        _java.delete_object(self._id)
+        _java.remove_object(self._id)
+        _java.remove_class(self._class_id)
 
     def __getattr__(self, name: str) -> Any:
-        raise AttributeError(
-            f"instance attribute '{name}' not found on Java class {self.name}",
-            name=name, obj=self
-        ) from None
+        raise NotImplementedError('FakeJavaObject.__getattr__')
+        # raise AttributeError(
+        #     f"instance attribute '{name}' not found on Java class {self.class_name}",
+        #     name=name, obj=self
+        # ) from None
 
     def __setattr__(self, key: str, value: Any) -> None:
         if key in FakeJavaObject.__slots__:
@@ -69,7 +85,7 @@ class FakeJavaObject:
         return _java.hash_code(self._id)
 
     def __repr__(self) -> str:
-        return f'<fake Java object {_java.identity_string(self._id)}>'
+        return _java.identity_string(self._id)
 
 
 class FakeJavaStaticMethod:
@@ -87,37 +103,44 @@ class FakeJavaStaticMethod:
     def __repr__(self) -> str:
         return f'<static Java method {self.owner_name}.{self.name}>'
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, FakeJavaStaticMethod):
+            return NotImplemented
+        return self._id == other._id
+
     def __del__(self) -> None:
         _java.remove_static_method(self._id)
 
     def __call__(self, *args: Any) -> Any:
         return _java.invoke_static_method(self._id, args)
 
-    def reflect_java(self) -> FakeJavaObject:
-        return _java.reflect_static_method(self._id)
-
 
 class FakeJavaClass:
-    __slots__ = ('name', '_id', 'attributes')
+    __slots__ = ('class_name', '_id', '_attributes')
 
-    name: str
+    class_name: str
     _id: int
-    attributes: dict[str, FakeJavaStaticMethod | int]
+    _attributes: dict[str, FakeJavaStaticMethod | int]
 
-    def __init__(self, name: str, id: int) -> None:
-        self.name = name
+    def __init__(self, class_name: str, id: int) -> None:
+        self.class_name = class_name
         self._id = id
-        self.attributes = {}
+        self._attributes = {}
 
     def __repr__(self) -> str:
-        return f'<Java class {self.name}>'
+        return f'<Java class {self.class_name}>'
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, FakeJavaClass):
+            return NotImplemented
+        return self._id == other._id
 
     def __del__(self) -> None:
         _java.remove_class(self._id)
-        for attr in self.attributes.values():
+        for attr in self._attributes.values():
             if isinstance(attr, int):
                 _java.remove_static_field(attr)
-        self.attributes.clear()
+        self._attributes.clear()
 
     def __getattr__(self, name: str) -> FakeJavaStaticMethod | Any:
         attr = self._get_attr(name)
@@ -130,25 +153,25 @@ class FakeJavaClass:
             return super().__setattr__(key, value)
         attr = self._get_attr(key)
         if not isinstance(attr, int):
-            raise TypeError(f'cannot assign to static method {self.name}.{key}')
+            raise TypeError(f'cannot assign to static method {self.class_name}.{key}')
         _java.set_static_field(attr, value)
 
     def _get_attr(self, name: str) -> FakeJavaStaticMethod | int:
         try:
-            return self.attributes[name]
+            return self._attributes[name]
         except KeyError:
-            attr = _java.find_class_attribute(self.name, self._id, name)
+            attr = _java.find_class_attribute(self.class_name, self._id, name)
             if isinstance(attr, _JavaAttributeNotFoundType):
                 if name == CONSTRUCTOR_NAME:
                     raise AttributeError(
-                        f'no public constructor for Java class {self.name}',
+                        f'no public constructor for Java class {self.class_name}',
                         name=name, obj=self
                     ) from None
                 raise AttributeError(
-                    f"static attribute '{name}' not found on Java class {self.name}",
+                    f"static attribute '{name}' not found on Java class {self.class_name}",
                     name=name, obj=self
                 ) from None
-            self.attributes[name] = attr
+            self._attributes[name] = attr
             return attr
 
     def __call__(self, *args: Any) -> Any:

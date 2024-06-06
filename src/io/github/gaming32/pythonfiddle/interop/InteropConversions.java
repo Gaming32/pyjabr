@@ -39,6 +39,9 @@ public class InteropConversions {
             }
             return result;
         }
+        if (target == MemorySegment.class) {
+            return obj;
+        }
         throw new UnsupportedOperationException("Only primitive and string conversions are supported at the moment");
     }
 
@@ -170,7 +173,14 @@ public class InteropConversions {
         if (sourceClass.isPrimitive() || Primitives.isWrapperType(sourceClass)) {
             return primitiveToPython(obj);
         }
-        throw new UnsupportedOperationException("Only primitive and string conversions are supported at the moment");
+
+        final int objectId = JavaObjectIndex.OBJECTS.getId(obj);
+        final int classId = JavaObjectIndex.getClassId(obj.getClass());
+        return InteropPythonObjects.createFakeJavaObject(
+            objectId,
+            createPythonString(obj.getClass().getName()),
+            classId
+        );
     }
 
     private static MemorySegment primitiveToPython(Object obj) {
