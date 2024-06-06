@@ -9,8 +9,8 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.nio.charset.StandardCharsets;
 
+import static io.github.gaming32.pythonfiddle.PythonUtil.PyObject_CallMethodOneArg;
 import static org.python.Python_h.*;
-import static io.github.gaming32.pythonfiddle.PythonUtil.*;
 
 public class PythonException extends RuntimeException {
     private static final MemorySegment MODULE_ATTRIBUTE = Arena.global().allocateFrom("__module__");
@@ -46,7 +46,11 @@ public class PythonException extends RuntimeException {
         if (exception.equals(MemorySegment.NULL)) {
             throw new IllegalStateException("PythonException.currentlyRaised called without raised");
         }
-        return of(exception, retainReference);
+        final PythonException result = of(exception, retainReference);
+        if (!retainReference) {
+            Py_DecRef(exception);
+        }
+        return result;
     }
 
     private static String getPythonClass(MemorySegment pythonException) {

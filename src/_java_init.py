@@ -1,9 +1,9 @@
-import sys
 import os
+import sys
 from importlib.abc import MetaPathFinder, Loader
 from importlib.machinery import ModuleSpec
-from types import ModuleType
-from typing import Sequence, Any
+from types import ModuleType, TracebackType
+from typing import Sequence, Any, Self, Iterator
 
 import _java
 
@@ -21,8 +21,55 @@ class _JavaAttributeNotFoundType:
 JavaAttributeNotFound = _JavaAttributeNotFoundType()
 
 
-class JavaError(Exception):
-    pass
+class JavaError(RuntimeError):
+    __slots__ = ('java_exception',)
+
+    java_exception: 'FakeJavaObject'
+
+
+class FakeJavaObject:
+    __slots__ = ('_id', 'java_type')
+
+    _id: int
+    java_type: 'FakeJavaClass'
+
+    def __init__(self, id: int) -> None:
+        self._id = id
+
+    def __del__(self) -> None:
+        _java.delete_object(self._id)
+
+    def __getattr__(self, name: str) -> Any:
+        raise AttributeError(
+            f"instance attribute '{name}' not found on Java class {self.name}",
+            name=name, obj=self
+        ) from None
+
+    def __setattr__(self, key: str, value: Any) -> None:
+        if key in FakeJavaObject.__slots__:
+            return super().__setattr__(key, value)
+
+    def __iter__(self) -> Iterator[Any]:
+        it = self.iterator()
+        while it.hasNext():
+            yield it.next()
+
+    def __enter__(self) -> Self:
+        if not hasattr(self, 'close'):
+            raise TypeError(f'{self!r} is not closeable')
+        return self
+
+    def __exit__(self, exc_type: type[BaseException], exc_val: BaseException, exc_tb: TracebackType):
+        self.close()
+
+    def __str__(self) -> str:
+        return _java.to_string(self._id)
+
+    def __hash__(self) -> int:
+        return _java.hash_code(self._id)
+
+    def __repr__(self) -> str:
+        return f'<fake Java object {_java.identity_string(self._id)}>'
 
 
 class FakeJavaStaticMethod:
@@ -45,6 +92,9 @@ class FakeJavaStaticMethod:
 
     def __call__(self, *args: Any) -> Any:
         return _java.invoke_static_method(self._id, args)
+
+    def reflect_java(self) -> FakeJavaObject:
+        return _java.reflect_static_method(self._id)
 
 
 class FakeJavaClass:
@@ -103,6 +153,9 @@ class FakeJavaClass:
 
     def __call__(self, *args: Any) -> Any:
         return getattr(self, CONSTRUCTOR_NAME)(*args)
+
+    def reflect_java(self) -> FakeJavaObject:
+        return _java.reflect_class_object(self._id)
 
 
 class JavaImportLoader(Loader):

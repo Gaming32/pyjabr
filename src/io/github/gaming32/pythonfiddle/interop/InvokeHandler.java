@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 
 public class InvokeHandler {
     public static MemorySegment invoke(
-        FieldOrExecutable.ExecutablesWrapper executables,
+        FieldOrMethod.MethodWrapper executables,
         Object owner, MemorySegment... args
     ) throws Throwable {
         for (final Executable executable : executables.executables()) {

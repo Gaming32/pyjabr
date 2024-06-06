@@ -11,7 +11,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-public sealed interface FieldOrExecutable {
+public sealed interface FieldOrMethod {
     String CONSTRUCTOR_NAME = "<init>";
 
     Class<?> owner();
@@ -21,19 +21,19 @@ public sealed interface FieldOrExecutable {
     List<? extends AccessibleObject> accessibleObjects();
 
     @Nullable
-    static FieldOrExecutable lookup(Class<?> owner, String name, boolean isStatic) {
+    static FieldOrMethod lookup(Class<?> owner, String name, boolean isStatic) {
         if (name.equals(CONSTRUCTOR_NAME)) {
             if (!isStatic) {
                 return null;
             }
             try {
-                return ExecutablesWrapper.findConstructors(owner);
+                return MethodWrapper.findConstructors(owner);
             } catch (NoSuchMethodException _) {
                 return null;
             }
         }
         try {
-            return ExecutablesWrapper.findMethods(owner, name, isStatic);
+            return MethodWrapper.findMethods(owner, name, isStatic);
         } catch (NoSuchMethodException _) {
         }
         try {
@@ -43,7 +43,7 @@ public sealed interface FieldOrExecutable {
         return null;
     }
 
-    record FieldWrapper(Field field) implements FieldOrExecutable {
+    record FieldWrapper(Field field) implements FieldOrMethod {
         public static FieldWrapper findField(Class<?> owner, String name, boolean isStatic) throws NoSuchFieldException {
             final Field field = owner.getField(name);
             if (Modifier.isStatic(field.getModifiers()) != isStatic) {
@@ -68,8 +68,8 @@ public sealed interface FieldOrExecutable {
         }
     }
 
-    record ExecutablesWrapper(Class<?> owner, String name, List<? extends Executable> executables) implements FieldOrExecutable {
-        public static ExecutablesWrapper findMethods(Class<?> owner, String name, boolean isStatic) throws NoSuchMethodException {
+    record MethodWrapper(Class<?> owner, String name, List<? extends Executable> executables) implements FieldOrMethod {
+        public static MethodWrapper findMethods(Class<?> owner, String name, boolean isStatic) throws NoSuchMethodException {
             final List<Method> methods = Arrays.stream(owner.getMethods())
                 .filter(m -> m.getName().equals(name))
                 .filter(m -> Modifier.isStatic(m.getModifiers()) == isStatic)
@@ -77,15 +77,15 @@ public sealed interface FieldOrExecutable {
             if (methods.isEmpty()) {
                 throw new NoSuchMethodException(owner.getName() + '.' + name);
             }
-            return new ExecutablesWrapper(owner, name, methods);
+            return new MethodWrapper(owner, name, methods);
         }
 
-        public static ExecutablesWrapper findConstructors(Class<?> owner) throws NoSuchMethodException {
+        public static MethodWrapper findConstructors(Class<?> owner) throws NoSuchMethodException {
             final Constructor<?>[] constructors = owner.getConstructors();
             if (constructors.length == 0 || Modifier.isAbstract(owner.getModifiers())) {
                 throw new NoSuchMethodException(owner.getName() + '.' + CONSTRUCTOR_NAME);
             }
-            return new ExecutablesWrapper(owner, CONSTRUCTOR_NAME, List.of(constructors));
+            return new MethodWrapper(owner, CONSTRUCTOR_NAME, List.of(constructors));
         }
 
         @Override

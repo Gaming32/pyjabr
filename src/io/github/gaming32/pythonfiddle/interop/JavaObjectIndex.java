@@ -1,8 +1,11 @@
 package io.github.gaming32.pythonfiddle.interop;
 
 import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
@@ -18,49 +21,34 @@ public class JavaObjectIndex {
     private static final Object CLASSES_LOCK = new Object();
     private static final Object2IntMap<String> CLASS_IDS = new Object2IntOpenHashMap<>();
     private static final Int2ObjectMap<Class<?>> FAKE_CLASSES = new Int2ObjectOpenHashMap<>();
+    private static final Int2IntOpenHashMap CLASS_REFCOUNTS = new Int2IntOpenHashMap();
 
     private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
-    private static final Map<Pair<Class<?>, String>, FieldOrExecutable> CLASS_ATTRIBUTES = new HashMap<>();
+    private static final Map<Pair<Class<?>, String>, FieldOrMethod> CLASS_ATTRIBUTES = new HashMap<>();
 
-    private static final Object STATIC_FIELDS_LOCK = new Object();
-    private static final Reference2IntMap<FieldOrExecutable.FieldWrapper> STATIC_FIELD_IDS = new Reference2IntOpenHashMap<>();
-    private static final Int2ObjectMap<FieldOrExecutable.FieldWrapper> FAKE_STATIC_FIELDS = new Int2ObjectOpenHashMap<>();
-
-    private static final Object STATIC_EXECUTABLES_LOCK = new Object();
-    private static final Reference2IntMap<FieldOrExecutable.ExecutablesWrapper> STATIC_EXECUTABLES_IDS = new Reference2IntOpenHashMap<>();
-    private static final Int2ObjectMap<FieldOrExecutable.ExecutablesWrapper> FAKE_STATIC_EXECUTABLES = new Int2ObjectOpenHashMap<>();
+    public static final ObjectIndex<FieldOrMethod.FieldWrapper> STATIC_FIELDS = new ObjectIndex<>();
+    public static final ObjectIndex<FieldOrMethod.MethodWrapper> STATIC_METHODS = new ObjectIndex<>();
 
     static {
         CLASS_IDS.defaultReturnValue(NO_ID);
-        STATIC_FIELD_IDS.defaultReturnValue(NO_ID);
-        STATIC_EXECUTABLES_IDS.defaultReturnValue(NO_ID);
     }
 
     public static Integer findClass(String className) {
         synchronized (CLASSES_LOCK) {
-            final int oldIndex = CLASS_IDS.getInt(className);
-            if (oldIndex != NO_ID) {
-                return oldIndex;
+            int id = CLASS_IDS.getInt(className);
+            if (id == NO_ID) {
+                final Class<?> clazz;
+                try {
+                    clazz = Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    return null;
+                }
+                id = CLASS_IDS.size();
+                CLASS_IDS.put(className, id);
+                FAKE_CLASSES.put(id, clazz);
             }
-            final Class<?> clazz;
-            try {
-                clazz = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                return null;
-            }
-            final int index = CLASS_IDS.size();
-            CLASS_IDS.put(className, index);
-            FAKE_CLASSES.put(index, clazz);
-            return index;
-        }
-    }
-
-    public static void removeClass(int classId) {
-        synchronized (CLASSES_LOCK) {
-            final Class<?> clazz = FAKE_CLASSES.remove(classId);
-            if (clazz != null) {
-                CLASS_IDS.removeInt(clazz.getName());
-            }
+            CLASS_REFCOUNTS.addTo(id, 1);
+            return id;
         }
     }
 
@@ -70,66 +58,59 @@ public class JavaObjectIndex {
         }
     }
 
+    public static void removeClass(int classId) {
+        synchronized (CLASSES_LOCK) {
+            final int oldRefCount = CLASS_REFCOUNTS.addTo(classId, -1);
+            if (oldRefCount == 1) {
+                final Class<?> clazz = FAKE_CLASSES.remove(classId);
+                CLASS_IDS.removeInt(clazz.getName());
+                CLASS_REFCOUNTS.remove(classId);
+            } else if (oldRefCount < 1) {
+                throw new IllegalStateException("refcount for class " + classId + " became negative");
+            }
+        }
+    }
+
     @Nullable
-    public static FieldOrExecutable findClassAttribute(int ownerId, String name) {
+    public static FieldOrMethod findClassAttribute(int ownerId, String name) {
         final Pair<Class<?>, String> key = Pair.of(getClassById(ownerId), name);
         synchronized (CLASS_ATTRIBUTES_LOCK) {
-            return CLASS_ATTRIBUTES.computeIfAbsent(key, k -> FieldOrExecutable.lookup(k.left(), k.right(), true));
+            return CLASS_ATTRIBUTES.computeIfAbsent(key, k -> FieldOrMethod.lookup(k.left(), k.right(), true));
         }
     }
 
-    public static int getStaticExecutablesId(FieldOrExecutable.ExecutablesWrapper executables) {
-        synchronized (STATIC_EXECUTABLES_LOCK) {
-            final int oldIndex = STATIC_EXECUTABLES_IDS.getInt(executables);
-            if (oldIndex != NO_ID) {
-                return oldIndex;
+    public static final class ObjectIndex<T> {
+        private final Reference2IntMap<T> ids = new Reference2IntOpenHashMap<>();
+        private final Int2ReferenceMap<T> objects = new Int2ReferenceOpenHashMap<>();
+        private final Int2IntOpenHashMap refcounts = new Int2IntOpenHashMap();
+
+        public ObjectIndex() {
+            ids.defaultReturnValue(NO_ID);
+        }
+
+        public synchronized int getId(T obj) {
+            int id = ids.getInt(obj);
+            if (id == NO_ID) {
+                id = ids.size();
+                ids.put(obj, id);
+                objects.put(id, obj);
             }
-            final int index = STATIC_EXECUTABLES_IDS.size();
-            STATIC_EXECUTABLES_IDS.put(executables, index);
-            FAKE_STATIC_EXECUTABLES.put(index, executables);
-            return index;
+            refcounts.addTo(id, 1);
+            return id;
         }
-    }
 
-    public static FieldOrExecutable.ExecutablesWrapper getStaticExecutables(int methodId) {
-        synchronized (STATIC_EXECUTABLES_LOCK) {
-            return FAKE_STATIC_EXECUTABLES.get(methodId);
+        public synchronized T get(int id) {
+            return objects.get(id);
         }
-    }
 
-    public static void removeStaticExecutables(int executablesId) {
-        synchronized (STATIC_EXECUTABLES_LOCK) {
-            final var executables = FAKE_STATIC_EXECUTABLES.remove(executablesId);
-            if (executables != null) {
-                STATIC_EXECUTABLES_IDS.removeInt(executables);
-            }
-        }
-    }
-
-    public static int getStaticFieldId(FieldOrExecutable.FieldWrapper field) {
-        synchronized (STATIC_FIELDS_LOCK) {
-            final int oldIndex = STATIC_FIELD_IDS.getInt(field);
-            if (oldIndex != NO_ID) {
-                return oldIndex;
-            }
-            final int index = STATIC_FIELD_IDS.size();
-            STATIC_FIELD_IDS.put(field, index);
-            FAKE_STATIC_FIELDS.put(index, field);
-            return index;
-        }
-    }
-
-    public static FieldOrExecutable.FieldWrapper getStaticField(int fieldId) {
-        synchronized (STATIC_FIELDS_LOCK) {
-            return FAKE_STATIC_FIELDS.get(fieldId);
-        }
-    }
-
-    public static void removeStaticField(int fieldId) {
-        synchronized (STATIC_FIELDS_LOCK) {
-            final var field = FAKE_STATIC_FIELDS.remove(fieldId);
-            if (field != null) {
-                STATIC_FIELD_IDS.removeInt(field);
+        public synchronized void remove(int id) {
+            final int oldRefCount = refcounts.addTo(id, -1);
+            if (oldRefCount == 1) {
+                final T obj = objects.remove(id);
+                ids.removeInt(obj);
+                refcounts.remove(id);
+            } else if (oldRefCount < 1) {
+                throw new IllegalStateException("refcount for " + id + " became negative");
             }
         }
     }

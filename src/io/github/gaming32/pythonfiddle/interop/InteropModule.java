@@ -6,7 +6,6 @@ import io.github.gaming32.pythonfiddle.PythonException;
 import io.github.gaming32.pythonfiddle.TupleUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.StringJoiner;
 
@@ -87,11 +86,11 @@ public class InteropModule {
         }
         return switch (JavaObjectIndex.findClassAttribute(ownerId, name)) {
             case null -> InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
-            case FieldOrExecutable.ExecutablesWrapper executables -> {
-                final int id = JavaObjectIndex.getStaticExecutablesId(executables);
+            case FieldOrMethod.MethodWrapper method -> {
+                final int id = JavaObjectIndex.STATIC_METHODS.getId(method);
                 yield InteropPythonObjects.createFakeJavaStaticMethod(owner, nameObject, id);
             }
-            case FieldOrExecutable.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.getStaticFieldId(field));
+            case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.STATIC_FIELDS.getId(field));
         };
     }
 
@@ -117,7 +116,7 @@ public class InteropModule {
             return MemorySegment.NULL;
         }
 
-        final FieldOrExecutable.ExecutablesWrapper method = JavaObjectIndex.getStaticExecutables(methodId);
+        final FieldOrMethod.MethodWrapper method = JavaObjectIndex.STATIC_METHODS.get(methodId);
         if (method == null) {
             return InteropUtils.raiseException(PyExc_SystemError(), "method with id " + methodId + " doesn't exist");
         }
@@ -155,7 +154,7 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 1)) {
             return MemorySegment.NULL;
         }
-        final FieldOrExecutable.FieldWrapper field = getStaticFieldFromArg(args[0]);
+        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
         if (field == null) {
             return MemorySegment.NULL;
         }
@@ -173,7 +172,7 @@ public class InteropModule {
         if (!InteropUtils.checkArity(args, 2)) {
             return MemorySegment.NULL;
         }
-        final FieldOrExecutable.FieldWrapper field = getStaticFieldFromArg(args[0]);
+        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(args[0]);
         if (field == null) {
             return MemorySegment.NULL;
         }
@@ -194,12 +193,12 @@ public class InteropModule {
     }
 
     @Nullable
-    private static FieldOrExecutable.FieldWrapper getStaticFieldFromArg(MemorySegment idArg) {
+    private static FieldOrMethod.FieldWrapper getStaticFieldFromArg(MemorySegment idArg) {
         final Integer fieldId = InteropUtils.getInt(idArg);
         if (fieldId == null) {
             return null;
         }
-        final FieldOrExecutable.FieldWrapper field = JavaObjectIndex.getStaticField(fieldId);
+        final FieldOrMethod.FieldWrapper field = JavaObjectIndex.STATIC_FIELDS.get(fieldId);
         if (field == null) {
             InteropUtils.raiseException(PyExc_SystemError(), "field with id " + fieldId + " doesn't exist");
             return null;
@@ -218,7 +217,7 @@ public class InteropModule {
         if (methodId == null) {
             return MemorySegment.NULL;
         }
-        JavaObjectIndex.removeStaticExecutables(methodId);
+        JavaObjectIndex.STATIC_METHODS.remove(methodId);
         return _Py_NoneStruct();
     }
 
@@ -233,7 +232,7 @@ public class InteropModule {
         if (fieldId == null) {
             return MemorySegment.NULL;
         }
-        JavaObjectIndex.removeStaticField(fieldId);
+        JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
         return _Py_NoneStruct();
     }
 }
