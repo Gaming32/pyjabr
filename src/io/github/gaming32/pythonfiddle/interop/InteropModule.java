@@ -31,11 +31,11 @@ public class InteropModule {
     }
 
     /**
-     * {@code remove_class(id: int) -> None}
+     * {@code remove_class(class_id: int) -> None}
      */
     @PythonFunction
-    public static void removeClass(int id) {
-        JavaObjectIndex.removeClass(id);
+    public static void removeClass(int classId) {
+        JavaObjectIndex.removeClass(classId);
     }
 
     /**
@@ -163,66 +163,66 @@ public class InteropModule {
     }
 
     /**
-     * {@code remove_static_method(id: int) -> None}
+     * {@code remove_static_method(method_id: int) -> None}
      */
     @PythonFunction
-    public static void removeStaticMethod(int id) {
-        JavaObjectIndex.STATIC_METHODS.remove(id);
+    public static void removeStaticMethod(int method_id) {
+        JavaObjectIndex.STATIC_METHODS.remove(method_id);
     }
 
     /**
-     * {@code remove_static_field(id: int) -> None}
+     * {@code remove_static_field(field_id: int) -> None}
      */
     @PythonFunction
-    public static void removeStaticField(int id) {
-        JavaObjectIndex.STATIC_FIELDS.remove(id);
+    public static void removeStaticField(int fieldId) {
+        JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
     }
 
     /**
-     * {@code reflect_class_object(id: int) -> FakeJavaObject}
+     * {@code reflect_class_object(class_id: int) -> FakeJavaObject}
      */
     @PythonFunction
-    public static Object reflectClassObject(int id) {
-        return JavaObjectIndex.getClassById(id);
+    public static Object reflectClassObject(int classId) {
+        return JavaObjectIndex.getClassById(classId);
     }
 
     /**
-     * {@code remove_object(id: int) -> None}
+     * {@code remove_object(object_id: int) -> None}
      */
     @PythonFunction
-    private static void removeObject(int id) {
-        JavaObjectIndex.OBJECTS.remove(id);
+    private static void removeObject(int objectId) {
+        JavaObjectIndex.OBJECTS.remove(objectId);
     }
 
     /**
-     * {@code to_string(id: int) -> str}
+     * {@code to_string(object_id: int) -> str}
      */
     @PythonFunction
-    private static String toString(int id) {
-        return Objects.toString(JavaObjectIndex.OBJECTS.get(id));
+    private static String toString(int objectId) {
+        return Objects.toString(JavaObjectIndex.OBJECTS.get(objectId));
     }
 
     /**
-     * {@code hash_code(id: int) -> int}
+     * {@code hash_code(object_id: int) -> int}
      */
     @PythonFunction
-    public static int hashCode(int id) {
-        return Objects.hashCode(JavaObjectIndex.OBJECTS.get(id));
+    public static int hashCode(int objectId) {
+        return Objects.hashCode(JavaObjectIndex.OBJECTS.get(objectId));
     }
 
     /**
-     * {@code identity_string(id: int) -> str}
+     * {@code identity_string(object_id: int) -> str}
      */
     @PythonFunction
-    public static String identityString(int id) {
-        return Objects.toIdentityString(JavaObjectIndex.OBJECTS.get(id));
+    public static String identityString(int objectId) {
+        return Objects.toIdentityString(JavaObjectIndex.OBJECTS.get(objectId));
     }
 
     /**
-     * {@code identity_hash(id: int) -> int}
+     * {@code identity_hash(object_id: int) -> int}
      */
     @PythonFunction
-    public static int identityHash(int id) {
-        return System.identityHashCode(JavaObjectIndex.OBJECTS.get(id));
+    public static int identityHash(int objectId) {
+        return System.identityHashCode(JavaObjectIndex.OBJECTS.get(objectId));
     }
 }
