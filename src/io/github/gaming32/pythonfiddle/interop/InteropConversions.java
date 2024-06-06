@@ -10,6 +10,8 @@ import static org.python.Python_h.*;
 import static io.github.gaming32.pythonfiddle.PythonUtil.*;
 
 public class InteropConversions {
+    private static final MemorySegment ID_FIELD = Arena.global().allocateFrom("_id");
+
     public static Object pythonToJava(MemorySegment obj, Class<?> target) throws IllegalArgumentException {
         if (target == Object.class) {
             return pythonToJava(obj);
@@ -31,7 +33,7 @@ public class InteropConversions {
         }
         if (target == String.class) {
             if (!PyUnicode_Check(obj)) {
-                throw new IllegalArgumentException("Cannot convert " + toString(obj) + " to String");
+                throw new IllegalArgumentException("Cannot convert " + toString(Py_TYPE(obj)) + " to String");
             }
             final String result = InteropUtils.getString(obj);
             if (result == null) {
@@ -42,7 +44,11 @@ public class InteropConversions {
         if (target == MemorySegment.class) {
             return obj;
         }
-        throw new UnsupportedOperationException("Only primitive and string conversions are supported at the moment");
+        final Object realObject = fakePythonToJava(obj);
+        if (target.isInstance(realObject)) {
+            return realObject;
+        }
+        throw new IllegalArgumentException("Cannot convert " + toString(Py_TYPE(obj)) + " to " + target);
     }
 
     public static Object pythonToJava(MemorySegment obj) {
@@ -68,6 +74,10 @@ public class InteropConversions {
         }
         if (PyFloat_Check(obj)) {
             return PyLong_AsDouble(obj);
+        }
+        final Object realObject = fakePythonToJava(obj);
+        if (realObject != null) {
+            return realObject;
         }
         return obj;
     }
@@ -160,6 +170,34 @@ public class InteropConversions {
             }
         }
         throw new AssertionError("primitiveFromPython called with non-primitive target " + target);
+    }
+
+    private static Object fakePythonToJava(MemorySegment obj) {
+        final int isInstance = PyObject_IsInstance(obj, InteropPythonObjects.FAKE_JAVA_OBJECT.get());
+        return switch (isInstance) {
+            case 0 -> null;
+            default -> {
+                final MemorySegment idObj = PyObject_GetAttrString(obj, ID_FIELD);
+                if (idObj.equals(MemorySegment.NULL)) {
+                    throw new IllegalArgumentException(
+                        "Could not get _id field of FakeJavaObject",
+                        PythonException.moveFromPython(true)
+                    );
+                }
+                final int id = PyLong_AsLong(obj);
+                if (id == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                    throw new IllegalArgumentException(
+                        "Could not read _id field of FakeJavaObject",
+                        PythonException.moveFromPython(true)
+                    );
+                }
+                yield JavaObjectIndex.OBJECTS.get(id);
+            }
+            case -1 -> throw new IllegalArgumentException(
+                "Could not check isinstance(FakeJavaObject)",
+                PythonException.moveFromPython(true)
+            );
+        };
     }
 
     public static MemorySegment javaToPython(Object obj) {
