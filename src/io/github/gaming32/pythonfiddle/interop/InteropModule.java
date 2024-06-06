@@ -6,6 +6,7 @@ import io.github.gaming32.pythonfiddle.module.PythonFunction;
 import io.github.gaming32.pythonfiddle.module.PythonModule;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -15,6 +16,8 @@ import static org.python.Python_h.*;
 
 @PythonModule("_java")
 public class InteropModule {
+    private static final MemorySegment JAVA_EXCEPTION_FIELD = Arena.global().allocateFrom("java_exception");
+
     /**
      * {@code find_class(name: str) -> int | None}
      */
@@ -80,7 +83,6 @@ public class InteropModule {
         try {
             result = InvokeHandler.invoke(method, null, argsArray);
         } catch (Throwable t) {
-            // TODO: Create fake object for Java exception
             final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
             if (errorClass.equals(MemorySegment.NULL)) {
                 return MemorySegment.NULL;
@@ -89,6 +91,11 @@ public class InteropModule {
             if (exception == null) {
                 return MemorySegment.NULL;
             }
+            final MemorySegment fakeException = InteropConversions.javaToPython(t);
+            if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
+                PyErr_Clear();
+            }
+            Py_DecRef(fakeException);
             PyErr_SetRaisedException(exception);
             return MemorySegment.NULL;
         }

@@ -1,6 +1,6 @@
 from typing import Any
 
-from _java_init import FakeJavaObject, FakeJavaStaticMethod, _JavaAttributeNotFoundType
+from java_api import FakeJavaObject, FakeJavaStaticMethod, _JavaAttributeNotFoundType
 
 
 def find_class(name: str) -> int | None: ...

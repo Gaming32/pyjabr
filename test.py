@@ -1,3 +1,8 @@
-from java.java.lang import String
+from java.java.util import Objects
 
-print(String('hi'))
+from java_api import JavaError
+
+try:
+    Objects.requireNonNull(None, 'This is a message')
+except JavaError as e:
+    print(e.java_exception)

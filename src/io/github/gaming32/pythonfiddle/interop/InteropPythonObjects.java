@@ -9,9 +9,9 @@ import java.util.function.Supplier;
 import static org.python.Python_h.*;
 
 public class InteropPythonObjects {
-    public static final Supplier<MemorySegment> _JAVA_INIT = Suppliers.memoize(() -> {
+    public static final Supplier<MemorySegment> JAVA_API = Suppliers.memoize(() -> {
         try (Arena arena = Arena.ofConfined()) {
-            return checkNotNull(PyImport_ImportModule(arena.allocateFrom("_java_init")));
+            return checkNotNull(PyImport_ImportModule(arena.allocateFrom("java_api")));
         }
     });
     public static final Supplier<MemorySegment> JAVA_ATTRIBUTE_NOT_FOUND = Suppliers.memoize(() -> getInitAttr("JavaAttributeNotFound"));
@@ -55,7 +55,7 @@ public class InteropPythonObjects {
     }
 
     private static MemorySegment getInitAttr(String attr) {
-        final MemorySegment initModule = _JAVA_INIT.get();
+        final MemorySegment initModule = JAVA_API.get();
         if (initModule.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }

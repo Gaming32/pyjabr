@@ -7,8 +7,8 @@ from typing import Sequence, Any, Self, Iterator
 
 import _java
 
-JAVA_PACKAGE_PREFIX = 'java.'
-CONSTRUCTOR_NAME = '<init>'
+_JAVA_PACKAGE_PREFIX = 'java.'
+_CONSTRUCTOR_NAME = '<init>'
 
 
 class _JavaAttributeNotFoundType:
@@ -64,6 +64,7 @@ class FakeJavaObject:
     def __setattr__(self, key: str, value: Any) -> None:
         if key in FakeJavaObject.__slots__:
             return super().__setattr__(key, value)
+        raise NotImplementedError('FakeJavaObject.__setattr__')
 
     def __iter__(self) -> Iterator[Any]:
         it = self.iterator()
@@ -162,7 +163,7 @@ class FakeJavaClass:
         except KeyError:
             attr = _java.find_class_attribute(self.class_name, self._id, name)
             if isinstance(attr, _JavaAttributeNotFoundType):
-                if name == CONSTRUCTOR_NAME:
+                if name == _CONSTRUCTOR_NAME:
                     raise AttributeError(
                         f'no public constructor for Java class {self.class_name}',
                         name=name, obj=self
@@ -175,7 +176,7 @@ class FakeJavaClass:
             return attr
 
     def __call__(self, *args: Any) -> Any:
-        return getattr(self, CONSTRUCTOR_NAME)(*args)
+        return getattr(self, _CONSTRUCTOR_NAME)(*args)
 
     def reflect_java(self) -> FakeJavaObject:
         return _java.reflect_class_object(self._id)
@@ -225,13 +226,13 @@ class JavaImportFinder(MetaPathFinder):
     ) -> ModuleSpec | None:
         if path:
             return None
-        if not fullname.startswith(JAVA_PACKAGE_PREFIX):
-            if fullname == JAVA_PACKAGE_PREFIX[:-1]:
+        if not fullname.startswith(_JAVA_PACKAGE_PREFIX):
+            if fullname == _JAVA_PACKAGE_PREFIX[:-1]:
                 java_package = ''
             else:
                 return None
         else:
-            java_package = fullname.removeprefix(JAVA_PACKAGE_PREFIX)
+            java_package = fullname.removeprefix(_JAVA_PACKAGE_PREFIX)
         return ModuleSpec(fullname, JavaImportLoader(java_package), is_package=True)
 
 

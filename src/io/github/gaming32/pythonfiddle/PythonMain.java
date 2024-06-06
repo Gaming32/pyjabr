@@ -20,7 +20,7 @@ public class PythonMain {
 
         Py_Initialize();
         try {
-            runResource("_java_init.py", "_java_init");
+            runResource("java_api.py", "java_api");
             runPath(Path.of("test.py"), "test");
         } finally {
             Py_Finalize();
