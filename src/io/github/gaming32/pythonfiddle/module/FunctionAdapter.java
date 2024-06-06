@@ -3,6 +3,7 @@ package io.github.gaming32.pythonfiddle.module;
 import com.google.common.primitives.Primitives;
 import io.github.gaming32.pythonfiddle.interop.InteropConversions;
 import io.github.gaming32.pythonfiddle.interop.InteropUtils;
+import org.python.Python_h;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.LambdaMetafactory;
@@ -33,7 +34,8 @@ class FunctionAdapter {
     private static final MethodHandle PYTHON_TO_JAVA;
     private static final MethodHandle JAVA_TO_PYTHON;
 
-    private static final Map<Class<?>, MethodHandle> TYPE_SPECIFIC_ADAPTERS;
+    private static final Map<Class<?>, MethodHandle> SPECIALIZED_ARG_ADAPTERS;
+    private static final Map<Class<?>, MethodHandle> SPECIALIZED_RETURN_ADAPTERS;
 
     static {
         try {
@@ -55,12 +57,20 @@ class FunctionAdapter {
                 MethodType.methodType(MemorySegment.class, Object.class)
             );
 
-            TYPE_SPECIFIC_ADAPTERS = Map.of(
-                String.class, findTypeSpecificAdapter(lookup, "getString", String.class),
-                int.class, findTypeSpecificAdapter(lookup, "getInt", int.class),
-                long.class, findTypeSpecificAdapter(lookup, "getLong", long.class),
-                double.class, findTypeSpecificAdapter(lookup, "getDouble", double.class),
-                float.class, findTypeSpecificAdapter(lookup, "getFloat", float.class)
+            SPECIALIZED_ARG_ADAPTERS = Map.of(
+                String.class, findSpecializedArgAdapter(lookup, "getString", String.class),
+                int.class, findSpecializedArgAdapter(lookup, "getInt", int.class),
+                long.class, findSpecializedArgAdapter(lookup, "getLong", long.class),
+                double.class, findSpecializedArgAdapter(lookup, "getDouble", double.class)
+            );
+            SPECIALIZED_RETURN_ADAPTERS = Map.of(
+                String.class, lookup.findStatic(
+                    InteropConversions.class, "createPythonString",
+                    MethodType.methodType(MemorySegment.class, String.class)
+                ),
+                int.class, findSpecializedReturnAdapter(lookup, "PyLong_FromLong", int.class),
+                long.class, findSpecializedReturnAdapter(lookup, "PyLong_FromLongLong", long.class),
+                double.class, findSpecializedReturnAdapter(lookup, "PyFloat_FromDouble", double.class)
             );
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(e);
@@ -89,18 +99,19 @@ class FunctionAdapter {
         final Class<?>[] targetArgs = method.getParameterTypes();
         final Class<?> returnType = method.getReturnType();
         MethodHandle handle = lookup.unreflect(method);
-        handle = MethodHandles.filterArguments(handle, 0, createAdapters(targetArgs));
+        handle = MethodHandles.filterArguments(handle, 0, createArgAdapters(targetArgs));
         if (returnType != MemorySegment.class) {
             if (returnType == void.class) {
                 handle = MethodHandles.filterReturnValue(handle, CONSTANT_NONE);
             } else {
-                handle = MethodHandles.filterReturnValue(
-                    handle,
-                    JAVA_TO_PYTHON.asType(MethodType.methodType(MemorySegment.class, returnType))
-                );
+                MethodHandle returnAdapter = SPECIALIZED_RETURN_ADAPTERS.get(returnType);
+                if (returnAdapter == null) {
+                    returnAdapter = JAVA_TO_PYTHON.asType(MethodType.methodType(MemorySegment.class, returnType));
+                }
+                handle = MethodHandles.filterReturnValue(handle, returnAdapter);
             }
         }
-        if (adaptCanThrowSpecial(targetArgs)) {
+        if (argAdaptersCanThrowSpecial(targetArgs)) {
             handle = MethodHandles.catchException(handle, AdaptFailedException.class, CATCH_ADAPT_FAILED);
         }
         handle = handle.asSpreader(MemorySegment[].class, targetArgs.length);
@@ -112,13 +123,13 @@ class FunctionAdapter {
         return MethodHandles.dropArguments(handle, 0, MemorySegment.class);
     }
 
-    private static MethodHandle[] createAdapters(Class<?>[] targetArgs) {
+    private static MethodHandle[] createArgAdapters(Class<?>[] targetArgs) {
         final MethodHandle[] result = new MethodHandle[targetArgs.length];
         for (int i = 0; i < result.length; i++) {
             if (targetArgs[i] == MemorySegment.class) continue;
-            final MethodHandle specific = TYPE_SPECIFIC_ADAPTERS.get(targetArgs[i]);
-            if (specific != null) {
-                result[i] = specific;
+            final MethodHandle specialized = SPECIALIZED_ARG_ADAPTERS.get(targetArgs[i]);
+            if (specialized != null) {
+                result[i] = specialized;
             } else {
                 result[i] = MethodHandles.insertArguments(PYTHON_TO_JAVA, 1, targetArgs[i]);
             }
@@ -126,16 +137,16 @@ class FunctionAdapter {
         return result;
     }
 
-    private static boolean adaptCanThrowSpecial(Class<?>[] targetArgs) {
+    private static boolean argAdaptersCanThrowSpecial(Class<?>[] targetArgs) {
         for (final Class<?> arg : targetArgs) {
-            if (TYPE_SPECIFIC_ADAPTERS.containsKey(arg)) {
+            if (SPECIALIZED_ARG_ADAPTERS.containsKey(arg)) {
                 return true;
             }
         }
         return false;
     }
 
-    private static MethodHandle findTypeSpecificAdapter(
+    private static MethodHandle findSpecializedArgAdapter(
         MethodHandles.Lookup lookup, String name, Class<?> type
     ) throws ReflectiveOperationException {
         final Class<?> wrapped = Primitives.wrap(type);
@@ -156,6 +167,21 @@ class FunctionAdapter {
                 )
             )
         );
+    }
+
+    private static MethodHandle findSpecializedReturnAdapter(
+        MethodHandles.Lookup lookup, String name, Class<?> type
+    ) throws ReflectiveOperationException {
+        final MethodType targetType = MethodType.methodType(MemorySegment.class, type);
+        Class<?> searchClass = Python_h.class;
+        while (searchClass != Object.class) {
+            try {
+                return lookup.findStatic(searchClass, name, targetType);
+            } catch (NoSuchMethodException _) {
+            }
+            searchClass = searchClass.getSuperclass();
+        }
+        throw new NoSuchMethodException("Python_h." + name);
     }
 
     private static class AdaptFailedException extends RuntimeException {
