@@ -137,7 +137,10 @@ class FakeJavaObject:
             return attr
 
     def __iter__(self) -> Iterator[Any]:
-        it = self.iterator()
+        try:
+            it = self.iterator()
+        except AttributeError:
+            it = self
         while it.hasNext():
             yield it.next()
 
