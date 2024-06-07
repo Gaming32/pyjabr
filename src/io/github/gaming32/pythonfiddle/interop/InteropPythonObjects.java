@@ -17,7 +17,7 @@ public class InteropPythonObjects {
     public static final Supplier<MemorySegment> JAVA_ATTRIBUTE_NOT_FOUND = Suppliers.memoize(() -> getInitAttr("JavaAttributeNotFound"));
     public static final Supplier<MemorySegment> JAVA_ERROR = Suppliers.memoize(() -> getInitAttr("JavaError"));
     public static final Supplier<MemorySegment> FAKE_JAVA_OBJECT = Suppliers.memoize(() -> getInitAttr("FakeJavaObject"));
-    public static final Supplier<MemorySegment> FAKE_JAVA_STATIC_METHOD = Suppliers.memoize(() -> getInitAttr("FakeJavaStaticMethod"));
+    public static final Supplier<MemorySegment> FAKE_JAVA_METHOD = Suppliers.memoize(() -> getInitAttr("FakeJavaMethod"));
 
     public static MemorySegment createFakeJavaObject(int id, MemorySegment classNameObject, int classId) {
         final MemorySegment idObject = PyLong_FromLong(id);
@@ -39,13 +39,13 @@ public class InteropPythonObjects {
         return InteropUtils.invokeCallable(constructor, idObject, classNameObject, classIdObject);
     }
 
-    public static MemorySegment createFakeJavaStaticMethod(MemorySegment owner, MemorySegment nameObject, int id) {
+    public static MemorySegment createFakeJavaMethod(MemorySegment owner, MemorySegment nameObject, int id) {
         final MemorySegment idObject = PyLong_FromLong(id);
         if (idObject.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }
 
-        final MemorySegment constructor = FAKE_JAVA_STATIC_METHOD.get();
+        final MemorySegment constructor = FAKE_JAVA_METHOD.get();
         if (constructor.equals(MemorySegment.NULL)) {
             return MemorySegment.NULL;
         }

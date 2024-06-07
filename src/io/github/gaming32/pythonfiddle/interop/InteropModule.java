@@ -39,10 +39,15 @@ public class InteropModule {
     }
 
     /**
-     * {@code find_class_attribute(owner_name: str, owner_id: int, name: str) -> FakeJavaStaticMethod | int | _JavaAttributeNotFoundType}
+     * {@code find_class_attribute(
+     *     owner_name: str,
+     *     owner_id: int,
+     *     name: str,
+     *     is_static: bool
+     * ) -> FakeJavaMethod | int | _JavaAttributeNotFoundType}
      */
     @PythonFunction
-    public static MemorySegment findClassAttribute(MemorySegment ownerName, int ownerId, MemorySegment name) {
+    public static MemorySegment findClassAttribute(MemorySegment ownerName, int ownerId, MemorySegment name, int isStatic) {
         if (!PyUnicode_Check(ownerName)) {
             return InteropUtils.raiseException(PyExc_TypeError(), "owner_name must be str");
         }
@@ -52,13 +57,13 @@ public class InteropModule {
             return MemorySegment.NULL;
         }
 
-        return switch (JavaObjectIndex.findClassAttribute(ownerId, attrName)) {
+        return switch (JavaObjectIndex.findClassAttribute(ownerId, attrName, isStatic != 0)) {
             case null -> InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
+            case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.FIELDS.getId(field));
             case FieldOrMethod.MethodWrapper method -> {
-                final int id = JavaObjectIndex.STATIC_METHODS.getId(method);
-                yield InteropPythonObjects.createFakeJavaStaticMethod(ownerName, name, id);
+                final int id = JavaObjectIndex.METHODS.getId(method);
+                yield InteropPythonObjects.createFakeJavaMethod(ownerName, name, id);
             }
-            case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.STATIC_FIELDS.getId(field));
         };
     }
 
@@ -75,7 +80,7 @@ public class InteropModule {
             return MemorySegment.NULL;
         }
 
-        final FieldOrMethod.MethodWrapper method = JavaObjectIndex.STATIC_METHODS.get(methodId);
+        final FieldOrMethod.MethodWrapper method = JavaObjectIndex.METHODS.get(methodId);
         if (method == null) {
             return InteropUtils.raiseException(PyExc_SystemError(), "method with id " + methodId + " doesn't exist");
         }
@@ -83,21 +88,7 @@ public class InteropModule {
         try {
             result = InvokeHandler.invoke(method, null, argsArray);
         } catch (Throwable t) {
-            final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
-            if (errorClass.equals(MemorySegment.NULL)) {
-                return MemorySegment.NULL;
-            }
-            final MemorySegment exception = PyObject_CallOneArg(errorClass, InteropConversions.createPythonString(t.toString()));
-            if (exception == null) {
-                return MemorySegment.NULL;
-            }
-            final MemorySegment fakeException = InteropConversions.javaToPython(t);
-            if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
-                PyErr_Clear();
-            }
-            Py_DecRef(fakeException);
-            PyErr_SetRaisedException(exception);
-            return MemorySegment.NULL;
+            return reraiseJavaException(t);
         }
         if (result == null) {
             final StringJoiner error = new StringJoiner(", ", "no overload matches args (", ")");
@@ -107,6 +98,25 @@ public class InteropModule {
             return InteropUtils.raiseException(PyExc_TypeError(), error.toString());
         }
         return result;
+    }
+
+    @SuppressWarnings("SameReturnValue")
+    private static MemorySegment reraiseJavaException(Throwable t) {
+        final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
+        if (errorClass.equals(MemorySegment.NULL)) {
+            return MemorySegment.NULL;
+        }
+        final MemorySegment exception = PyObject_CallOneArg(errorClass, InteropConversions.createPythonString(t.toString()));
+        if (exception == null) {
+            return MemorySegment.NULL;
+        }
+        final MemorySegment fakeException = InteropConversions.javaToPython(t);
+        if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
+            PyErr_Clear();
+        }
+        Py_DecRef(fakeException);
+        PyErr_SetRaisedException(exception);
+        return MemorySegment.NULL;
     }
 
     /**
@@ -119,11 +129,15 @@ public class InteropModule {
             return MemorySegment.NULL;
         }
 
+        final Object fieldValue;
         try {
-            return InteropConversions.javaToPython(field.field().get(null));
+            fieldValue = field.field().get(null);
+        } catch (NullPointerException e) {
+            return raiseNotStatic(field);
         } catch (ReflectiveOperationException e) {
             throw new AssertionError(e);
         }
+        return InteropConversions.javaToPython(fieldValue);
     }
 
     /**
@@ -148,13 +162,15 @@ public class InteropModule {
             return MemorySegment.NULL;
         } catch (IllegalAccessException e) {
             return InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
+        } catch (NullPointerException e) {
+            return raiseNotStatic(field);
         }
         return _Py_NoneStruct();
     }
 
     @Nullable
     private static FieldOrMethod.FieldWrapper getStaticFieldFromArg(int fieldId) {
-        final FieldOrMethod.FieldWrapper field = JavaObjectIndex.STATIC_FIELDS.get(fieldId);
+        final FieldOrMethod.FieldWrapper field = JavaObjectIndex.FIELDS.get(fieldId);
         if (field == null) {
             InteropUtils.raiseException(PyExc_SystemError(), "field with id " + fieldId + " doesn't exist");
             return null;
@@ -162,12 +178,23 @@ public class InteropModule {
         return field;
     }
 
+    private static MemorySegment raiseNotStatic(FieldOrMethod member) {
+        final String type = switch (member) {
+            case FieldOrMethod.FieldWrapper _ -> "field";
+            case FieldOrMethod.MethodWrapper _ -> "method";
+        };
+        return InteropUtils.raiseException(
+            PyExc_AttributeError(),
+            type + ' ' + member.owner().getName() + '.' + member.name() + " is not static"
+        );
+    }
+
     /**
      * {@code remove_static_method(method_id: int) -> None}
      */
     @PythonFunction
     public static void removeStaticMethod(int method_id) {
-        JavaObjectIndex.STATIC_METHODS.remove(method_id);
+        JavaObjectIndex.METHODS.remove(method_id);
     }
 
     /**
@@ -175,7 +202,7 @@ public class InteropModule {
      */
     @PythonFunction
     public static void removeStaticField(int fieldId) {
-        JavaObjectIndex.STATIC_FIELDS.remove(fieldId);
+        JavaObjectIndex.FIELDS.remove(fieldId);
     }
 
     /**

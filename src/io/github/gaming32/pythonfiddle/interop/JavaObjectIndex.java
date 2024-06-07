@@ -1,6 +1,5 @@
 package io.github.gaming32.pythonfiddle.interop;
 
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -25,10 +24,10 @@ public class JavaObjectIndex {
     private static final Int2IntOpenHashMap CLASS_REFCOUNTS = new Int2IntOpenHashMap();
 
     private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
-    private static final Map<Pair<Class<?>, String>, FieldOrMethod> CLASS_ATTRIBUTES = new HashMap<>();
+    private static final Map<ClassAttributeKey, FieldOrMethod> CLASS_ATTRIBUTES = new HashMap<>();
 
-    public static final ObjectIndex<FieldOrMethod.FieldWrapper> STATIC_FIELDS = new ObjectIndex<>();
-    public static final ObjectIndex<FieldOrMethod.MethodWrapper> STATIC_METHODS = new ObjectIndex<>();
+    public static final ObjectIndex<FieldOrMethod.FieldWrapper> FIELDS = new ObjectIndex<>();
+    public static final ObjectIndex<FieldOrMethod.MethodWrapper> METHODS = new ObjectIndex<>();
     public static final ObjectIndex<Object> OBJECTS = new ObjectIndex<>();
 
     static {
@@ -91,11 +90,18 @@ public class JavaObjectIndex {
     }
 
     @Nullable
-    public static FieldOrMethod findClassAttribute(int ownerId, String name) {
-        final Pair<Class<?>, String> key = Pair.of(getClassById(ownerId), name);
-        synchronized (CLASS_ATTRIBUTES_LOCK) {
-            return CLASS_ATTRIBUTES.computeIfAbsent(key, k -> FieldOrMethod.lookup(k.left(), k.right(), true));
+    public static FieldOrMethod findClassAttribute(int ownerId, String name, boolean isStatic) {
+        final Class<?> owner = getClassById(ownerId);
+        if (owner == null) {
+            return null;
         }
+        final ClassAttributeKey key = new ClassAttributeKey(owner, name, isStatic);
+        synchronized (CLASS_ATTRIBUTES_LOCK) {
+            return CLASS_ATTRIBUTES.computeIfAbsent(key, k -> FieldOrMethod.lookup(k.clazz, k.name, k.isStatic));
+        }
+    }
+
+    private record ClassAttributeKey(Class<?> clazz, String name, boolean isStatic) {
     }
 
     public static final class ObjectIndex<T> {

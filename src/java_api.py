@@ -89,7 +89,7 @@ class FakeJavaObject:
         return _java.identity_string(self._id)
 
 
-class FakeJavaStaticMethod:
+class FakeJavaMethod:
     __slots__ = ('owner_name', 'name', '_id')
 
     owner_name: str
@@ -102,10 +102,10 @@ class FakeJavaStaticMethod:
         self._id = id
 
     def __repr__(self) -> str:
-        return f'<static Java method {self.owner_name}.{self.name}>'
+        return f'<Java method {self.owner_name}.{self.name}>'
 
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, FakeJavaStaticMethod):
+        if not isinstance(other, FakeJavaMethod):
             return NotImplemented
         return self._id == other._id
 
@@ -121,7 +121,7 @@ class FakeJavaClass:
 
     class_name: str
     _id: int
-    _attributes: dict[str, FakeJavaStaticMethod | int]
+    _attributes: dict[str, FakeJavaMethod | int]
 
     def __init__(self, class_name: str, id: int) -> None:
         self.class_name = class_name
@@ -143,7 +143,7 @@ class FakeJavaClass:
                 _java.remove_static_field(attr)
         self._attributes.clear()
 
-    def __getattr__(self, name: str) -> FakeJavaStaticMethod | Any:
+    def __getattr__(self, name: str) -> FakeJavaMethod | Any:
         attr = self._get_attr(name)
         if isinstance(attr, int):
             attr = _java.get_static_field(attr)
@@ -157,11 +157,11 @@ class FakeJavaClass:
             raise TypeError(f'cannot assign to static method {self.class_name}.{key}')
         _java.set_static_field(attr, value)
 
-    def _get_attr(self, name: str) -> FakeJavaStaticMethod | int:
+    def _get_attr(self, name: str) -> FakeJavaMethod | int:
         try:
             return self._attributes[name]
         except KeyError:
-            attr = _java.find_class_attribute(self.class_name, self._id, name)
+            attr = _java.find_class_attribute(self.class_name, self._id, name, True)
             if isinstance(attr, _JavaAttributeNotFoundType):
                 if name == _CONSTRUCTOR_NAME:
                     raise AttributeError(

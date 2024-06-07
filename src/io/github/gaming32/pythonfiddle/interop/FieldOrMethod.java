@@ -37,19 +37,15 @@ public sealed interface FieldOrMethod {
         } catch (NoSuchMethodException _) {
         }
         try {
-            return FieldWrapper.findField(owner, name, isStatic);
+            return FieldWrapper.findField(owner, name);
         } catch (NoSuchFieldException _) {
         }
         return null;
     }
 
     record FieldWrapper(Field field) implements FieldOrMethod {
-        public static FieldWrapper findField(Class<?> owner, String name, boolean isStatic) throws NoSuchFieldException {
-            final Field field = owner.getField(name);
-            if (Modifier.isStatic(field.getModifiers()) != isStatic) {
-                throw new NoSuchFieldException(owner.getName() + '.' + name);
-            }
-            return new FieldWrapper(field);
+        public static FieldWrapper findField(Class<?> owner, String name) throws NoSuchFieldException {
+            return new FieldWrapper(owner.getField(name));
         }
 
         @Override
