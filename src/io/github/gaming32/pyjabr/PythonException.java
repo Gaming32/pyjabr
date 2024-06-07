@@ -1,19 +1,16 @@
 package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pyjabr.interop.InteropUtils;
 import org.jetbrains.annotations.Nullable;
-import org.python.PyObject;
-import org.python.PyTypeObject;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.nio.charset.StandardCharsets;
 
 import static io.github.gaming32.pyjabr.PythonUtil.PyObject_CallMethodOneArg;
+import static io.github.gaming32.pyjabr.PythonUtil.Py_TYPE;
 import static org.python.Python_h.*;
 
 public class PythonException extends RuntimeException {
-    private static final MemorySegment MODULE_ATTRIBUTE = Arena.global().allocateFrom("__module__");
     private static final MemorySegment TRACEBACK_MODULE = Arena.global().allocateFrom("traceback");
     private static final MemorySegment FORMAT_FUNCTION = Arena.global().allocateFrom("format_exception");
     private static final MemorySegment BLANK_STRING = Arena.global().allocateFrom("");
@@ -54,23 +51,9 @@ public class PythonException extends RuntimeException {
     }
 
     private static String getPythonClass(MemorySegment pythonException) {
-        final MemorySegment pythonType = PyObject.ob_type(pythonException);
-        final MemorySegment module = PyObject_GetAttrString(pythonType, MODULE_ATTRIBUTE);
-        final String prefix;
-        if (!module.equals(MemorySegment.NULL)) {
-            final String basePrefix = InteropUtils.getString(module);
-            if (basePrefix != null) {
-                prefix = basePrefix + '.';
-            } else {
-                PyErr_Clear();
-                prefix = "";
-            }
-        } else {
-            PyErr_Clear();
-            prefix = "";
-        }
-        final MemorySegment typeName = PyTypeObject.tp_name(pythonType);
-        return prefix + typeName.getString(0L, StandardCharsets.UTF_8);
+        final MemorySegment pythonType = Py_TYPE(pythonException);
+        final MemorySegment typeName = PyType_GetQualName(pythonType);
+        return typeName.getString(0L, StandardCharsets.UTF_8);
     }
 
     private static String getPythonMessage(MemorySegment pythonException) {
