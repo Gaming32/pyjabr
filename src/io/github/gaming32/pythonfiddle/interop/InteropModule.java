@@ -45,7 +45,7 @@ public class InteropModule {
      *     owner_id: int,
      *     name: str,
      *     is_static: bool
-     * ) -> FakeJavaMethod | int | _JavaAttributeNotFoundType}
+     * ) -> FakeJavaMethod | FakeJavaClass | int | _JavaAttributeNotFoundType}
      */
     @PythonFunction
     public static MemorySegment findClassAttribute(MemorySegment ownerName, int ownerId, MemorySegment name, int isStatic) {
@@ -59,7 +59,18 @@ public class InteropModule {
         }
 
         return switch (JavaObjectIndex.findClassAttribute(ownerId, attrName, isStatic != 0)) {
-            case null -> InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
+            case null -> {
+                if (isStatic != 0) {
+                    final String innerClassName = InteropUtils.getString(ownerName) + '$' + attrName;
+                    final Integer index = JavaObjectIndex.findClass(innerClassName);
+                    if (index != null) {
+                        yield InteropPythonObjects.createFakeJavaClass(
+                            InteropConversions.createPythonString(innerClassName), index
+                        );
+                    }
+                }
+                yield InteropPythonObjects.JAVA_ATTRIBUTE_NOT_FOUND.get();
+            }
             case FieldOrMethod.FieldWrapper field -> PyLong_FromLong(JavaObjectIndex.FIELDS.getId(field));
             case FieldOrMethod.MethodWrapper method -> {
                 final int id = JavaObjectIndex.METHODS.getId(method);

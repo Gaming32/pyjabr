@@ -132,6 +132,7 @@ class FakeJavaObject:
                     f"instance attribute '{name}' not found on Java class {self.class_name}",
                     name=name, obj=self
                 ) from None
+            assert not isinstance(attr, FakeJavaClass)
             self._attributes[name] = attr
             return attr
 
@@ -163,7 +164,7 @@ class FakeJavaClass:
 
     class_name: str
     _id: int
-    _attributes: dict[str, FakeJavaMethod | int]
+    _attributes: dict[str, 'FakeJavaMethod | FakeJavaClass | int']
 
     def __init__(self, class_name: str, id: int) -> None:
         self.class_name = class_name
@@ -199,7 +200,7 @@ class FakeJavaClass:
             raise TypeError(f'cannot assign to static method {self.class_name}.{key}')
         _java.set_static_field(attr, value)
 
-    def _get_attr(self, name: str) -> FakeJavaMethod | int:
+    def _get_attr(self, name: str) -> 'FakeJavaMethod | FakeJavaClass | int':
         try:
             return self._attributes[name]
         except KeyError:

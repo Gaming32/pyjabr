@@ -1,6 +1,6 @@
 from typing import Any
 
-from java_api import FakeJavaObject, FakeJavaMethod, _JavaAttributeNotFoundType
+from java_api import FakeJavaObject, FakeJavaMethod, _JavaAttributeNotFoundType, FakeJavaClass
 
 
 def find_class(name: str) -> int | None: ...
@@ -12,7 +12,7 @@ def find_class_attribute(
     owner_id: int,
     name: str,
     is_static: bool
-) -> FakeJavaMethod | int | _JavaAttributeNotFoundType: ...
+) -> FakeJavaMethod | FakeJavaClass | int | _JavaAttributeNotFoundType: ...
 
 def invoke_static_method(method_id: int, args: tuple[Any, ...]) -> Any: ...
 
