@@ -1,4 +1,3 @@
-from java.java.lang import String
+from java.java.lang import System
 
-print(String)
-print(String.CaseInsensitiveComparator)
+System.out.println('Hello, world!')
