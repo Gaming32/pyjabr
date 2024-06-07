@@ -23,6 +23,7 @@ public class JavaObjectIndex {
     private static final Object2IntMap<Class<?>> CLASS_IDS_BY_CLASS = new Object2IntOpenHashMap<>();
     private static final Int2ObjectMap<Class<?>> CLASSES_BY_ID = new Int2ObjectOpenHashMap<>();
     private static final Int2IntOpenHashMap CLASS_REFCOUNTS = new Int2IntOpenHashMap();
+    private static int nextClassId;
 
     private static final Object CLASS_ATTRIBUTES_LOCK = new Object();
     private static final Map<ClassAttributeKey, FieldOrMethod> CLASS_ATTRIBUTES = new HashMap<>();
@@ -49,7 +50,7 @@ public class JavaObjectIndex {
                 if (!Modifier.isPublic(clazz.getModifiers())) {
                     return null;
                 }
-                id = CLASS_IDS_BY_NAME.size();
+                id = nextClassId++;
                 CLASS_IDS_BY_NAME.put(className, id);
                 CLASS_IDS_BY_CLASS.put(clazz, id);
                 CLASSES_BY_ID.put(id, clazz);
@@ -63,7 +64,7 @@ public class JavaObjectIndex {
         synchronized (CLASSES_LOCK) {
             int id = CLASS_IDS_BY_CLASS.getInt(clazz);
             if (id == NO_ID) {
-                id = CLASS_IDS_BY_CLASS.size();
+                id = nextClassId++;
                 CLASS_IDS_BY_NAME.put(clazz.getName(), id);
                 CLASS_IDS_BY_CLASS.put(clazz, id);
                 CLASSES_BY_ID.put(id, clazz);
@@ -112,6 +113,7 @@ public class JavaObjectIndex {
         private final Reference2IntMap<T> ids = new Reference2IntOpenHashMap<>();
         private final Int2ReferenceMap<T> objects = new Int2ReferenceOpenHashMap<>();
         private final Int2IntOpenHashMap refcounts = new Int2IntOpenHashMap();
+        private int nextId;
 
         public ObjectIndex() {
             ids.defaultReturnValue(NO_ID);
@@ -120,7 +122,7 @@ public class JavaObjectIndex {
         public synchronized int getId(T obj) {
             int id = ids.getInt(obj);
             if (id == NO_ID) {
-                id = ids.size();
+                id = nextId++;
                 ids.put(obj, id);
                 objects.put(id, obj);
             }
