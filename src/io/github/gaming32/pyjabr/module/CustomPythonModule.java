@@ -20,7 +20,12 @@ public record CustomPythonModule(String name, @Nullable String doc, CustomPython
     }
 
     public static CustomPythonModule fromClass(Class<?> clazz) throws IllegalAccessException {
-        return fromClass(MethodHandles.privateLookupIn(clazz, MethodHandles.lookup()), clazz);
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        try {
+            lookup = MethodHandles.privateLookupIn(clazz, lookup);
+        } catch (IllegalAccessException _) {
+        }
+        return fromClass(lookup, clazz);
     }
 
     public static CustomPythonModule fromClass(MethodHandles.Lookup lookup, Class<?> clazz) throws IllegalAccessException {

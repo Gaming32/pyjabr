@@ -21,7 +21,7 @@ public class PythonMain {
         Py_Initialize();
         try {
             runResource("java_api.py", "java_api");
-            runPath(Path.of("test.py"), "test");
+            runPath(Path.of("test.py"), "__main__");
         } finally {
             Py_Finalize();
         }
