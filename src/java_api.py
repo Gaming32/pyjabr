@@ -27,17 +27,69 @@ class JavaError(RuntimeError):
     java_exception: 'FakeJavaObject'
 
 
+class FakeJavaMethod:
+    __slots__ = ('owner_name', 'name', '_id')
+
+    owner_name: str
+    name: str
+    _id: int
+
+    def __init__(self, owner_name: str, name: str, id: int) -> None:
+        self.owner_name = owner_name
+        self.name = name
+        self._id = id
+
+    def __repr__(self) -> str:
+        return f'<Java method {self.owner_name}.{self.name}>'
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, FakeJavaMethod):
+            return NotImplemented
+        return self._id == other._id
+
+    def __del__(self) -> None:
+        _java.remove_method(self._id)
+
+    def __call__(self, *args: Any) -> Any:
+        return _java.invoke_static_method(self._id, args)
+
+
+class BoundFakeJavaMethod:
+    __slots__ = ('obj', 'method')
+
+    obj: 'FakeJavaObject'
+    method: FakeJavaMethod
+
+    def __init__(self, obj: 'FakeJavaObject', method: FakeJavaMethod):
+        self.obj = obj
+        self.method = method
+
+    def __repr__(self) -> str:
+        return f'<bound Java method {self.method.owner_name}.{self.method.name}>'
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, BoundFakeJavaMethod):
+            return NotImplemented
+        return self.obj == other.obj and self.method == other.method
+
+    def __call__(self, *args: Any) -> Any:
+        # noinspection PyProtectedMember
+        return _java.invoke_instance_method(self.obj._id, self.method._id, args)
+
+
 class FakeJavaObject:
-    __slots__ = ('_id', 'class_name', '_class_id')
+    __slots__ = ('_id', 'class_name', '_class_id', '_attributes')
 
     _id: int
     class_name: str
     _class_id: int
+    _attributes: dict[str, FakeJavaMethod | int]
 
     def __init__(self, id: int, class_name: str, class_id: int) -> None:
         self._id = id
         self.class_name = class_name
         self._class_id = class_id
+        self._attributes = {}
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, FakeJavaObject):
@@ -55,16 +107,33 @@ class FakeJavaObject:
         _java.remove_class(self._class_id)
 
     def __getattr__(self, name: str) -> Any:
-        raise NotImplementedError('FakeJavaObject.__getattr__')
-        # raise AttributeError(
-        #     f"instance attribute '{name}' not found on Java class {self.class_name}",
-        #     name=name, obj=self
-        # ) from None
+        attr = self._get_attr(name)
+        if isinstance(attr, FakeJavaMethod):
+            attr = BoundFakeJavaMethod(self, attr)
+        elif isinstance(attr, int):
+            attr = _java.get_instance_field(self._id, attr)
+        return attr
 
     def __setattr__(self, key: str, value: Any) -> None:
         if key in FakeJavaObject.__slots__:
             return super().__setattr__(key, value)
-        raise NotImplementedError('FakeJavaObject.__setattr__')
+        attr = self._get_attr(key)
+        if not isinstance(attr, int):
+            raise TypeError(f'cannot assign to method {self.class_name}.{key}')
+        _java.set_instance_field(self._id, attr, value)
+
+    def _get_attr(self, name: str) -> FakeJavaMethod | int:
+        try:
+            return self._attributes[name]
+        except KeyError:
+            attr = _java.find_class_attribute(self.class_name, self._class_id, name, False)
+            if isinstance(attr, _JavaAttributeNotFoundType):
+                raise AttributeError(
+                    f"instance attribute '{name}' not found on Java class {self.class_name}",
+                    name=name, obj=self
+                ) from None
+            self._attributes[name] = attr
+            return attr
 
     def __iter__(self) -> Iterator[Any]:
         it = self.iterator()
@@ -87,33 +156,6 @@ class FakeJavaObject:
 
     def __repr__(self) -> str:
         return _java.identity_string(self._id)
-
-
-class FakeJavaMethod:
-    __slots__ = ('owner_name', 'name', '_id')
-
-    owner_name: str
-    name: str
-    _id: int
-
-    def __init__(self, owner_name: str, name: str, id: int) -> None:
-        self.owner_name = owner_name
-        self.name = name
-        self._id = id
-
-    def __repr__(self) -> str:
-        return f'<Java method {self.owner_name}.{self.name}>'
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, FakeJavaMethod):
-            return NotImplemented
-        return self._id == other._id
-
-    def __del__(self) -> None:
-        _java.remove_static_method(self._id)
-
-    def __call__(self, *args: Any) -> Any:
-        return _java.invoke_static_method(self._id, args)
 
 
 class FakeJavaClass:
@@ -140,7 +182,7 @@ class FakeJavaClass:
         _java.remove_class(self._id)
         for attr in self._attributes.values():
             if isinstance(attr, int):
-                _java.remove_static_field(attr)
+                _java.remove_field(attr)
         self._attributes.clear()
 
     def __getattr__(self, name: str) -> FakeJavaMethod | Any:

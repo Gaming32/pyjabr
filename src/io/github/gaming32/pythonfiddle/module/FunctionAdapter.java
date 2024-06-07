@@ -6,8 +6,8 @@ import io.github.gaming32.pythonfiddle.interop.InteropUtils;
 import org.python.Python_h;
 
 import java.lang.foreign.MemorySegment;
-import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandleProxies;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
@@ -78,21 +78,9 @@ class FunctionAdapter {
     }
 
     static CustomPythonFunction.Implementation adapt(MethodHandles.Lookup lookup, Method method) throws IllegalAccessException {
-        final MethodHandle handle = adaptToMH(lookup, method);
-        try {
-            return (CustomPythonFunction.Implementation)LambdaMetafactory.metafactory(
-                lookup,
-                "call",
-                IMPLEMENTATION_TYPE,
-                IMPLEMENTATION_IMPL_TYPE,
-                MethodHandles.exactInvoker(handle.type()),
-                IMPLEMENTATION_IMPL_TYPE
-            ).getTarget().invokeExact(handle);
-        } catch (RuntimeException | Error e) {
-            throw e;
-        } catch (Throwable e) {
-            throw new IllegalStateException(e);
-        }
+        return MethodHandleProxies.asInterfaceInstance(
+            CustomPythonFunction.Implementation.class, adaptToMH(lookup, method)
+        );
     }
 
     private static MethodHandle adaptToMH(MethodHandles.Lookup lookup, Method method) throws IllegalAccessException {

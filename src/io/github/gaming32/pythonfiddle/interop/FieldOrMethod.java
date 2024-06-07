@@ -1,5 +1,6 @@
 package io.github.gaming32.pythonfiddle.interop;
 
+import io.github.gaming32.pythonfiddle.ReflectUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.AccessibleObject;
@@ -10,6 +11,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public sealed interface FieldOrMethod {
     String CONSTRUCTOR_NAME = "<init>";
@@ -66,10 +69,15 @@ public sealed interface FieldOrMethod {
 
     record MethodWrapper(Class<?> owner, String name, List<? extends Executable> executables) implements FieldOrMethod {
         public static MethodWrapper findMethods(Class<?> owner, String name, boolean isStatic) throws NoSuchMethodException {
-            final List<Method> methods = Arrays.stream(owner.getMethods())
+            Stream<Method> methodStream = Arrays.stream(owner.getMethods())
                 .filter(m -> m.getName().equals(name))
-                .filter(m -> Modifier.isStatic(m.getModifiers()) == isStatic)
-                .toList();
+                .filter(m -> Modifier.isStatic(m.getModifiers()) == isStatic);
+            if (!isStatic) {
+                methodStream = methodStream
+                    .map(ReflectUtil::findAccessibleMethod)
+                    .filter(Objects::nonNull);
+            }
+            final List<Method> methods = methodStream.toList();
             if (methods.isEmpty()) {
                 throw new NoSuchMethodException(owner.getName() + '.' + name);
             }

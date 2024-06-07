@@ -72,23 +72,54 @@ public class InteropModule {
      */
     @PythonFunction
     public static MemorySegment invokeStaticMethod(int methodId, MemorySegment args) {
+        return invokeMethod(null, methodId, args);
+    }
+
+    /**
+     * {@code invoke_instance_method(object_id: int, method_id: int, args: tuple[Any, ...]) -> Any}
+     */
+    @PythonFunction
+    public static MemorySegment invokeInstanceMethod(int objectId, int methodId, MemorySegment args) {
+        final Object object = JavaObjectIndex.OBJECTS.get(objectId);
+        if (object == null) {
+            return InteropUtils.raiseException(PyExc_SystemError(), "instance with id " + methodId + " doesn't exist");
+        }
+        return invokeMethod(object, methodId, args);
+    }
+
+    private static MemorySegment invokeMethod(Object owner, int methodId, MemorySegment args) {
+        final FieldOrMethod.MethodWrapper method = JavaObjectIndex.METHODS.get(methodId);
+        if (method == null) {
+            return InteropUtils.raiseException(PyExc_SystemError(), "method with id " + methodId + " doesn't exist");
+        }
+
         if (!PyTuple_Check(args)) {
-            return InteropUtils.raiseException(PyExc_TypeError(), "expected tuple for args in invoke_static_method");
+            return InteropUtils.raiseException(PyExc_TypeError(), "expected tuple for args in invoke_method");
         }
         final MemorySegment[] argsArray = TupleUtil.unpackTuple(args);
         if (argsArray == null) {
             return MemorySegment.NULL;
         }
 
-        final FieldOrMethod.MethodWrapper method = JavaObjectIndex.METHODS.get(methodId);
-        if (method == null) {
-            return InteropUtils.raiseException(PyExc_SystemError(), "method with id " + methodId + " doesn't exist");
-        }
         final MemorySegment result;
         try {
-            result = InvokeHandler.invoke(method, null, argsArray);
+            result = InvokeHandler.invoke(method, owner, argsArray);
         } catch (Throwable t) {
-            return reraiseJavaException(t);
+            final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
+            if (errorClass.equals(MemorySegment.NULL)) {
+                return MemorySegment.NULL;
+            }
+            final MemorySegment exception = PyObject_CallOneArg(errorClass, InteropConversions.createPythonString(t.toString()));
+            if (exception == null) {
+                return MemorySegment.NULL;
+            }
+            final MemorySegment fakeException = InteropConversions.javaToPython(t);
+            if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
+                PyErr_Clear();
+            }
+            Py_DecRef(fakeException);
+            PyErr_SetRaisedException(exception);
+            return MemorySegment.NULL;
         }
         if (result == null) {
             final StringJoiner error = new StringJoiner(", ", "no overload matches args (", ")");
@@ -98,25 +129,6 @@ public class InteropModule {
             return InteropUtils.raiseException(PyExc_TypeError(), error.toString());
         }
         return result;
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    private static MemorySegment reraiseJavaException(Throwable t) {
-        final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
-        if (errorClass.equals(MemorySegment.NULL)) {
-            return MemorySegment.NULL;
-        }
-        final MemorySegment exception = PyObject_CallOneArg(errorClass, InteropConversions.createPythonString(t.toString()));
-        if (exception == null) {
-            return MemorySegment.NULL;
-        }
-        final MemorySegment fakeException = InteropConversions.javaToPython(t);
-        if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
-            PyErr_Clear();
-        }
-        Py_DecRef(fakeException);
-        PyErr_SetRaisedException(exception);
-        return MemorySegment.NULL;
     }
 
     /**
@@ -190,18 +202,18 @@ public class InteropModule {
     }
 
     /**
-     * {@code remove_static_method(method_id: int) -> None}
+     * {@code remove_method(method_id: int) -> None}
      */
     @PythonFunction
-    public static void removeStaticMethod(int method_id) {
+    public static void removeMethod(int method_id) {
         JavaObjectIndex.METHODS.remove(method_id);
     }
 
     /**
-     * {@code remove_static_field(field_id: int) -> None}
+     * {@code remove_field(field_id: int) -> None}
      */
     @PythonFunction
-    public static void removeStaticField(int fieldId) {
+    public static void removeField(int fieldId) {
         JavaObjectIndex.FIELDS.remove(fieldId);
     }
 
