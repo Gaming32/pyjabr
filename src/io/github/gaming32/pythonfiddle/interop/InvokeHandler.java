@@ -13,7 +13,7 @@ public class InvokeHandler {
     public static MemorySegment invoke(
         FieldOrMethod.MethodWrapper executables,
         Object owner, MemorySegment... args
-    ) throws Throwable {
+    ) throws InvocationTargetException, IllegalAccessException {
         for (final Executable executable : executables.executables()) {
             if (!isLengthApplicable(executable, args)) continue;
             final Object[] builtArgs;
@@ -30,8 +30,8 @@ public class InvokeHandler {
                     case Method m -> m.invoke(owner, builtArgs);
                     case Constructor<?> c -> c.newInstance(builtArgs);
                 });
-            } catch (InvocationTargetException targetException) {
-                throw targetException.getCause();
+            } catch (InstantiationException e) {
+                throw new InvocationTargetException(e);
             }
         }
         return null;

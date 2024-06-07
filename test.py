@@ -1,3 +1,6 @@
-from java.java.lang import String
+from java.io.github.gaming32.pythonfiddle import TestClass
 
-String.CASE_INSENSITIVE_ORDER = String.CASE_INSENSITIVE_ORDER
+instance = TestClass()
+print(instance.aField)
+instance.aField = 'hi'
+print(instance.aField)

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -80,9 +81,9 @@ public class InteropModule {
      */
     @PythonFunction
     public static MemorySegment invokeInstanceMethod(int objectId, int methodId, MemorySegment args) {
-        final Object object = JavaObjectIndex.OBJECTS.get(objectId);
+        final Object object = getObject(objectId);
         if (object == null) {
-            return InteropUtils.raiseException(PyExc_SystemError(), "instance with id " + methodId + " doesn't exist");
+            return MemorySegment.NULL;
         }
         return invokeMethod(object, methodId, args);
     }
@@ -104,22 +105,28 @@ public class InteropModule {
         final MemorySegment result;
         try {
             result = InvokeHandler.invoke(method, owner, argsArray);
-        } catch (Throwable t) {
+        } catch (InvocationTargetException e) {
             final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
             if (errorClass.equals(MemorySegment.NULL)) {
                 return MemorySegment.NULL;
             }
-            final MemorySegment exception = PyObject_CallOneArg(errorClass, InteropConversions.createPythonString(t.toString()));
+            final MemorySegment exception = PyObject_CallOneArg(
+                errorClass, InteropConversions.createPythonString(e.getCause().toString())
+            );
             if (exception == null) {
                 return MemorySegment.NULL;
             }
-            final MemorySegment fakeException = InteropConversions.javaToPython(t);
+            final MemorySegment fakeException = InteropConversions.javaToPython(e.getCause());
             if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
                 PyErr_Clear();
             }
             Py_DecRef(fakeException);
             PyErr_SetRaisedException(exception);
             return MemorySegment.NULL;
+        } catch (IllegalAccessException e) {
+            return InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
+        } catch (NullPointerException e) {
+            return raiseNotStatic(method);
         }
         if (result == null) {
             final StringJoiner error = new StringJoiner(", ", "no overload matches args (", ")");
@@ -136,18 +143,34 @@ public class InteropModule {
      */
     @PythonFunction
     public static MemorySegment getStaticField(int fieldId) {
-        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(fieldId);
+        return getField(null, fieldId);
+    }
+
+    /**
+     * {@code get_instance_field(object_id: int, field_id: int) -> Any}
+     */
+    @PythonFunction
+    public static MemorySegment getInstanceField(int objectId, int fieldId) {
+        final Object object = getObject(objectId);
+        if (object == null) {
+            return MemorySegment.NULL;
+        }
+        return getField(object, fieldId);
+    }
+
+    private static MemorySegment getField(Object owner, int fieldId) {
+        final FieldOrMethod.FieldWrapper field = getFieldFromArg(fieldId);
         if (field == null) {
             return MemorySegment.NULL;
         }
 
         final Object fieldValue;
         try {
-            fieldValue = field.field().get(null);
+            fieldValue = field.field().get(owner);
         } catch (NullPointerException e) {
             return raiseNotStatic(field);
-        } catch (ReflectiveOperationException e) {
-            throw new AssertionError(e);
+        } catch (IllegalAccessException e) {
+            return InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
         }
         return InteropConversions.javaToPython(fieldValue);
     }
@@ -157,13 +180,29 @@ public class InteropModule {
      */
     @PythonFunction
     public static MemorySegment setStaticField(int fieldId, MemorySegment value) {
-        final FieldOrMethod.FieldWrapper field = getStaticFieldFromArg(fieldId);
+        return setField(null, fieldId, value);
+    }
+
+    /**
+     * {@code set_instance_field(object_id: int, field_id: int, value: Any) -> None}
+     */
+    @PythonFunction
+    public static MemorySegment setInstanceField(int objectId, int fieldId, MemorySegment value) {
+        final Object object = getObject(objectId);
+        if (object == null) {
+            return MemorySegment.NULL;
+        }
+        return setField(object, fieldId, value);
+    }
+
+    private static MemorySegment setField(Object owner, int fieldId, MemorySegment value) {
+        final FieldOrMethod.FieldWrapper field = getFieldFromArg(fieldId);
         if (field == null) {
             return MemorySegment.NULL;
         }
 
         try {
-            field.field().set(null, InteropConversions.pythonToJava(value, field.field().getType()));
+            field.field().set(owner, InteropConversions.pythonToJava(value, field.field().getType()));
         } catch (IllegalArgumentException e) {
             InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
             if (e.getCause() instanceof PythonException pythonException && pythonException.getOriginalException() != null) {
@@ -181,7 +220,7 @@ public class InteropModule {
     }
 
     @Nullable
-    private static FieldOrMethod.FieldWrapper getStaticFieldFromArg(int fieldId) {
+    private static FieldOrMethod.FieldWrapper getFieldFromArg(int fieldId) {
         final FieldOrMethod.FieldWrapper field = JavaObjectIndex.FIELDS.get(fieldId);
         if (field == null) {
             InteropUtils.raiseException(PyExc_SystemError(), "field with id " + fieldId + " doesn't exist");
@@ -190,13 +229,21 @@ public class InteropModule {
         return field;
     }
 
+    private static Object getObject(int objectId) {
+        final Object object = JavaObjectIndex.OBJECTS.get(objectId);
+        if (object == null) {
+            InteropUtils.raiseException(PyExc_SystemError(), "instance with id " + objectId + " doesn't exist");
+        }
+        return object;
+    }
+
     private static MemorySegment raiseNotStatic(FieldOrMethod member) {
         final String type = switch (member) {
             case FieldOrMethod.FieldWrapper _ -> "field";
             case FieldOrMethod.MethodWrapper _ -> "method";
         };
         return InteropUtils.raiseException(
-            PyExc_AttributeError(),
+            PyExc_TypeError(),
             type + ' ' + member.owner().getName() + '.' + member.name() + " is not static"
         );
     }
