@@ -1,3 +1,3 @@
 from java.java.lang import String
 
-print(String.CASE_INSENSITIVE_ORDER.compare('hi', 'HI'))
+String.CASE_INSENSITIVE_ORDER = String.CASE_INSENSITIVE_ORDER

@@ -184,8 +184,8 @@ public class InteropConversions {
                         PythonException.moveFromPython(true)
                     );
                 }
-                final int id = PyLong_AsLong(obj);
-                if (id == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                final int id = PyLong_AsLong(idObj);
+                if (id == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                     throw new IllegalArgumentException(
                         "Could not read _id field of FakeJavaObject",
                         PythonException.moveFromPython(true)
