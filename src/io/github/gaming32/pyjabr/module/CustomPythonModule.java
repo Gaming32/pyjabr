@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle.module;
+package io.github.gaming32.pyjabr.module;
 
 import org.jetbrains.annotations.Nullable;
 import org.python.PyImport_AppendInittab$initfunc;

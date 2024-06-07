@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

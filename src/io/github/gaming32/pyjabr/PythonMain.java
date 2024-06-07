@@ -1,7 +1,7 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pythonfiddle.interop.InteropModule;
-import io.github.gaming32.pythonfiddle.module.CustomPythonModule;
+import io.github.gaming32.pyjabr.interop.InteropModule;
+import io.github.gaming32.pyjabr.module.CustomPythonModule;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

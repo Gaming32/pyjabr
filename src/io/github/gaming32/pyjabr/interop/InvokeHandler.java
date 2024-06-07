@@ -1,6 +1,6 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pythonfiddle.PythonException;
+import io.github.gaming32.pyjabr.PythonException;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.reflect.Array;

@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pyjabr;
 
 import java.lang.foreign.MemorySegment;
 

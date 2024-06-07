@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
 import com.google.common.base.Suppliers;
 

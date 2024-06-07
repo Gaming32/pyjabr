@@ -1,6 +1,6 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pythonfiddle.TupleUtil;
+import io.github.gaming32.pyjabr.TupleUtil;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

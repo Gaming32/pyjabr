@@ -1,6 +1,6 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pythonfiddle.ReflectUtil;
+import io.github.gaming32.pyjabr.ReflectUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.AccessibleObject;

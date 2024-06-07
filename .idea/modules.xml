@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jextract-fiddle.iml" filepath="$PROJECT_DIR$/jextract-fiddle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pyjabr.iml" filepath="$PROJECT_DIR$/pyjabr.iml" />
     </modules>
   </component>
 </project>

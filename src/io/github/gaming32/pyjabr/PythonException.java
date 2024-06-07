@@ -1,6 +1,6 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pythonfiddle.interop.InteropUtils;
+import io.github.gaming32.pyjabr.interop.InteropUtils;
 import org.jetbrains.annotations.Nullable;
 import org.python.PyObject;
 import org.python.PyTypeObject;
@@ -9,7 +9,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.nio.charset.StandardCharsets;
 
-import static io.github.gaming32.pythonfiddle.PythonUtil.PyObject_CallMethodOneArg;
+import static io.github.gaming32.pyjabr.PythonUtil.PyObject_CallMethodOneArg;
 import static org.python.Python_h.*;
 
 public class PythonException extends RuntimeException {

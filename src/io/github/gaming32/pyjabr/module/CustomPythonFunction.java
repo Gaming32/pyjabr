@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle.module;
+package io.github.gaming32.pyjabr.module;
 
 import com.google.common.base.CaseFormat;
 import org.jetbrains.annotations.Nullable;

@@ -1,8 +1,8 @@
-package io.github.gaming32.pythonfiddle.module;
+package io.github.gaming32.pyjabr.module;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pythonfiddle.interop.InteropConversions;
-import io.github.gaming32.pythonfiddle.interop.InteropUtils;
+import io.github.gaming32.pyjabr.interop.InteropConversions;
+import io.github.gaming32.pyjabr.interop.InteropUtils;
 import org.python.Python_h;
 
 import java.lang.foreign.MemorySegment;

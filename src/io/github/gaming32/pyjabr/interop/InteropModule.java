@@ -1,9 +1,9 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pythonfiddle.PythonException;
-import io.github.gaming32.pythonfiddle.TupleUtil;
-import io.github.gaming32.pythonfiddle.module.PythonFunction;
-import io.github.gaming32.pythonfiddle.module.PythonModule;
+import io.github.gaming32.pyjabr.PythonException;
+import io.github.gaming32.pyjabr.TupleUtil;
+import io.github.gaming32.pyjabr.module.PythonFunction;
+import io.github.gaming32.pyjabr.module.PythonModule;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static io.github.gaming32.pythonfiddle.PythonUtil.*;
+import static io.github.gaming32.pyjabr.PythonUtil.*;
 import static org.python.Python_h.*;
 
 @PythonModule("_java")

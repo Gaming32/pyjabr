@@ -1,13 +1,13 @@
-package io.github.gaming32.pythonfiddle.interop;
+package io.github.gaming32.pyjabr.interop;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pythonfiddle.PythonException;
+import io.github.gaming32.pyjabr.PythonException;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static org.python.Python_h.*;
-import static io.github.gaming32.pythonfiddle.PythonUtil.*;
+import static io.github.gaming32.pyjabr.PythonUtil.*;
 
 public class InteropConversions {
     private static final MemorySegment ID_FIELD = Arena.global().allocateFrom("_id");

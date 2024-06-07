@@ -1,4 +1,4 @@
-package io.github.gaming32.pythonfiddle;
+package io.github.gaming32.pyjabr;
 
 import org.python.PyObject;
 import org.python.PyTypeObject;
