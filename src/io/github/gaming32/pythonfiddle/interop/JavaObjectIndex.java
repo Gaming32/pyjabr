@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,9 @@ public class JavaObjectIndex {
                 try {
                     clazz = Class.forName(className);
                 } catch (ClassNotFoundException e) {
+                    return null;
+                }
+                if (!Modifier.isPublic(clazz.getModifiers())) {
                     return null;
                 }
                 id = CLASS_IDS_BY_NAME.size();

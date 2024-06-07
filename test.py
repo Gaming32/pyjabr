@@ -1,4 +1,4 @@
-from java.java.lang.invoke import MethodHandles
+from java.java.lang import String
 
-print(MethodHandles)
-print(MethodHandles.Lookup)
+print(String)
+print(String.CaseInsensitiveComparator)
