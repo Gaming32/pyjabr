@@ -13,30 +13,42 @@ public class InteropConversions {
     private static final MemorySegment ID_FIELD = Arena.global().allocateFrom("_id");
 
     public static Object pythonToJava(MemorySegment obj, Class<?> target) throws IllegalArgumentException {
+        return pythonToJava(obj, target, true);
+    }
+
+    public static Object pythonToJava(MemorySegment obj) throws IllegalArgumentException {
+        return pythonToJava(obj, true);
+    }
+
+    static Object pythonToJava(MemorySegment obj, Class<?> target, boolean throwDetails) throws IllegalArgumentException {
         if (target == Object.class) {
-            return pythonToJava(obj);
+            return pythonToJava(obj, throwDetails);
         }
         if (target == Void.class) {
             if (!obj.equals(_Py_NoneStruct())) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Only None can be assigned to Void");
             }
             return obj;
         }
         if (obj.equals(_Py_NoneStruct())) {
             if (target.isPrimitive()) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Cannot pass None to primitive type " + target);
             }
             return null;
         }
         if (target.isPrimitive() || Primitives.isWrapperType(target)) {
-            return primitiveFromPython(obj, Primitives.unwrap(target));
+            return primitiveFromPython(obj, Primitives.unwrap(target), throwDetails);
         }
         if (target == String.class) {
             if (!PyUnicode_Check(obj)) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Cannot convert " + toString(Py_TYPE(obj)) + " to String");
             }
             final String result = InteropUtils.getString(obj);
             if (result == null) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Could not convert to String", PythonException.moveFromPython(true));
             }
             return result;
@@ -44,14 +56,15 @@ public class InteropConversions {
         if (target == MemorySegment.class) {
             return obj;
         }
-        final Object realObject = fakePythonToJava(obj);
+        final Object realObject = fakePythonToJava(obj, throwDetails);
         if (target.isInstance(realObject)) {
             return realObject;
         }
+        NoDetailsConversionFailed.maybeThrow(throwDetails);
         throw new IllegalArgumentException("Cannot convert " + toString(Py_TYPE(obj)) + " to " + target);
     }
 
-    public static Object pythonToJava(MemorySegment obj) {
+    static Object pythonToJava(MemorySegment obj, boolean throwDetails) {
         if (obj.equals(_Py_NoneStruct())) {
             return null;
         }
@@ -75,7 +88,7 @@ public class InteropConversions {
         if (PyFloat_Check(obj)) {
             return PyLong_AsDouble(obj);
         }
-        final Object realObject = fakePythonToJava(obj);
+        final Object realObject = fakePythonToJava(obj, throwDetails);
         if (realObject != null) {
             return realObject;
         }
@@ -105,20 +118,23 @@ public class InteropConversions {
         return false;
     }
 
-    private static Object primitiveFromPython(MemorySegment obj, Class<?> target) {
+    private static Object primitiveFromPython(MemorySegment obj, Class<?> target, boolean throwDetails) {
         if (target == int.class || target == byte.class || target == short.class) {
             final int result = PyLong_AsLong(obj);
             if (result == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
             }
             if (target == byte.class) {
                 if ((byte)result != result) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException("Could not fit " + result + " into a byte");
                 }
                 return (byte)result;
             }
             if (target == short.class) {
                 if ((short)result != result) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException("Could not fit " + result + " into a short");
                 }
                 return (short)result;
@@ -128,6 +144,7 @@ public class InteropConversions {
         if (target == long.class) {
             final long result = PyLong_AsLongLong(obj);
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython(true));
             }
             return result;
@@ -135,6 +152,7 @@ public class InteropConversions {
         if (target == double.class || target == float.class) {
             final double result = PyFloat_AsDouble(obj);
             if (result == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
             }
             if (target == float.class) {
@@ -152,6 +170,7 @@ public class InteropConversions {
                     throw new IllegalArgumentException("Could not convert str to String to parse as char", PythonException.moveFromPython(true));
                 }
                 if (asString.length() != 1) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     if (asString.length() == 2 && Character.isSurrogatePair(asString.charAt(0), asString.charAt(1))) {
                         throw new IllegalArgumentException("Could not fit " + asString + " into a char");
                     }
@@ -161,9 +180,11 @@ public class InteropConversions {
             } else {
                 final int result = PyLong_AsLong(obj);
                 if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException("Could not convert to char", PythonException.moveFromPython(true));
                 }
                 if ((char)result != result) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException("Could not fit " + result + " into a char");
                 }
                 return (char)result;
@@ -172,13 +193,14 @@ public class InteropConversions {
         throw new AssertionError("primitiveFromPython called with non-primitive target " + target);
     }
 
-    private static Object fakePythonToJava(MemorySegment obj) {
+    private static Object fakePythonToJava(MemorySegment obj, boolean throwDetails) {
         final int isInstance = PyObject_IsInstance(obj, InteropPythonObjects.FAKE_JAVA_OBJECT.get());
         return switch (isInstance) {
             case 0 -> null;
             default -> {
                 final MemorySegment idObj = PyObject_GetAttrString(obj, ID_FIELD);
                 if (idObj.equals(MemorySegment.NULL)) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException(
                         "Could not get _id field of FakeJavaObject",
                         PythonException.moveFromPython(true)
@@ -186,6 +208,7 @@ public class InteropConversions {
                 }
                 final int id = PyLong_AsLong(idObj);
                 if (id == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
+                    NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException(
                         "Could not read _id field of FakeJavaObject",
                         PythonException.moveFromPython(true)
@@ -193,10 +216,13 @@ public class InteropConversions {
                 }
                 yield JavaObjectIndex.OBJECTS.get(id);
             }
-            case -1 -> throw new IllegalArgumentException(
-                "Could not check isinstance(FakeJavaObject)",
-                PythonException.moveFromPython(true)
-            );
+            case -1 -> {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
+                throw new IllegalArgumentException(
+                    "Could not check isinstance(FakeJavaObject)",
+                    PythonException.moveFromPython(true)
+                );
+            }
         };
     }
 
@@ -238,6 +264,25 @@ public class InteropConversions {
     public static MemorySegment createPythonString(String javaString) {
         try (Arena arena = Arena.ofConfined()) {
             return PyUnicode_FromString(arena.allocateFrom(javaString));
+        }
+    }
+
+    static final class NoDetailsConversionFailed extends IllegalArgumentException {
+        private static final NoDetailsConversionFailed INSTANCE = new NoDetailsConversionFailed();
+
+        private NoDetailsConversionFailed() {
+        }
+
+        public static void maybeThrow(boolean throwDetails) {
+            if (!throwDetails) {
+                PyErr_Clear();
+                throw INSTANCE;
+            }
+        }
+
+        @Override
+        public synchronized Throwable fillInStackTrace() {
+            return this;
         }
     }
 }

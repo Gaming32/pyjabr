@@ -1,7 +1,5 @@
 package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pyjabr.PythonException;
-
 import java.lang.foreign.MemorySegment;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -19,10 +17,7 @@ public class InvokeHandler {
             final Object[] builtArgs;
             try {
                 builtArgs = buildArgs(executable, args);
-            } catch (IllegalArgumentException e) {
-                if (e.getCause() instanceof PythonException pythonException) {
-                    pythonException.clearOriginalException();
-                }
+            } catch (InteropConversions.NoDetailsConversionFailed e) {
                 continue;
             }
             try {
@@ -51,14 +46,14 @@ public class InvokeHandler {
         final Object[] result = new Object[paramTypes.length];
         final int simpleParamCount = executable.isVarArgs() ? result.length - 1 : result.length;
         for (int i = 0; i < simpleParamCount; i++) {
-            result[i] = InteropConversions.pythonToJava(args[i], paramTypes[i]);
+            result[i] = InteropConversions.pythonToJava(args[i], paramTypes[i], false);
         }
         if (executable.isVarArgs()) {
             final Class<?> componentType = paramTypes[paramTypes.length - 1].componentType();
             final int extraArgCount = args.length - simpleParamCount;
             final Object finalElement = Array.newInstance(componentType, extraArgCount);
             for (int i = 0; i < extraArgCount; i++) {
-                Array.set(finalElement, i, InteropConversions.pythonToJava(args[simpleParamCount + i], componentType));
+                Array.set(finalElement, i, InteropConversions.pythonToJava(args[simpleParamCount + i], componentType, false));
             }
             result[result.length - 1] = finalElement;
         }
