@@ -60,6 +60,7 @@ public class InvokeHandler {
             for (int i = 0; i < extraArgCount; i++) {
                 Array.set(finalElement, i, InteropConversions.pythonToJava(args[simpleParamCount + i], componentType));
             }
+            result[result.length - 1] = finalElement;
         }
         return result;
     }

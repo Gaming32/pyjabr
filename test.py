@@ -1,3 +1,4 @@
-from java.java.lang import System
+from java.java.util.stream import Stream
 
-System.out.println('Hello, world!')
+for element in Stream.of('hello', 'world'):
+    print(element)
