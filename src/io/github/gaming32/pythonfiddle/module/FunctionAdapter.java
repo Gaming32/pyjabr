@@ -6,8 +6,9 @@ import io.github.gaming32.pythonfiddle.interop.InteropUtils;
 import org.python.Python_h;
 
 import java.lang.foreign.MemorySegment;
+import java.lang.invoke.LambdaConversionException;
+import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandleProxies;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
@@ -17,13 +18,6 @@ import java.util.Objects;
 import static org.python.Python_h._Py_NoneStruct;
 
 class FunctionAdapter {
-    private static final MethodType IMPLEMENTATION_TYPE = MethodType.methodType(
-        CustomPythonFunction.Implementation.class, MethodHandle.class
-    );
-    private static final MethodType IMPLEMENTATION_IMPL_TYPE = MethodType.methodType(
-        MemorySegment.class, MemorySegment.class, MemorySegment[].class
-    );
-
     private static final MethodHandle NULL_POINTER = MethodHandles.constant(MemorySegment.class, MemorySegment.NULL);
     private static final MethodHandle THROW_PYTHON_EXCEPTION = MethodHandles.dropArguments(NULL_POINTER, 0, MemorySegment[].class);
     private static final MethodHandle CATCH_ADAPT_FAILED = MethodHandles.dropArguments(NULL_POINTER, 0, AdaptFailedException.class);
@@ -36,6 +30,8 @@ class FunctionAdapter {
 
     private static final Map<Class<?>, MethodHandle> SPECIALIZED_ARG_ADAPTERS;
     private static final Map<Class<?>, MethodHandle> SPECIALIZED_RETURN_ADAPTERS;
+
+    private static final MethodHandle IMPLEMENTATION_CONSTRUCTOR;
 
     static {
         try {
@@ -72,15 +68,29 @@ class FunctionAdapter {
                 long.class, findSpecializedReturnAdapter(lookup, "PyLong_FromLongLong", long.class),
                 double.class, findSpecializedReturnAdapter(lookup, "PyFloat_FromDouble", double.class)
             );
-        } catch (ReflectiveOperationException e) {
+
+            final MethodType implementationType = MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment[].class);
+            IMPLEMENTATION_CONSTRUCTOR = LambdaMetafactory.metafactory(
+                lookup,
+                "call",
+                MethodType.methodType(CustomPythonFunction.Implementation.class, MethodHandle.class),
+                implementationType,
+                MethodHandles.exactInvoker(implementationType),
+                implementationType
+            ).getTarget();
+        } catch (ReflectiveOperationException | LambdaConversionException e) {
             throw new IllegalStateException(e);
         }
     }
 
     static CustomPythonFunction.Implementation adapt(MethodHandles.Lookup lookup, Method method) throws IllegalAccessException {
-        return MethodHandleProxies.asInterfaceInstance(
-            CustomPythonFunction.Implementation.class, adaptToMH(lookup, method)
-        );
+        try {
+            return (CustomPythonFunction.Implementation)IMPLEMENTATION_CONSTRUCTOR.invokeExact(adaptToMH(lookup, method));
+        } catch (RuntimeException | Error | IllegalAccessException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw new IllegalStateException(t);
+        }
     }
 
     private static MethodHandle adaptToMH(MethodHandles.Lookup lookup, Method method) throws IllegalAccessException {
