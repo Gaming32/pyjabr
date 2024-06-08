@@ -2,6 +2,7 @@ package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.interop.InteropModule;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
+import io.github.gaming32.pyjabr.python.PythonException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,14 +53,14 @@ public class PythonMain {
                 Py_file_input()
             );
             if (code.equals(MemorySegment.NULL)) {
-                throw PythonException.moveFromPython(false);
+                throw PythonException.moveFromPython();
             }
 
             result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
         }
         Py_DecRef(code);
         if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython(false);
+            throw PythonException.moveFromPython();
         }
         Py_DecRef(result);
     }

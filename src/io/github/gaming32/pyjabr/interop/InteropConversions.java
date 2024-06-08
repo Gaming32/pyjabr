@@ -1,13 +1,14 @@
 package io.github.gaming32.pyjabr.interop;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pyjabr.PythonException;
+import io.github.gaming32.pyjabr.python.PythonException;
+import io.github.gaming32.pyjabr.python.PythonObject;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static org.python.Python_h.*;
 import static io.github.gaming32.pyjabr.PythonUtil.*;
+import static org.python.Python_h.*;
 
 public class InteropConversions {
     private static final MemorySegment ID_FIELD = Arena.global().allocateFrom("_id");
@@ -49,12 +50,13 @@ public class InteropConversions {
             final String result = InteropUtils.getString(obj);
             if (result == null) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Could not convert to String", PythonException.moveFromPython(true));
+                throw new IllegalArgumentException("Could not convert to String", PythonException.moveFromPython());
             }
             return result;
         }
-        if (target == MemorySegment.class) {
-            return obj;
+        if (target == PythonObject.class) {
+            Py_IncRef(obj);
+            return PythonObject.steal(obj);
         }
         final Object realObject = fakePythonToJava(obj, throwDetails);
         if (target.isInstance(realObject)) {
@@ -75,34 +77,42 @@ public class InteropConversions {
             final int asInt = PyLong_AsLong(obj);
             if (asInt == -1 && isOverflow()) {
                 final long asLong = PyLong_AsLongLong(obj);
-                if (asLong == -1L && isOverflow()) {
-                    return obj;
+                if (asLong != -1L || !isOverflow()) {
+                    return asLong;
                 }
-                return asLong;
+            } else {
+                return asInt;
             }
-            return asInt;
         }
         if (PyUnicode_Check(obj)) {
-            return InteropUtils.getString(obj);
+            final String asString = InteropUtils.getString(obj);
+            if (asString == null) {
+                PyErr_Clear();
+            }
         }
         if (PyFloat_Check(obj)) {
-            return PyLong_AsDouble(obj);
+            return PyFloat_AsDouble(obj);
         }
         final Object realObject = fakePythonToJava(obj, throwDetails);
         if (realObject != null) {
             return realObject;
         }
-        return obj;
+        Py_IncRef(obj);
+        return PythonObject.steal(obj);
     }
 
     public static String toString(MemorySegment obj) {
-        final MemorySegment messageString = PyObject_Str(obj);
-        if (messageString.equals(MemorySegment.NULL)) {
+        final MemorySegment resultStr = PyObject_Str(obj);
+        if (resultStr.equals(MemorySegment.NULL)) {
             PyErr_Clear();
             return null;
         }
-        final String result = InteropUtils.getString(messageString);
-        Py_DecRef(messageString);
+        final String result = InteropUtils.getString(resultStr);
+        Py_DecRef(resultStr);
+        if (result == null) {
+            PyErr_Clear();
+            return null;
+        }
         return result;
     }
 
@@ -123,7 +133,7 @@ public class InteropConversions {
             final int result = PyLong_AsLong(obj);
             if (result == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
+                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
             }
             if (target == byte.class) {
                 if ((byte)result != result) {
@@ -145,7 +155,7 @@ public class InteropConversions {
             final long result = PyLong_AsLongLong(obj);
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython(true));
+                throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython());
             }
             return result;
         }
@@ -153,7 +163,7 @@ public class InteropConversions {
             final double result = PyFloat_AsDouble(obj);
             if (result == -1.0 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython(true));
+                throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
             }
             if (target == float.class) {
                 return (float)result;
@@ -167,7 +177,7 @@ public class InteropConversions {
             if (PyUnicode_Check(obj)) {
                 final String asString = InteropUtils.getString(obj);
                 if (asString == null) {
-                    throw new IllegalArgumentException("Could not convert str to String to parse as char", PythonException.moveFromPython(true));
+                    throw new IllegalArgumentException("Could not convert str to String to parse as char", PythonException.moveFromPython());
                 }
                 if (asString.length() != 1) {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
@@ -181,7 +191,7 @@ public class InteropConversions {
                 final int result = PyLong_AsLong(obj);
                 if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
-                    throw new IllegalArgumentException("Could not convert to char", PythonException.moveFromPython(true));
+                    throw new IllegalArgumentException("Could not convert to char", PythonException.moveFromPython());
                 }
                 if ((char)result != result) {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
@@ -203,7 +213,7 @@ public class InteropConversions {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException(
                         "Could not get _id field of FakeJavaObject",
-                        PythonException.moveFromPython(true)
+                        PythonException.moveFromPython()
                     );
                 }
                 final int id = PyLong_AsLong(idObj);
@@ -211,7 +221,7 @@ public class InteropConversions {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException(
                         "Could not read _id field of FakeJavaObject",
-                        PythonException.moveFromPython(true)
+                        PythonException.moveFromPython()
                     );
                 }
                 yield JavaObjectIndex.OBJECTS.get(id);
@@ -220,7 +230,7 @@ public class InteropConversions {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException(
                     "Could not check isinstance(FakeJavaObject)",
-                    PythonException.moveFromPython(true)
+                    PythonException.moveFromPython()
                 );
             }
         };

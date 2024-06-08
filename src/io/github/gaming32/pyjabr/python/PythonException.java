@@ -1,10 +1,9 @@
-package io.github.gaming32.pyjabr;
+package io.github.gaming32.pyjabr.python;
 
-import org.jetbrains.annotations.Nullable;
+import org.python.PyTypeObject;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.nio.charset.StandardCharsets;
 
 import static io.github.gaming32.pyjabr.PythonUtil.PyObject_CallMethodOneArg;
 import static io.github.gaming32.pyjabr.PythonUtil.Py_TYPE;
@@ -19,9 +18,9 @@ public class PythonException extends RuntimeException {
     private final String pythonClass;
     private final String pythonMessage;
     private final String pythonTraceback;
-    private MemorySegment originalException;
+    private final PythonObject originalException;
 
-    public PythonException(String pythonClass, String pythonMessage, String pythonTraceback, MemorySegment originalException) {
+    public PythonException(String pythonClass, String pythonMessage, String pythonTraceback, PythonObject originalException) {
         super(pythonClass + ": " + pythonMessage);
         this.pythonClass = pythonClass;
         this.pythonMessage = pythonMessage;
@@ -29,31 +28,35 @@ public class PythonException extends RuntimeException {
         this.originalException = originalException;
     }
 
-    public static PythonException of(MemorySegment pythonException, boolean retainReference) {
+    public static PythonException of(PythonObject pythonException) {
         return new PythonException(
-            getPythonClass(pythonException),
-            getPythonMessage(pythonException),
-            getPythonTraceback(pythonException),
-            retainReference ? pythonException : null
+            getPythonClass(pythonException.borrow()),
+            getPythonMessage(pythonException.borrow()),
+            getPythonTraceback(pythonException.borrow()),
+            pythonException
         );
     }
 
-    public static PythonException moveFromPython(boolean retainReference) {
+    public static PythonException moveFromPython() {
         final MemorySegment exception = PyErr_GetRaisedException();
         if (exception.equals(MemorySegment.NULL)) {
-            throw new IllegalStateException("PythonException.currentlyRaised called without raised");
+            throw new IllegalStateException("PythonException.moveFromPython called without a raised exception");
         }
-        final PythonException result = of(exception, retainReference);
-        if (!retainReference) {
-            Py_DecRef(exception);
-        }
-        return result;
+        return of(PythonObject.steal(exception));
     }
 
     private static String getPythonClass(MemorySegment pythonException) {
         final MemorySegment pythonType = Py_TYPE(pythonException);
         final MemorySegment typeName = PyType_GetQualName(pythonType);
-        return typeName.getString(0L, StandardCharsets.UTF_8);
+        final MemorySegment typeNameUtf8 = PyUnicode_AsUTF8(typeName);
+        if (typeNameUtf8.equals(MemorySegment.NULL)) {
+            Py_DecRef(typeName);
+            PyErr_Clear();
+            return PyTypeObject.tp_name(pythonType).getString(0L);
+        }
+        final String result = typeNameUtf8.getString(0L);
+        Py_DecRef(typeName);
+        return result;
     }
 
     private static String getPythonMessage(MemorySegment pythonException) {
@@ -68,7 +71,7 @@ public class PythonException extends RuntimeException {
             PyErr_Clear();
             return "<failed to convert message to Java string>";
         }
-        final String result = argsUtf8String.getString(0L, StandardCharsets.UTF_8);
+        final String result = argsUtf8String.getString(0L);
         Py_DecRef(messageString);
         return result;
     }
@@ -106,7 +109,7 @@ public class PythonException extends RuntimeException {
             PyErr_Clear();
             return "<failed to convert traceback to Java string>";
         }
-        final String result = resultUtf8String.getString(0L, StandardCharsets.UTF_8);
+        final String result = resultUtf8String.getString(0L);
         Py_DecRef(resultString);
         return result.stripTrailing();
     }
@@ -123,25 +126,8 @@ public class PythonException extends RuntimeException {
         return pythonTraceback;
     }
 
-    @Nullable
-    public MemorySegment getOriginalException() {
+    public PythonObject getOriginalException() {
         return originalException;
-    }
-
-    public PythonException clearOriginalException() {
-        if (originalException == null) {
-            return this;
-        }
-        Py_DecRef(originalException);
-        originalException = null;
-        return this;
-    }
-
-    @Nullable
-    public MemorySegment acquireOriginalException() {
-        final MemorySegment result = originalException;
-        originalException = null;
-        return result;
     }
 
     @Override

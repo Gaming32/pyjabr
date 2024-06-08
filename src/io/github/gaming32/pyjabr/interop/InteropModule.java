@@ -1,9 +1,9 @@
 package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pyjabr.PythonException;
 import io.github.gaming32.pyjabr.TupleUtil;
 import io.github.gaming32.pyjabr.module.PythonFunction;
 import io.github.gaming32.pyjabr.module.PythonModule;
+import io.github.gaming32.pyjabr.python.PythonException;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
@@ -61,7 +61,11 @@ public class InteropModule {
         return switch (JavaObjectIndex.findClassAttribute(ownerId, attrName, isStatic != 0)) {
             case null -> {
                 if (isStatic != 0) {
-                    final String innerClassName = InteropUtils.getString(ownerName) + '$' + attrName;
+                    final String owner = InteropUtils.getString(ownerName);
+                    if (owner == null) {
+                        yield MemorySegment.NULL;
+                    }
+                    final String innerClassName = owner + '$' + attrName;
                     final Integer index = JavaObjectIndex.findClass(innerClassName);
                     if (index != null) {
                         yield InteropPythonObjects.createFakeJavaClass(
@@ -218,7 +222,7 @@ public class InteropModule {
             InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
             if (e.getCause() instanceof PythonException pythonException && pythonException.getOriginalException() != null) {
                 final MemorySegment raised = PyErr_GetRaisedException();
-                PyException_SetCause(raised, pythonException.acquireOriginalException());
+                PyException_SetCause(raised, pythonException.getOriginalException().borrow());
                 PyErr_SetRaisedException(raised);
             }
             return MemorySegment.NULL;

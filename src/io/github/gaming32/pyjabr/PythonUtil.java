@@ -1,14 +1,24 @@
 package io.github.gaming32.pyjabr;
 
+import org.python.PyCodeObject;
 import org.python.PyObject;
 import org.python.PyTypeObject;
-
-import static org.python.Python_h.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
+import static org.python.Python_h.*;
+
 public class PythonUtil {
+    public static MemorySegment PyObject_CallMethodNoArgs(MemorySegment self, MemorySegment name) {
+        try (Arena arena = Arena.ofConfined()) {
+            final MemorySegment args = arena.allocate(C_POINTER, 1);
+            args.setAtIndex(C_POINTER, 0, self);
+            final long nargsf = 1 | PY_VECTORCALL_ARGUMENTS_OFFSET();
+            return PyObject_VectorcallMethod(name, args, nargsf, _Py_NULL());
+        }
+    }
+
     public static MemorySegment PyObject_CallMethodOneArg(MemorySegment self, MemorySegment name, MemorySegment arg) {
         try (Arena arena = Arena.ofConfined()) {
             final MemorySegment args = arena.allocate(C_POINTER, 2);
@@ -29,6 +39,10 @@ public class PythonUtil {
 
     public static boolean PyTuple_Check(MemorySegment op) {
         return PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_TUPLE_SUBCLASS());
+    }
+
+    public static boolean PyDict_Check(MemorySegment op) {
+        return PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_DICT_SUBCLASS());
     }
 
     public static MemorySegment Py_TYPE(MemorySegment ob) {
@@ -56,7 +70,20 @@ public class PythonUtil {
         return Py_IS_TYPE(x, PyBool_Type());
     }
 
+    public static boolean PyCode_Check(MemorySegment x) {
+        return Py_IS_TYPE(x, PyCode_Type());
+    }
+
     public static boolean Py_IS_TYPE(MemorySegment ob, MemorySegment type) {
         return Py_TYPE(ob).equals(type);
+    }
+
+    public static long PyCode_GetNumFree(MemorySegment op) {
+        assert PyCode_Check(op);
+        return PyCodeObject.co_nfreevars(op);
+    }
+
+    public static int PyObject_DelAttrString(MemorySegment v, MemorySegment name) {
+        return PyObject_SetAttrString(v, name, MemorySegment.NULL);
     }
 }
