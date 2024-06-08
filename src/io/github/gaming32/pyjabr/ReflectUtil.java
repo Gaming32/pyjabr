@@ -1,7 +1,9 @@
 package io.github.gaming32.pyjabr;
 
 import com.google.common.collect.Streams;
+import org.jetbrains.annotations.Nullable;
 
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -41,5 +43,24 @@ public class ReflectUtil {
             streamDuplicatedHierarchy(c.getSuperclass()),
             Arrays.stream(c.getInterfaces()).flatMap(ReflectUtil::streamDuplicatedHierarchy)
         ));
+    }
+
+    @Nullable
+    public static Method findSam(Class<?> lambdaClass) {
+        Method found = null;
+        for (final Method method : lambdaClass.getMethods()) {
+            if (Modifier.isAbstract(method.getModifiers())) {
+                if (found == null) {
+                    found = method;
+                } else {
+                    return null;
+                }
+            }
+        }
+        return found;
+    }
+
+    public static MethodType getType(Method method) {
+        return MethodType.methodType(method.getReturnType(), method.getParameterTypes());
     }
 }

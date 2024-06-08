@@ -12,7 +12,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static io.github.gaming32.pyjabr.PythonUtil.*;
+import static io.github.gaming32.pyjabr.PythonUtil.PyTuple_Check;
+import static io.github.gaming32.pyjabr.PythonUtil.PyUnicode_Check;
 import static org.python.Python_h.*;
 
 @PythonModule("_java")
@@ -121,23 +122,7 @@ public class InteropModule {
         try {
             result = InvokeHandler.invoke(method, owner, argsArray);
         } catch (InvocationTargetException e) {
-            final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
-            if (errorClass.equals(MemorySegment.NULL)) {
-                return MemorySegment.NULL;
-            }
-            final MemorySegment exception = PyObject_CallOneArg(
-                errorClass, InteropConversions.createPythonString(e.getCause().toString())
-            );
-            if (exception == null) {
-                return MemorySegment.NULL;
-            }
-            final MemorySegment fakeException = InteropConversions.javaToPython(e.getCause());
-            if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
-                PyErr_Clear();
-            }
-            Py_DecRef(fakeException);
-            PyErr_SetRaisedException(exception);
-            return MemorySegment.NULL;
+            return raiseJavaError(e.getCause());
         } catch (IllegalAccessException e) {
             return InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
         } catch (NullPointerException e) {
@@ -146,11 +131,32 @@ public class InteropModule {
         if (result == null) {
             final StringJoiner error = new StringJoiner(", ", "no overload matches args (", ")");
             for (final MemorySegment arg : argsArray) {
-                error.add(InteropConversions.toString(Py_TYPE(arg)));
+                error.add(InteropConversions.repr(arg));
             }
             return InteropUtils.raiseException(PyExc_TypeError(), error.toString());
         }
         return result;
+    }
+
+    @SuppressWarnings("SameReturnValue")
+    private static MemorySegment raiseJavaError(Throwable t) {
+        final MemorySegment errorClass = InteropPythonObjects.JAVA_ERROR.get();
+        if (errorClass.equals(MemorySegment.NULL)) {
+            return MemorySegment.NULL;
+        }
+        final MemorySegment exception = PyObject_CallOneArg(
+            errorClass, InteropConversions.createPythonString(t.toString())
+        );
+        if (exception == null) {
+            return MemorySegment.NULL;
+        }
+        final MemorySegment fakeException = InteropConversions.javaToPython(t);
+        if (PyObject_SetAttrString(exception, JAVA_EXCEPTION_FIELD, fakeException) == -1) {
+            PyErr_Clear();
+        }
+        Py_DecRef(fakeException);
+        PyErr_SetRaisedException(exception);
+        return MemorySegment.NULL;
     }
 
     /**
@@ -267,8 +273,8 @@ public class InteropModule {
      * {@code remove_method(method_id: int) -> None}
      */
     @PythonFunction
-    public static void removeMethod(int method_id) {
-        JavaObjectIndex.METHODS.remove(method_id);
+    public static void removeMethod(int methodId) {
+        JavaObjectIndex.METHODS.remove(methodId);
     }
 
     /**
@@ -325,5 +331,16 @@ public class InteropModule {
     @PythonFunction
     public static int identityHash(int objectId) {
         return System.identityHashCode(JavaObjectIndex.OBJECTS.get(objectId));
+    }
+
+    @PythonFunction
+    public static MemorySegment makeLambda(int classId, MemorySegment action) {
+        Py_IncRef(action);
+        try {
+            return InteropConversions.javaToPython(LambdaMaker.makeLambda(JavaObjectIndex.getClassById(classId), action));
+        } catch (Throwable t) {
+            Py_DecRef(action);
+            return raiseJavaError(t);
+        }
     }
 }

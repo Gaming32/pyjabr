@@ -1,17 +1,20 @@
-from java.java.io import PrintStream, OutputStream
 from java.java.lang import System
+from java.java.util.function import Consumer, Function, BiConsumer
+from java.java.util.stream import Stream, Collectors
+
+from java_api import make_lambda, FakeJavaObject
 
 
-def print_numbers() -> None:
-    out = System.out
-    for i in range(1_000_000):
-        out.println(i)
+def map_multi_test(x: int, consumer: FakeJavaObject) -> None:
+    consumer.accept(x)
+    consumer.accept(x * 3)
 
-System.out.println('Start')
 
-old_out = System.out
-System.setOut(PrintStream(OutputStream.nullOutputStream()))
-print_numbers()
-System.setOut(old_out)
-
-System.out.println('End')
+println = System.out.println
+Stream.of(1, 2, 3).map(make_lambda(Function, lambda x: x * 2)).forEach(make_lambda(Consumer, println))
+println(
+    Stream.of(1, 2, 3)
+    .mapMulti(make_lambda(BiConsumer, map_multi_test))
+    .map(make_lambda(Function, str))
+    .collect(Collectors.joining(', '))
+)

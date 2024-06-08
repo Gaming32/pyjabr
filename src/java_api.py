@@ -3,7 +3,7 @@ import sys
 from importlib.abc import MetaPathFinder, Loader
 from importlib.machinery import ModuleSpec
 from types import ModuleType, TracebackType
-from typing import Sequence, Any, Self, Iterator
+from typing import Sequence, Any, Self, Iterator, Callable
 
 import _java
 
@@ -228,7 +228,7 @@ class FakeJavaClass:
         return _java.reflect_class_object(self._id)
 
 
-class JavaImportLoader(Loader):
+class _JavaImportLoader(Loader):
     __slots__ = ('java_package',)
 
     java_package: str
@@ -261,7 +261,7 @@ class JavaImportLoader(Loader):
         return f'<Java package {self.java_package}>'
 
 
-class JavaImportFinder(MetaPathFinder):
+class _JavaImportFinder(MetaPathFinder):
     __slots__ = ()
 
     def find_spec(
@@ -279,10 +279,20 @@ class JavaImportFinder(MetaPathFinder):
                 return None
         else:
             java_package = fullname.removeprefix(_JAVA_PACKAGE_PREFIX)
-        return ModuleSpec(fullname, JavaImportLoader(java_package), is_package=True)
+        return ModuleSpec(fullname, _JavaImportLoader(java_package), is_package=True)
 
 
-sys.meta_path.append(JavaImportFinder())
+def unreflect_class(clazz: FakeJavaObject) -> FakeJavaClass:
+    # noinspection PyProtectedMember
+    return _java.unreflect_class(clazz._id)
+
+
+def make_lambda(clazz: FakeJavaClass, action: Callable[..., Any]) -> FakeJavaObject:
+    # noinspection PyProtectedMember
+    return _java.make_lambda(clazz._id, action)
+
+
+sys.meta_path.append(_JavaImportFinder())
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
 del os._exit
