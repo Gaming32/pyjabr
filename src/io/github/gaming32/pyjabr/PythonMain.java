@@ -17,6 +17,8 @@ import static org.python.Python_h.*;
 
 public class PythonMain {
     public static void main(String[] args) throws IOException, IllegalAccessException {
+        PythonVersion.checkAndLog();
+
         CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
 
         Py_Initialize();
