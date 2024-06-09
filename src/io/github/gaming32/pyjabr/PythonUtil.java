@@ -10,15 +10,6 @@ import java.lang.foreign.MemorySegment;
 import static org.python.Python_h.*;
 
 public class PythonUtil {
-    public static MemorySegment PyObject_CallOneArgStableABI(MemorySegment callable, MemorySegment arg) {
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment args = arena.allocate(C_POINTER, 1);
-            args.setAtIndex(C_POINTER, 0, arg);
-            final long nargsf = 1 | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return PyObject_Vectorcall(callable, args, nargsf, _Py_NULL());
-        }
-    }
-
     public static MemorySegment PyObject_CallMethodNoArgs(MemorySegment self, MemorySegment name) {
         try (Arena arena = Arena.ofConfined()) {
             final MemorySegment args = arena.allocate(C_POINTER, 1);

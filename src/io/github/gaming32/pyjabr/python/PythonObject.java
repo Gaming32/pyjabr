@@ -130,19 +130,22 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject call(PythonObject arg) {
-        return checkAndSteal(PyObject_CallOneArgStableABI(borrow(), arg.borrow()));
+        return checkAndSteal(PyObject_CallOneArg(borrow(), arg.borrow()));
     }
 
     public PythonObject call(PythonObject... args) {
         final MemorySegment self = borrow();
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
-            for (int i = 0; i < args.length; i++) {
-                argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
+        if (PyType_HasFeature(Py_TYPE(self), Py_TPFLAGS_HAVE_VECTORCALL())) {
+            try (Arena arena = Arena.ofConfined()) {
+                final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
+                for (int i = 0; i < args.length; i++) {
+                    argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
+                }
+                final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+                return checkAndSteal(PyObject_Vectorcall(self, argsArray, nargsf, _Py_NULL()));
             }
-            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return checkAndSteal(PyObject_Vectorcall(self, argsArray, nargsf, _Py_NULL()));
         }
+        return checkAndSteal(PyObject_CallObject(borrow(), PythonObjects.tuple(args).borrow()));
     }
 
     public PythonObject callMethod(String method) {

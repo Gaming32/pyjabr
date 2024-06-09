@@ -23,7 +23,7 @@ public class PythonVersion {
         versionChecked = true;
         if (getCurrentVersion() < getTargetVersion()) {
             LOGGER.warn(
-                "Loaded Python version ({}) is less than the version pyjabr was built with ({}). Issues may arise.",
+                "Loaded Python version ({}) is less than the version pyjabr was built with ({}). Prepare for unforeseen consequences.",
                 formatVersion(getCurrentVersion()), formatVersion(getTargetVersion())
             );
         }

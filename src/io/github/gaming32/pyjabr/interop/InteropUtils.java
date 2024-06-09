@@ -24,7 +24,7 @@ public class InteropUtils {
     }
 
     public static String getString(MemorySegment unicode) {
-        final MemorySegment utf8 = PyUnicode_AsUTF8AndSize(unicode, MemorySegment.NULL);
+        final MemorySegment utf8 = PyUnicode_AsUTF8(unicode);
         if (utf8.equals(MemorySegment.NULL)) {
             return null;
         }

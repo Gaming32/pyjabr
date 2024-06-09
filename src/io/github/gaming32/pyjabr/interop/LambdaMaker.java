@@ -4,7 +4,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import io.github.gaming32.pyjabr.PythonUtil;
 import io.github.gaming32.pyjabr.ReflectUtil;
 import io.github.gaming32.pyjabr.TupleUtil;
 import io.github.gaming32.pyjabr.python.PythonException;
@@ -84,7 +83,7 @@ class LambdaMaker {
                 MethodType.methodType(MemorySegment.class, MemorySegment.class)
             );
             PY_OBJECT_CALL_ONE_ARG = LOOKUP.findStatic(
-                PythonUtil.class, "PyObject_CallOneArgStableABI",
+                Python_h.class, "PyObject_CallOneArg",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment.class)
             );
             PERFORM_VECTORCALL = LOOKUP.findStatic(
