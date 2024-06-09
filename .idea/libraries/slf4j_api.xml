@@ -5,6 +5,8 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.13/slf4j-api-2.0.13.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.ideaLibSources/slf4j-api-2.0.13-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
