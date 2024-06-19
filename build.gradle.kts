@@ -1,6 +1,7 @@
 plugins {
     java
     `java-library`
+    application
 }
 
 group = "io.github.gaming32"
@@ -19,6 +20,10 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+application {
+    mainClass = "io.github.gaming32.pyjabr.PythonMain"
 }
 
 java {
