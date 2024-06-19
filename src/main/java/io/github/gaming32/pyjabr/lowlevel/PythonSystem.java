@@ -225,7 +225,7 @@ public class PythonSystem {
     private static void signalState() {
         STATE_LOCK.lock();
         try {
-            STATE_COND.signal();
+            STATE_COND.signalAll();
         } finally {
             STATE_LOCK.unlock();
         }
