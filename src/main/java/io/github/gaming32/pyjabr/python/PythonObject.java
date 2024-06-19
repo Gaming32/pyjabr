@@ -287,15 +287,6 @@ public final class PythonObject implements Iterable<PythonObject> {
         return InteropConversions.createLambda(lambdaClass, borrow());
     }
 
-    @SafeVarargs
-    @SuppressWarnings("unchecked")
-    public final <T> T asJavaLambda(T... typeGetter) {
-        if (typeGetter.length != 0) {
-            throw new IllegalArgumentException("typeGetter length must be 0");
-        }
-        return (T)asJavaLambda(typeGetter.getClass().componentType());
-    }
-
     /**
      * @return The underlying {@code PyObject*}. The object's refcount is not incremented before being returned.
      */

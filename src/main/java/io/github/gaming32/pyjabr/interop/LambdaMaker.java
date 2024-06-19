@@ -160,7 +160,9 @@ class LambdaMaker {
             return MethodHandles.filterReturnValue(mh, PYTHON_TO_JAVA_UNTYPED);
         }
         return MethodHandles.filterReturnValue(
-            mh, MethodHandles.insertArguments(PYTHON_TO_JAVA_TYPED, 1, lambdaInfo.returnType)
+            mh,
+            MethodHandles.insertArguments(PYTHON_TO_JAVA_TYPED, 1, lambdaInfo.returnType)
+                .asType(MethodType.methodType(lambdaInfo.returnType, MemorySegment.class))
         );
     }
 
