@@ -296,3 +296,7 @@ sys.meta_path.append(_JavaImportFinder())
 
 # noinspection PyUnresolvedReferences,PyProtectedMember
 del os._exit
+
+# Attach the "main thread" to whatever thread initializes pyjabr.
+# Otherwise, whatever thread imports threading will own the main thread.
+__import__('threading')

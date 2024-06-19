@@ -3,7 +3,9 @@ package io.github.gaming32.pyjabr;
 import io.github.gaming32.pyjabr.interop.InteropModule;
 import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
+import io.github.gaming32.pyjabr.object.PythonEval;
 import io.github.gaming32.pyjabr.object.PythonException;
+import io.github.gaming32.pyjabr.object.PythonObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Map;
 
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
@@ -30,7 +33,6 @@ public class PythonMain {
 //            PythonEval.eval(
 //                "__import__('threading').Thread(name='a_thread', target=arg.run).start()",
 //                Map.of("arg", PythonObject.fromJavaObject((Runnable)() -> {
-////                    System.out.println(PythonEval.eval("__import__('threading').current_thread()"));
 //                    try {
 //                        Thread.sleep(5000);
 //                    } catch (InterruptedException e) {
@@ -40,9 +42,12 @@ public class PythonMain {
 //                }))
 //            );
 
-//            Thread.ofPlatform().start(() -> PythonEval.eval("print('hi')")).join();
+//            Thread.ofPlatform()
+//                .start(() -> PythonEval.eval("print(__import__('threading').current_thread())"))
+//                .join();
+//            PythonEval.eval("print(__import__('threading').current_thread())");
 
-//            final Runnable action = PythonEval.eval("lambda: print('hi')").asJavaLambda(Runnable.class);
+//            final Runnable action = PythonEval.eval("lambda: print(__import__('threading').current_thread())").asJavaLambda(Runnable.class);
 //            Thread.ofPlatform().start(action).join();
 
             runPath(Path.of("test.py"), "__main__");
