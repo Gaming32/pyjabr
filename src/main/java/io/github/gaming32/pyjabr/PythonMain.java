@@ -3,9 +3,7 @@ package io.github.gaming32.pyjabr;
 import io.github.gaming32.pyjabr.interop.InteropModule;
 import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
-import io.github.gaming32.pyjabr.object.PythonEval;
 import io.github.gaming32.pyjabr.object.PythonException;
-import io.github.gaming32.pyjabr.object.PythonObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Map;
 
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
