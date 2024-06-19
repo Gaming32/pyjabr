@@ -1,7 +1,5 @@
 package io.github.gaming32.pyjabr.interop;
 
-import io.github.gaming32.pyjabr.TupleUtil;
-
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
@@ -56,10 +54,13 @@ public class InteropUtils {
     }
 
     public static MemorySegment invokeCallable(MemorySegment callable, MemorySegment... args) {
-        final MemorySegment argsTuple = TupleUtil.createTuple(args);
-        if (argsTuple.equals(MemorySegment.NULL)) {
-            return MemorySegment.NULL;
+        try (Arena arena = Arena.ofConfined()) {
+            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
+            for (int i = 0; i < args.length; i++) {
+                argsArray.setAtIndex(C_POINTER, i, args[i]);
+            }
+            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+            return PyObject_Vectorcall(callable, argsArray, nargsf, _Py_NULL());
         }
-        return PyObject_CallObject(callable, argsTuple);
     }
 }

@@ -10,7 +10,6 @@ import io.github.gaming32.pyjabr.python.PythonException;
 import org.jetbrains.annotations.NotNull;
 import org.python.Python_h;
 
-import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.LambdaConversionException;
 import java.lang.invoke.LambdaMetafactory;
@@ -19,8 +18,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
-
-import static org.python.Python_h.*;
 
 class LambdaMaker {
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
@@ -31,7 +28,7 @@ class LambdaMaker {
 
     private static final MethodHandle PY_OBJECT_CALL_NO_ARGS;
     private static final MethodHandle PY_OBJECT_CALL_ONE_ARG;
-    private static final MethodHandle PERFORM_VECTORCALL;
+    private static final MethodHandle INVOKE_CALLABLE;
 
     private static final MethodHandle WRAP_PYTHON_EXCEPTION;
 
@@ -78,10 +75,10 @@ class LambdaMaker {
                 PythonUtil.class, "PyObject_CallOneArg",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment.class)
             );
-            PERFORM_VECTORCALL = LOOKUP.findStatic(
-                LambdaMaker.class, "performVectorcall",
+            INVOKE_CALLABLE = LOOKUP.findStatic(
+                InteropUtils.class, "invokeCallable",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment[].class)
-            );
+            ).asFixedArity();
 
             WRAP_PYTHON_EXCEPTION = MethodHandles.guardWithTest(
                 LOOKUP.findVirtual(
@@ -140,21 +137,10 @@ class LambdaMaker {
     }
 
     private static MethodHandle handleVectorcall(LambdaInfo lambdaInfo, MemorySegment action) {
-        MethodHandle handle = PERFORM_VECTORCALL.bindTo(action);
+        MethodHandle handle = INVOKE_CALLABLE.bindTo(action);
         handle = handle.asCollector(MemorySegment[].class, lambdaInfo.argTypes.length);
         handle = MethodHandles.filterArguments(handle, 0, createParamAdapters(lambdaInfo.argTypes));
         return adaptReturnType(handle, lambdaInfo);
-    }
-
-    private static MemorySegment performVectorcall(MemorySegment self, MemorySegment[] args) {
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
-            for (int i = 0; i < args.length; i++) {
-                argsArray.setAtIndex(C_POINTER, i, args[i]);
-            }
-            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return PyObject_Vectorcall(self, argsArray, nargsf, _Py_NULL());
-        }
     }
 
     private static MethodHandle[] createParamAdapters(Class<?>... argTypes) {

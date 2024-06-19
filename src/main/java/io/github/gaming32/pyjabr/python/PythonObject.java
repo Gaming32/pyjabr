@@ -36,6 +36,10 @@ public final class PythonObject implements Iterable<PythonObject> {
         return new PythonObject(raw);
     }
 
+    public static PythonObject fromJavaObject(Object o) {
+        return checkAndSteal(InteropConversions.javaToPython(o));
+    }
+
     @Override
     public String toString() {
         return toString(Python_h::PyObject_Str);
