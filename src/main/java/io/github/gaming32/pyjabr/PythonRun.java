@@ -12,11 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyImport_ExecCodeModule;
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.Py_CompileString;
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h_1.Py_DecRef;
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h_2.C_CHAR;
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h_2.Py_file_input;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonRun {
     public static void runResource(String resourceName, String moduleName) throws IOException {
