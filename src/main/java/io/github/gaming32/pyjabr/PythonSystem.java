@@ -1,7 +1,5 @@
-package io.github.gaming32.pyjabr.lowlevel;
+package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pyjabr.PythonRun;
-import io.github.gaming32.pyjabr.PythonVersion;
 import io.github.gaming32.pyjabr.interop.InteropModule;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
 import org.slf4j.Logger;
@@ -40,7 +38,7 @@ public class PythonSystem {
 
     private static final AtomicReference<Thread> MANAGEMENT_THREAD = new AtomicReference<>();
 
-    public static void callPython(Runnable action) {
+    public static void withGil(Runnable action) {
         initialize();
         final int state = PyGILState_Ensure();
         try {
@@ -50,7 +48,7 @@ public class PythonSystem {
         }
     }
 
-    public static <T> T callPython(Supplier<T> action) {
+    public static <T> T withGil(Supplier<T> action) {
         initialize();
         final int state = PyGILState_Ensure();
         try {

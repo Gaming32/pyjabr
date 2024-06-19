@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static io.github.gaming32.pyjabr.lowlevel.PythonSystem.callPython;
+import static io.github.gaming32.pyjabr.PythonSystem.withGil;
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
@@ -38,7 +38,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public static PythonObject fromJavaObject(Object o) {
-        return checkAndSteal(callPython(() -> InteropConversions.javaToPython(o)));
+        return checkAndSteal(withGil(() -> InteropConversions.javaToPython(o)));
     }
 
     @Override
@@ -51,7 +51,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     private String toString(Function<MemorySegment, MemorySegment> function) {
-        return callPython(() -> {
+        return withGil(() -> {
             final MemorySegment resultStr = function.apply(borrow());
             if (resultStr.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -72,7 +72,7 @@ public final class PythonObject implements Iterable<PythonObject> {
 
     @Override
     public int hashCode() {
-        return callPython(() -> {
+        return withGil(() -> {
             long result = PyObject_Hash(borrow());
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 if (PyErr_ExceptionMatches(PyExc_TypeError()) != 0) {
@@ -87,7 +87,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public long hash() {
-        return callPython(() -> {
+        return withGil(() -> {
             final long result = PyObject_Hash(borrow());
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -106,7 +106,7 @@ public final class PythonObject implements Iterable<PythonObject> {
                 return false;
             }
         }
-        final int result = callPython(() -> PyObject_RichCompareBool(borrow(), to.borrow(), operator.getConstant()));
+        final int result = withGil(() -> PyObject_RichCompareBool(borrow(), to.borrow(), operator.getConstant()));
         if (result == -1) {
             throw PythonException.moveFromPython();
         }
@@ -114,19 +114,19 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public boolean isInstance(PythonObject type) {
-        return tristateToBoolean(callPython(() -> PyObject_IsInstance(borrow(), type.borrow())));
+        return tristateToBoolean(withGil(() -> PyObject_IsInstance(borrow(), type.borrow())));
     }
 
     public boolean isSubclass(PythonObject type) {
-        return tristateToBoolean(callPython(() -> PyObject_IsSubclass(borrow(), type.borrow())));
+        return tristateToBoolean(withGil(() -> PyObject_IsSubclass(borrow(), type.borrow())));
     }
 
     public boolean isTrue() {
-        return tristateToBoolean(callPython(() -> PyObject_IsTrue(borrow())));
+        return tristateToBoolean(withGil(() -> PyObject_IsTrue(borrow())));
     }
 
     public boolean not() {
-        return tristateToBoolean(callPython(() -> PyObject_Not(borrow())));
+        return tristateToBoolean(withGil(() -> PyObject_Not(borrow())));
     }
 
     private static boolean tristateToBoolean(int value) {
@@ -137,11 +137,11 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject call() {
-        return checkAndSteal(callPython(() -> PyObject_CallNoArgs(borrow())));
+        return checkAndSteal(withGil(() -> PyObject_CallNoArgs(borrow())));
     }
 
     public PythonObject call(PythonObject arg) {
-        return checkAndSteal(callPython(() -> PyObject_CallOneArg(borrow(), arg.borrow())));
+        return checkAndSteal(withGil(() -> PyObject_CallOneArg(borrow(), arg.borrow())));
     }
 
     public PythonObject call(PythonObject... args) {
@@ -151,18 +151,18 @@ public final class PythonObject implements Iterable<PythonObject> {
                 argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
             }
             final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return checkAndSteal(callPython(() -> PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
+            return checkAndSteal(withGil(() -> PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
         }
     }
 
     public PythonObject callMethod(String method) {
-        return checkAndSteal(callPython(() ->
+        return checkAndSteal(withGil(() ->
             PyObject_CallMethodNoArgs(borrow(), InteropConversions.createPythonString(method))
         ));
     }
 
     public PythonObject callMethod(String method, PythonObject arg) {
-        return checkAndSteal(callPython(() ->
+        return checkAndSteal(withGil(() ->
             PyObject_CallMethodOneArg(borrow(), InteropConversions.createPythonString(method), arg.borrow())
         ));
     }
@@ -175,7 +175,7 @@ public final class PythonObject implements Iterable<PythonObject> {
                 argsArray.setAtIndex(C_POINTER, i + 1, args[i].borrow());
             }
             final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return checkAndSteal(callPython(() ->
+            return checkAndSteal(withGil(() ->
                 PyObject_VectorcallMethod(arena.allocateFrom(method), argsArray, nargsf, _Py_NULL())
             ));
         }
@@ -183,20 +183,20 @@ public final class PythonObject implements Iterable<PythonObject> {
 
     public PythonObject getAttr(String attr) {
         try (Arena arena = Arena.ofConfined()) {
-            return checkAndSteal(callPython(() -> PyObject_GetAttrString(borrow(), arena.allocateFrom(attr))));
+            return checkAndSteal(withGil(() -> PyObject_GetAttrString(borrow(), arena.allocateFrom(attr))));
         }
     }
 
     public void setAttr(String attr, PythonObject value) {
         try (Arena arena = Arena.ofConfined()) {
-            if (callPython(() -> PyObject_SetAttrString(borrow(), arena.allocateFrom(attr), value.borrow())) == -1) {
+            if (withGil(() -> PyObject_SetAttrString(borrow(), arena.allocateFrom(attr), value.borrow())) == -1) {
                 throw PythonException.moveFromPython();
             }
         }
     }
 
     public boolean hasAttr(String attr) {
-        return callPython(() -> {
+        return withGil(() -> {
             final MemorySegment result;
             try (Arena arena = Arena.ofConfined()) {
                 result = PyObject_GetAttrString(borrow(), arena.allocateFrom(attr));
@@ -213,14 +213,14 @@ public final class PythonObject implements Iterable<PythonObject> {
 
     public void delAttr(String attr) {
         try (Arena arena = Arena.ofConfined()) {
-            if (callPython(() -> PyObject_DelAttrString(borrow(), arena.allocateFrom(attr))) == -1) {
+            if (withGil(() -> PyObject_DelAttrString(borrow(), arena.allocateFrom(attr))) == -1) {
                 throw PythonException.moveFromPython();
             }
         }
     }
 
     public List<PythonObject> dir() {
-        return callPython(() -> {
+        return withGil(() -> {
             final MemorySegment result = PyObject_Dir(borrow());
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -245,11 +245,11 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject dirList() {
-        return checkAndSteal(callPython(() -> PyObject_Dir(borrow())));
+        return checkAndSteal(withGil(() -> PyObject_Dir(borrow())));
     }
 
     public long len() {
-        return callPython(() -> {
+        return withGil(() -> {
             final long result = PyObject_Length(borrow());
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -259,39 +259,39 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject getItem(PythonObject key) {
-        return checkAndSteal(callPython(() -> PyObject_GetItem(borrow(), key.borrow())));
+        return checkAndSteal(withGil(() -> PyObject_GetItem(borrow(), key.borrow())));
     }
 
     public void setItem(PythonObject key, PythonObject value) {
-        if (callPython(() -> PyObject_SetItem(borrow(), key.borrow(), value.borrow())) == -1) {
+        if (withGil(() -> PyObject_SetItem(borrow(), key.borrow(), value.borrow())) == -1) {
             throw PythonException.moveFromPython();
         }
     }
 
     public void detItem(PythonObject key) {
-        if (callPython(() -> PyObject_DelItem(borrow(), key.borrow())) == -1) {
+        if (withGil(() -> PyObject_DelItem(borrow(), key.borrow())) == -1) {
             throw PythonException.moveFromPython();
         }
     }
 
     public PythonObject getType() {
-        return checkAndSteal(callPython(() -> PyObject_Type(borrow())));
+        return checkAndSteal(withGil(() -> PyObject_Type(borrow())));
     }
 
     @NotNull
     @Override
     public PythonIterator iterator() {
-        return new PythonIterator(checkAndSteal(callPython(() -> PyObject_GetIter(borrow()))));
+        return new PythonIterator(checkAndSteal(withGil(() -> PyObject_GetIter(borrow()))));
     }
 
     public boolean isIterator() {
-        return callPython(() -> PyIter_Check(borrow())) != 0;
+        return withGil(() -> PyIter_Check(borrow())) != 0;
     }
 
     public SendResult send(PythonObject value) {
         try (Arena arena = Arena.ofConfined()) {
             final MemorySegment result = arena.allocate(C_POINTER, 1);
-            final int sendResult = callPython(() -> PyIter_Send(borrow(), value.borrow(), result));
+            final int sendResult = withGil(() -> PyIter_Send(borrow(), value.borrow(), result));
             if (sendResult == PYGEN_RETURN() || sendResult == PYGEN_NEXT()) {
                 final SendResult.Type resultType = sendResult == PYGEN_RETURN()
                     ? SendResult.Type.RETURN
@@ -303,7 +303,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public <T> T asJavaLambda(Class<T> lambdaClass) {
-        return callPython(() -> InteropConversions.createLambda(lambdaClass, borrow()));
+        return withGil(() -> InteropConversions.createLambda(lambdaClass, borrow()));
     }
 
     /**

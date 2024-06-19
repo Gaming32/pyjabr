@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr;
+package io.github.gaming32.pyjabr.util;
 
 import com.google.common.collect.Streams;
 import org.jetbrains.annotations.Nullable;

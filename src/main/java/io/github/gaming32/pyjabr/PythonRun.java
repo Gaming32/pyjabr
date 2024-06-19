@@ -1,6 +1,5 @@
 package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 import io.github.gaming32.pyjabr.object.PythonException;
 
 import java.io.FileNotFoundException;
@@ -31,7 +30,7 @@ public class PythonRun {
     }
 
     public static void runCode(byte[] source, String filename, String moduleName) {
-        PythonSystem.callPython(() -> {
+        PythonSystem.withGil(() -> {
             final MemorySegment code;
             final MemorySegment result;
             try (Arena arena = Arena.ofConfined()) {

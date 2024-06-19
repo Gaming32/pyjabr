@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr.object;
 
-import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
+import io.github.gaming32.pyjabr.PythonSystem;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -28,7 +28,7 @@ public class PythonException extends RuntimeException {
     }
 
     public static PythonException of(PythonObject pythonException) {
-        return PythonSystem.callPython(() -> new PythonException(
+        return PythonSystem.withGil(() -> new PythonException(
             getPythonClass(pythonException.borrow()),
             getPythonMessage(pythonException.borrow()),
             getPythonTraceback(pythonException.borrow()),

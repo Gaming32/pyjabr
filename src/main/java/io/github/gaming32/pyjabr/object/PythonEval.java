@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr.object;
 
-import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
+import io.github.gaming32.pyjabr.PythonSystem;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -33,7 +33,7 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
-        return PythonSystem.callPython(() -> {
+        return PythonSystem.withGil(() -> {
             checkGlobalsLocals(globals, locals);
 
             final MemorySegment code;
@@ -71,7 +71,7 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
-        return PythonSystem.callPython(() -> {
+        return PythonSystem.withGil(() -> {
             checkGlobalsLocals(globals, locals);
             return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
         });
