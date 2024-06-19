@@ -6,7 +6,7 @@ import java.nio.file.Path;
 public class PythonMain {
     public static void main(String[] args) throws IOException {
 //        PythonEval.eval(
-//            "__import__('threading').Thread(name='a_thread', target=arg.run).start()",
+//            "__import__('threading').Thread(name='a_thread', target=arg.run, daemon=False).start()",
 //            Map.of("arg", PythonObject.fromJavaObject((Runnable)() -> {
 //                try {
 //                    Thread.sleep(5000);
