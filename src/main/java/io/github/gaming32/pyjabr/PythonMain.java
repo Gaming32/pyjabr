@@ -23,6 +23,13 @@ public class PythonMain {
         CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
 
         Py_InitializeEx(0);
+        try (Arena arena = Arena.ofConfined()) {
+            if (PyImport_ImportModuleLevel(
+                arena.allocateFrom("threading"), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
+            ) == null) {
+                PyErr_Clear();
+            }
+        }
         final MemorySegment save = PyEval_SaveThread();
         try {
             runResource("java_api.py", "java_api");
