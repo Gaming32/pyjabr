@@ -1,9 +1,9 @@
 package io.github.gaming32.pyjabr.module;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pyjabr.interop.InteropConversions;
-import io.github.gaming32.pyjabr.interop.InteropUtils;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropUtils;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.LambdaConversionException;

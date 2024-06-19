@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr;
 
-import io.github.gaming32.pyjabr.interop.InteropModule;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropModule;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

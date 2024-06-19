@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.interop;
+package io.github.gaming32.pyjabr.lowlevel.interop;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

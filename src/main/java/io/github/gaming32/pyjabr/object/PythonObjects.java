@@ -1,8 +1,8 @@
 package io.github.gaming32.pyjabr.object;
 
 import com.google.common.base.Suppliers;
-import io.github.gaming32.pyjabr.interop.InteropConversions;
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

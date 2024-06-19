@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.interop;
+package io.github.gaming32.pyjabr.lowlevel.interop;
 
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
 import io.github.gaming32.pyjabr.module.PythonFunction;

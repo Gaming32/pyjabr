@@ -1,8 +1,8 @@
 package io.github.gaming32.pyjabr.object;
 
-import io.github.gaming32.pyjabr.interop.InteropConversions;
-import io.github.gaming32.pyjabr.interop.InteropUtils;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.foreign.Arena;

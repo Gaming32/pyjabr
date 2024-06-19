@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.interop;
+package io.github.gaming32.pyjabr.lowlevel.interop;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
