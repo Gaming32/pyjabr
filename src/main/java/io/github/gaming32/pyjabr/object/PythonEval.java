@@ -1,10 +1,12 @@
-package io.github.gaming32.pyjabr.python;
+package io.github.gaming32.pyjabr.object;
+
+import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.Map;
 
-import static io.github.gaming32.pyjabr.PythonUtil.*;
+import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.PyDict_Check;
 import static org.python.Python_h.*;
 
 // Based on builtin_eval_impl
@@ -31,15 +33,17 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
-        checkGlobalsLocals(globals, locals);
+        return PythonSystem.callPython(() -> {
+            checkGlobalsLocals(globals, locals);
 
-        final MemorySegment code;
-        try (Arena arena = Arena.ofConfined()) {
-            code = Py_CompileString(arena.allocateFrom(trimSource(source)), FILENAME, Py_eval_input());
-        }
-        final MemorySegment result = PyEval_EvalCode(code, globals.borrow(), locals.borrow());
-        Py_DecRef(code);
-        return PythonObject.checkAndSteal(result);
+            final MemorySegment code;
+            try (Arena arena = Arena.ofConfined()) {
+                code = Py_CompileString(arena.allocateFrom(trimSource(source)), FILENAME, Py_eval_input());
+            }
+            final MemorySegment result = PyEval_EvalCode(code, globals.borrow(), locals.borrow());
+            Py_DecRef(code);
+            return PythonObject.checkAndSteal(result);
+        });
     }
 
     private static String trimSource(String source) {
@@ -67,8 +71,10 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
-        checkGlobalsLocals(globals, locals);
-        return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
+        return PythonSystem.callPython(() -> {
+            checkGlobalsLocals(globals, locals);
+            return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
+        });
     }
 
     private static void checkGlobalsLocals(PythonObject globals, PythonObject locals) {

@@ -1,8 +1,8 @@
-package io.github.gaming32.pyjabr.python;
+package io.github.gaming32.pyjabr.object;
 
 import com.google.common.base.Suppliers;
-import io.github.gaming32.pyjabr.TupleUtil;
 import io.github.gaming32.pyjabr.interop.InteropConversions;
+import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.github.gaming32.pyjabr.lowlevel.PythonSystem.callPython;
 import static org.python.Python_h.*;
 
 public final class PythonObjects {
@@ -27,19 +28,19 @@ public final class PythonObjects {
     }
 
     public static PythonObject pythonInt(int value) {
-        return PythonObject.checkAndSteal(PyLong_FromLong(value));
+        return PythonObject.checkAndSteal(callPython(() -> PyLong_FromLong(value)));
     }
 
     public static PythonObject pythonInt(long value) {
-        return PythonObject.checkAndSteal(PyLong_FromLongLong(value));
+        return PythonObject.checkAndSteal(callPython(() -> PyLong_FromLongLong(value)));
     }
 
     public static PythonObject pythonFloat(double value) {
-        return PythonObject.checkAndSteal(PyFloat_FromDouble(value));
+        return PythonObject.checkAndSteal(callPython(() -> PyFloat_FromDouble(value)));
     }
 
     public static PythonObject str(String value) {
-        return PythonObject.steal(InteropConversions.createPythonString(value));
+        return PythonObject.steal(callPython(() -> InteropConversions.createPythonString(value)));
     }
 
     public static PythonObject bool(boolean value) {
@@ -53,68 +54,74 @@ public final class PythonObjects {
             Py_IncRef(pyObject);
             pyObjects[i] = pyObject;
         }
-        return PythonObject.checkAndSteal(TupleUtil.createTuple(pyObjects));
+        return PythonObject.checkAndSteal(callPython(() -> TupleUtil.createTuple(pyObjects)));
     }
 
     public static PythonObject list(List<PythonObject> values) {
-        final MemorySegment result = PyList_New(values.size());
-        if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
-        }
-        int i = 0;
-        for (final PythonObject value : values) {
-            final MemorySegment pyObject = value.borrow();
-            Py_IncRef(pyObject);
-            PyList_SetItem(result, i++, pyObject);
-        }
-        return PythonObject.steal(result);
+        return callPython(() -> {
+            final MemorySegment result = PyList_New(values.size());
+            if (result.equals(MemorySegment.NULL)) {
+                throw PythonException.moveFromPython();
+            }
+            int i = 0;
+            for (final PythonObject value : values) {
+                final MemorySegment pyObject = value.borrow();
+                Py_IncRef(pyObject);
+                PyList_SetItem(result, i++, pyObject);
+            }
+            return PythonObject.steal(result);
+        });
     }
 
     public static PythonObject dict(Map<PythonObject, PythonObject> values) {
-        final MemorySegment result = PyDict_New();
-        if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
-        }
-        for (final var entry : values.entrySet()) {
-            final MemorySegment key = entry.getKey().borrow();
-            final MemorySegment value = entry.getValue().borrow();
-            if (PyDict_SetItem(result, key, value) == -1) {
-                Py_DecRef(result);
+        return callPython(() -> {
+            final MemorySegment result = PyDict_New();
+            if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
             }
-        }
-        return PythonObject.steal(result);
+            for (final var entry : values.entrySet()) {
+                final MemorySegment key = entry.getKey().borrow();
+                final MemorySegment value = entry.getValue().borrow();
+                if (PyDict_SetItem(result, key, value) == -1) {
+                    Py_DecRef(result);
+                    throw PythonException.moveFromPython();
+                }
+            }
+            return PythonObject.steal(result);
+        });
     }
 
     public static PythonObject stringDict(Map<String, PythonObject> values) {
-        final MemorySegment result = PyDict_New();
-        if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
-        }
-        final Arena arena = Arena.ofAuto();
-        for (final var entry : values.entrySet()) {
-            final MemorySegment key = arena.allocateFrom(entry.getKey());
-            final MemorySegment value = entry.getValue().borrow();
-            if (PyDict_SetItemString(result, key, value) == -1) {
-                Py_DecRef(result);
+        return callPython(() -> {
+            final MemorySegment result = PyDict_New();
+            if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
             }
-        }
-        return PythonObject.steal(result);
+            final Arena arena = Arena.ofAuto();
+            for (final var entry : values.entrySet()) {
+                final MemorySegment key = arena.allocateFrom(entry.getKey());
+                final MemorySegment value = entry.getValue().borrow();
+                if (PyDict_SetItemString(result, key, value) == -1) {
+                    Py_DecRef(result);
+                    throw PythonException.moveFromPython();
+                }
+            }
+            return PythonObject.steal(result);
+        });
     }
 
     public static PythonObject importModule(String module) {
         try (Arena arena = Arena.ofConfined()) {
-            return PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
+            return PythonObject.checkAndSteal(callPython(() -> PyImport_ImportModuleLevel(
                 arena.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
-            ));
+            )));
         }
     }
 
     public static PythonObject getBuiltins() {
-        return PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
+        return callPython(() -> PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
             BUILTINS, MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
-        ));
+        )));
     }
 
     public static PythonObject getBuiltin(String name) {

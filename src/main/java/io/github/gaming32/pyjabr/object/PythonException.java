@@ -1,9 +1,11 @@
-package io.github.gaming32.pyjabr.python;
+package io.github.gaming32.pyjabr.object;
+
+import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static io.github.gaming32.pyjabr.PythonUtil.*;
+import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static org.python.Python_h.*;
 
 public class PythonException extends RuntimeException {
@@ -26,16 +28,18 @@ public class PythonException extends RuntimeException {
     }
 
     public static PythonException of(PythonObject pythonException) {
-        return new PythonException(
+        return PythonSystem.callPython(() -> new PythonException(
             getPythonClass(pythonException.borrow()),
             getPythonMessage(pythonException.borrow()),
             getPythonTraceback(pythonException.borrow()),
             pythonException
-        );
+        ));
     }
 
     public static PythonException moveFromPython() {
-        final MemorySegment exception = PyErr_GetRaisedException();
+        final MemorySegment exception = !PyGILState_GetThisThreadState().equals(MemorySegment.NULL)
+            ? PyErr_GetRaisedException()
+            : MemorySegment.NULL;
         if (exception.equals(MemorySegment.NULL)) {
             throw new IllegalStateException("PythonException.moveFromPython called without a raised exception");
         }

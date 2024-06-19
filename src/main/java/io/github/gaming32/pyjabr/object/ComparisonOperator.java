@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.python;
+package io.github.gaming32.pyjabr.object;
 
 import static org.python.Python_h.*;
 

@@ -7,6 +7,9 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.python.Python_h.PyEval_RestoreThread;
+import static org.python.Python_h.PyEval_SaveThread;
+
 public class InvokeHandler {
     public static MemorySegment invoke(
         FieldOrMethod.MethodWrapper executables,
@@ -20,14 +23,19 @@ public class InvokeHandler {
             } catch (InteropConversions.NoDetailsConversionFailed e) {
                 continue;
             }
+            final MemorySegment save = PyEval_SaveThread();
+            final Object result;
             try {
-                return InteropConversions.javaToPython(switch (executable) {
+                result = switch (executable) {
                     case Method m -> m.invoke(owner, builtArgs);
                     case Constructor<?> c -> c.newInstance(builtArgs);
-                });
+                };
             } catch (InstantiationException e) {
                 throw new InvocationTargetException(e);
+            } finally {
+                PyEval_RestoreThread(save);
             }
+            return InteropConversions.javaToPython(result);
         }
         return null;
     }

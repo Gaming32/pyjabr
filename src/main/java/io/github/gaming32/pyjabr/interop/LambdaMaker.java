@@ -4,9 +4,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
-import io.github.gaming32.pyjabr.PythonUtil;
 import io.github.gaming32.pyjabr.ReflectUtil;
-import io.github.gaming32.pyjabr.python.PythonException;
+import io.github.gaming32.pyjabr.lowlevel.PythonUtil;
+import io.github.gaming32.pyjabr.object.PythonException;
 import org.jetbrains.annotations.NotNull;
 import org.python.Python_h;
 
@@ -29,6 +29,9 @@ class LambdaMaker {
     private static final MethodHandle PY_OBJECT_CALL_NO_ARGS;
     private static final MethodHandle PY_OBJECT_CALL_ONE_ARG;
     private static final MethodHandle INVOKE_CALLABLE;
+
+    private static final MethodHandle PY_GIL_STATE_ENSURE;
+    private static final MethodHandle PY_GIL_STATE_RELEASE;
 
     private static final MethodHandle WRAP_PYTHON_EXCEPTION;
 
@@ -80,6 +83,15 @@ class LambdaMaker {
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment[].class)
             ).asFixedArity();
 
+            PY_GIL_STATE_ENSURE = LOOKUP.findStatic(
+                Python_h.class, "PyGILState_Ensure",
+                MethodType.methodType(int.class)
+            );
+            PY_GIL_STATE_RELEASE = LOOKUP.findStatic(
+                Python_h.class, "PyGILState_Release",
+                MethodType.methodType(void.class, int.class)
+            );
+
             WRAP_PYTHON_EXCEPTION = MethodHandles.guardWithTest(
                 LOOKUP.findVirtual(
                     MemorySegment.class, "equals",
@@ -119,7 +131,26 @@ class LambdaMaker {
             case 1 -> handleOneArg(lambdaInfo, action);
             default -> handleVectorcall(lambdaInfo, action);
         };
-        return (Object)lambdaInfo.factory.invokeExact(mh);
+        return (Object)lambdaInfo.factory.invokeExact(wrapMethod(mh));
+    }
+
+    private static MethodHandle wrapMethod(MethodHandle mh) {
+        mh = MethodHandles.dropArguments(mh, 0, int.class);
+
+        final Class<?> returnType = mh.type().returnType();
+        MethodHandle release = returnType == void.class
+            ? MethodHandles.empty(mh.type())
+            : MethodHandles.dropArguments(MethodHandles.identity(returnType), 1, mh.type().parameterArray());
+        release = MethodHandles.filterArguments(
+            release,
+            returnType == void.class ? 0 : 1,
+            MethodHandles.filterReturnValue(PY_GIL_STATE_RELEASE, MethodHandles.zero(int.class))
+        );
+        release = MethodHandles.dropArguments(release, 0, Throwable.class);
+
+        mh = MethodHandles.tryFinally(mh, release);
+        mh = MethodHandles.collectArguments(mh, 0, PY_GIL_STATE_ENSURE);
+        return mh;
     }
 
     private static MethodHandle handleNoArgs(LambdaInfo lambdaInfo, MemorySegment action) {

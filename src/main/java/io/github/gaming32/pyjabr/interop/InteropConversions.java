@@ -1,15 +1,15 @@
 package io.github.gaming32.pyjabr.interop;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pyjabr.python.PythonException;
-import io.github.gaming32.pyjabr.python.PythonObject;
+import io.github.gaming32.pyjabr.object.PythonException;
+import io.github.gaming32.pyjabr.object.PythonObject;
 import org.python.Python_h;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.function.Function;
 
-import static io.github.gaming32.pyjabr.PythonUtil.*;
+import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static org.python.Python_h.*;
 
 public class InteropConversions {

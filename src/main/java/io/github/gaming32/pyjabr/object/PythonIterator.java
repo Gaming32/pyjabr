@@ -1,6 +1,7 @@
-package io.github.gaming32.pyjabr.python;
+package io.github.gaming32.pyjabr.object;
 
 import com.google.common.collect.AbstractIterator;
+import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
@@ -25,14 +26,16 @@ public final class PythonIterator extends AbstractIterator<PythonObject> {
     @Nullable
     @Override
     protected PythonObject computeNext() {
-        final MemorySegment result = PyIter_Next(iterator.borrow());
-        if (result.equals(MemorySegment.NULL)) {
-            if (!PyErr_Occurred().equals(MemorySegment.NULL)) {
-                throw PythonException.moveFromPython();
+        return PythonSystem.callPython(() -> {
+            final MemorySegment result = PyIter_Next(iterator.borrow());
+            if (result.equals(MemorySegment.NULL)) {
+                if (!PyErr_Occurred().equals(MemorySegment.NULL)) {
+                    throw PythonException.moveFromPython();
+                }
+                return endOfData();
             }
-            return endOfData();
-        }
-        return PythonObject.steal(result);
+            return PythonObject.steal(result);
+        });
     }
 
     public SendResult send(PythonObject value) {

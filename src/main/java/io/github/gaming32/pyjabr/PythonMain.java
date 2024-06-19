@@ -1,9 +1,9 @@
 package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.interop.InteropModule;
+import io.github.gaming32.pyjabr.lowlevel.PythonSystem;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
-import io.github.gaming32.pyjabr.python.PythonEval;
-import io.github.gaming32.pyjabr.python.PythonException;
+import io.github.gaming32.pyjabr.object.PythonException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,16 +17,37 @@ import java.util.Arrays;
 import static org.python.Python_h.*;
 
 public class PythonMain {
-    public static void main(String[] args) throws IOException, IllegalAccessException {
+    public static void main(String[] args) throws IOException, IllegalAccessException, InterruptedException {
         PythonVersion.checkAndLog();
 
         CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
 
-        Py_Initialize();
+        Py_InitializeEx(0);
+        final MemorySegment save = PyEval_SaveThread();
         try {
             runResource("java_api.py", "java_api");
+
+//            PythonEval.eval(
+//                "__import__('threading').Thread(name='a_thread', target=arg.run).start()",
+//                Map.of("arg", PythonObject.fromJavaObject((Runnable)() -> {
+////                    System.out.println(PythonEval.eval("__import__('threading').current_thread()"));
+//                    try {
+//                        Thread.sleep(5000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    System.out.println(Thread.currentThread());
+//                }))
+//            );
+
+//            Thread.ofPlatform().start(() -> PythonEval.eval("print('hi')")).join();
+
+//            final Runnable action = PythonEval.eval("lambda: print('hi')").asJavaLambda(Runnable.class);
+//            Thread.ofPlatform().start(action).join();
+
             runPath(Path.of("test.py"), "__main__");
         } finally {
+            PyEval_RestoreThread(save);
             Py_Finalize();
         }
     }
@@ -47,24 +68,26 @@ public class PythonMain {
     }
 
     public static void runCode(byte[] source, String filename, String moduleName) {
-        final MemorySegment code;
-        final MemorySegment result;
-        try (Arena arena = Arena.ofConfined()) {
-            code = Py_CompileString(
-                arena.allocateFrom(C_CHAR, Arrays.copyOf(source, source.length + 1)),
-                arena.allocateFrom(filename),
-                Py_file_input()
-            );
-            if (code.equals(MemorySegment.NULL)) {
+        PythonSystem.callPython(() -> {
+            final MemorySegment code;
+            final MemorySegment result;
+            try (Arena arena = Arena.ofConfined()) {
+                code = Py_CompileString(
+                    arena.allocateFrom(C_CHAR, Arrays.copyOf(source, source.length + 1)),
+                    arena.allocateFrom(filename),
+                    Py_file_input()
+                );
+                if (code.equals(MemorySegment.NULL)) {
+                    throw PythonException.moveFromPython();
+                }
+
+                result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
+            }
+            Py_DecRef(code);
+            if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
             }
-
-            result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
-        }
-        Py_DecRef(code);
-        if (result.equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
-        }
-        Py_DecRef(result);
+            Py_DecRef(result);
+        });
     }
 }

@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr;
+package io.github.gaming32.pyjabr.lowlevel;
 
 import java.lang.foreign.MemorySegment;
 
