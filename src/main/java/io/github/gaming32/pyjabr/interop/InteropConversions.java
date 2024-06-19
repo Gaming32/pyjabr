@@ -350,6 +350,17 @@ public class InteropConversions {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T createLambda(Class<T> lambdaClass, MemorySegment action) {
+        Py_IncRef(action);
+        try {
+            return (T)LambdaMaker.makeLambda(lambdaClass, action);
+        } catch (Throwable t) {
+            Py_DecRef(action);
+            throw new RuntimeException(t);
+        }
+    }
+
     static final class NoDetailsConversionFailed extends IllegalArgumentException {
         private static final NoDetailsConversionFailed INSTANCE = new NoDetailsConversionFailed();
 

@@ -38,7 +38,7 @@ class LambdaMaker {
         .build(new CacheLoader<>() {
             @NotNull
             @Override
-            public LambdaInfo load(@NotNull Class<?> key) throws Exception {
+            public LambdaInfo load(@NotNull Class<?> key) throws LambdaConversionException {
                 final Method sam = ReflectUtil.findSam(key);
                 if (sam == null) {
                     throw new IllegalArgumentException("Not a functional interface: " + key);
