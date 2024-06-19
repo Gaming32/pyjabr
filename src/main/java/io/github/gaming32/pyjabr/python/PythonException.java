@@ -1,12 +1,9 @@
 package io.github.gaming32.pyjabr.python;
 
-import org.python.PyTypeObject;
-
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static io.github.gaming32.pyjabr.PythonUtil.PyObject_CallMethodOneArg;
-import static io.github.gaming32.pyjabr.PythonUtil.Py_TYPE;
+import static io.github.gaming32.pyjabr.PythonUtil.*;
 import static org.python.Python_h.*;
 
 public class PythonException extends RuntimeException {
@@ -48,11 +45,11 @@ public class PythonException extends RuntimeException {
     private static String getPythonClass(MemorySegment pythonException) {
         final MemorySegment pythonType = Py_TYPE(pythonException);
         final MemorySegment typeName = PyType_GetQualName(pythonType);
-        final MemorySegment typeNameUtf8 = PyUnicode_AsUTF8(typeName);
+        final MemorySegment typeNameUtf8 = PyUnicode_AsUTF8AndSize(typeName, MemorySegment.NULL);
         if (typeNameUtf8.equals(MemorySegment.NULL)) {
             Py_DecRef(typeName);
             PyErr_Clear();
-            return PyTypeObject.tp_name(pythonType).getString(0L);
+            return "<failed to convert class name to Java string>";
         }
         final String result = typeNameUtf8.getString(0L);
         Py_DecRef(typeName);
@@ -65,7 +62,7 @@ public class PythonException extends RuntimeException {
             PyErr_Clear();
             return "<exception str() failed>";
         }
-        final MemorySegment argsUtf8String = PyUnicode_AsUTF8(messageString);
+        final MemorySegment argsUtf8String = PyUnicode_AsUTF8AndSize(messageString, MemorySegment.NULL);
         if (argsUtf8String.equals(MemorySegment.NULL)) {
             Py_DecRef(messageString);
             PyErr_Clear();
@@ -104,7 +101,7 @@ public class PythonException extends RuntimeException {
             PyErr_Clear();
             return "<failed to call str.join>";
         }
-        final MemorySegment resultUtf8String = PyUnicode_AsUTF8(resultString);
+        final MemorySegment resultUtf8String = PyUnicode_AsUTF8AndSize(resultString, MemorySegment.NULL);
         if (resultUtf8String.equals(MemorySegment.NULL)) {
             PyErr_Clear();
             return "<failed to convert traceback to Java string>";

@@ -134,18 +134,14 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject call(PythonObject... args) {
-        final MemorySegment self = borrow();
-        if (PyType_HasFeature(Py_TYPE(self), Py_TPFLAGS_HAVE_VECTORCALL())) {
-            try (Arena arena = Arena.ofConfined()) {
-                final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
-                for (int i = 0; i < args.length; i++) {
-                    argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
-                }
-                final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-                return checkAndSteal(PyObject_Vectorcall(self, argsArray, nargsf, _Py_NULL()));
+        try (Arena arena = Arena.ofConfined()) {
+            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
+            for (int i = 0; i < args.length; i++) {
+                argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
             }
+            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+            return checkAndSteal(PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL()));
         }
-        return checkAndSteal(PyObject_CallObject(borrow(), PythonObjects.tuple(args).borrow()));
     }
 
     public PythonObject callMethod(String method) {
@@ -233,14 +229,6 @@ public final class PythonObject implements Iterable<PythonObject> {
 
     public long len() {
         final long result = PyObject_Length(borrow());
-        if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
-            throw PythonException.moveFromPython();
-        }
-        return result;
-    }
-
-    public long lengthHint(long defaultValue) {
-        final long result = PyObject_LengthHint(borrow(), defaultValue);
         if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
             throw PythonException.moveFromPython();
         }

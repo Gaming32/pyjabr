@@ -14,10 +14,16 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
- * typedef struct _longobject PyLongObject
+ * typedef struct _object {
+ *     union {
+ *         Py_ssize_t ob_refcnt;
+ *         uint32_t ob_refcnt_split[2];
+ *     };
+ *     PyTypeObject *ob_type;
+ * } PyLongObject
  * }
  */
-public class PyLongObject extends _longobject {
+public class PyLongObject extends _object {
 
     PyLongObject() {
         // Should not be called directly

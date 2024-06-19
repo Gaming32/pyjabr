@@ -12,8 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-import static io.github.gaming32.pyjabr.PythonUtil.PyTuple_Check;
-import static io.github.gaming32.pyjabr.PythonUtil.PyUnicode_Check;
+import static io.github.gaming32.pyjabr.PythonUtil.*;
 import static org.python.Python_h.*;
 
 @PythonModule("_java")

@@ -17,7 +17,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * typedef _Lldiv_t imaxdiv_t
  * }
  */
-public class imaxdiv_t extends _Lldiv_t$4 {
+public class imaxdiv_t extends _Lldiv_t {
 
     imaxdiv_t() {
         // Should not be called directly

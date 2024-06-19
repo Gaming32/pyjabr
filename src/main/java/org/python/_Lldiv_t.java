@@ -14,22 +14,22 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
- * struct _PyCFrame {
- *     struct _PyInterpreterFrame *current_frame;
- *     struct _PyCFrame *previous;
+ * struct {
+ *     intmax_t quot;
+ *     intmax_t rem;
  * }
  * }
  */
-public class _PyCFrame {
+public class _Lldiv_t {
 
-    _PyCFrame() {
+    _Lldiv_t() {
         // Should not be called directly
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        Python_h.C_POINTER.withName("current_frame"),
-        Python_h.C_POINTER.withName("previous")
-    ).withName("_PyCFrame");
+        Python_h.C_LONG_LONG.withName("quot"),
+        Python_h.C_LONG_LONG.withName("rem")
+    ).withName("$anon$29:9");
 
     /**
      * The layout of this struct
@@ -38,92 +38,92 @@ public class _PyCFrame {
         return $LAYOUT;
     }
 
-    private static final AddressLayout current_frame$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("current_frame"));
+    private static final OfLong quot$LAYOUT = (OfLong)$LAYOUT.select(groupElement("quot"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct _PyInterpreterFrame *current_frame
+     * intmax_t quot
      * }
      */
-    public static final AddressLayout current_frame$layout() {
-        return current_frame$LAYOUT;
+    public static final OfLong quot$layout() {
+        return quot$LAYOUT;
     }
 
-    private static final long current_frame$OFFSET = 0;
+    private static final long quot$OFFSET = 0;
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct _PyInterpreterFrame *current_frame
+     * intmax_t quot
      * }
      */
-    public static final long current_frame$offset() {
-        return current_frame$OFFSET;
+    public static final long quot$offset() {
+        return quot$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct _PyInterpreterFrame *current_frame
+     * intmax_t quot
      * }
      */
-    public static MemorySegment current_frame(MemorySegment struct) {
-        return struct.get(current_frame$LAYOUT, current_frame$OFFSET);
+    public static long quot(MemorySegment struct) {
+        return struct.get(quot$LAYOUT, quot$OFFSET);
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct _PyInterpreterFrame *current_frame
+     * intmax_t quot
      * }
      */
-    public static void current_frame(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(current_frame$LAYOUT, current_frame$OFFSET, fieldValue);
+    public static void quot(MemorySegment struct, long fieldValue) {
+        struct.set(quot$LAYOUT, quot$OFFSET, fieldValue);
     }
 
-    private static final AddressLayout previous$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("previous"));
+    private static final OfLong rem$LAYOUT = (OfLong)$LAYOUT.select(groupElement("rem"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * struct _PyCFrame *previous
+     * intmax_t rem
      * }
      */
-    public static final AddressLayout previous$layout() {
-        return previous$LAYOUT;
+    public static final OfLong rem$layout() {
+        return rem$LAYOUT;
     }
 
-    private static final long previous$OFFSET = 8;
+    private static final long rem$OFFSET = 8;
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * struct _PyCFrame *previous
+     * intmax_t rem
      * }
      */
-    public static final long previous$offset() {
-        return previous$OFFSET;
+    public static final long rem$offset() {
+        return rem$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * struct _PyCFrame *previous
+     * intmax_t rem
      * }
      */
-    public static MemorySegment previous(MemorySegment struct) {
-        return struct.get(previous$LAYOUT, previous$OFFSET);
+    public static long rem(MemorySegment struct) {
+        return struct.get(rem$LAYOUT, rem$OFFSET);
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * struct _PyCFrame *previous
+     * intmax_t rem
      * }
      */
-    public static void previous(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(previous$LAYOUT, previous$OFFSET, fieldValue);
+    public static void rem(MemorySegment struct, long fieldValue) {
+        struct.set(rem$LAYOUT, rem$OFFSET, fieldValue);
     }
 
     /**

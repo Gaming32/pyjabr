@@ -2,6 +2,7 @@ package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.interop.InteropModule;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
+import io.github.gaming32.pyjabr.python.PythonEval;
 import io.github.gaming32.pyjabr.python.PythonException;
 
 import java.io.FileNotFoundException;

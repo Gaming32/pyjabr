@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import io.github.gaming32.pyjabr.PythonUtil;
 import io.github.gaming32.pyjabr.ReflectUtil;
-import io.github.gaming32.pyjabr.TupleUtil;
 import io.github.gaming32.pyjabr.python.PythonException;
 import org.jetbrains.annotations.NotNull;
 import org.python.Python_h;
@@ -20,8 +20,6 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 
-import static io.github.gaming32.pyjabr.PythonUtil.PyType_HasFeature;
-import static io.github.gaming32.pyjabr.PythonUtil.Py_TYPE;
 import static org.python.Python_h.*;
 
 class LambdaMaker {
@@ -30,12 +28,10 @@ class LambdaMaker {
     private static final MethodHandle PYTHON_TO_JAVA_TYPED;
     private static final MethodHandle PYTHON_TO_JAVA_UNTYPED;
     private static final MethodHandle JAVA_TO_PYTHON;
-    private static final MethodHandle CREATE_TUPLE;
 
     private static final MethodHandle PY_OBJECT_CALL_NO_ARGS;
     private static final MethodHandle PY_OBJECT_CALL_ONE_ARG;
     private static final MethodHandle PERFORM_VECTORCALL;
-    private static final MethodHandle PY_OBJECT_CALL_OBJECT;
 
     private static final MethodHandle WRAP_PYTHON_EXCEPTION;
 
@@ -73,26 +69,18 @@ class LambdaMaker {
                 InteropConversions.class, "javaToPython",
                 MethodType.methodType(MemorySegment.class, Object.class)
             );
-            CREATE_TUPLE = LOOKUP.findStatic(
-                TupleUtil.class, "createTuple",
-                MethodType.methodType(MemorySegment.class, MemorySegment[].class)
-            );
 
             PY_OBJECT_CALL_NO_ARGS = LOOKUP.findStatic(
                 Python_h.class, "PyObject_CallNoArgs",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class)
             );
             PY_OBJECT_CALL_ONE_ARG = LOOKUP.findStatic(
-                Python_h.class, "PyObject_CallOneArg",
+                PythonUtil.class, "PyObject_CallOneArg",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment.class)
             );
             PERFORM_VECTORCALL = LOOKUP.findStatic(
                 LambdaMaker.class, "performVectorcall",
                 MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment[].class)
-            );
-            PY_OBJECT_CALL_OBJECT = LOOKUP.findStatic(
-                Python_h.class, "PyObject_CallObject",
-                MethodType.methodType(MemorySegment.class, MemorySegment.class, MemorySegment.class)
             );
 
             WRAP_PYTHON_EXCEPTION = MethodHandles.guardWithTest(
@@ -132,9 +120,7 @@ class LambdaMaker {
         final MethodHandle mh = switch (lambdaInfo.argTypes.length) {
             case 0 -> handleNoArgs(lambdaInfo, action);
             case 1 -> handleOneArg(lambdaInfo, action);
-            default -> PyType_HasFeature(Py_TYPE(action), Py_TPFLAGS_HAVE_VECTORCALL())
-                ? handleVectorcall(lambdaInfo, action)
-                : handleTupleCall(lambdaInfo, action);
+            default -> handleVectorcall(lambdaInfo, action);
         };
         return (Object)lambdaInfo.factory.invokeExact(mh);
     }
@@ -169,14 +155,6 @@ class LambdaMaker {
             final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
             return PyObject_Vectorcall(self, argsArray, nargsf, _Py_NULL());
         }
-    }
-
-    private static MethodHandle handleTupleCall(LambdaInfo lambdaInfo, MemorySegment action) {
-        MethodHandle handle = PY_OBJECT_CALL_OBJECT.bindTo(action);
-        handle = MethodHandles.filterArguments(handle, 0, CREATE_TUPLE);
-        handle = handle.asCollector(MemorySegment[].class, lambdaInfo.argTypes.length);
-        handle = MethodHandles.filterArguments(handle, 0, createParamAdapters(lambdaInfo.argTypes));
-        return adaptReturnType(handle, lambdaInfo);
     }
 
     private static MethodHandle[] createParamAdapters(Class<?>... argTypes) {

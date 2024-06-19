@@ -1,7 +1,5 @@
 package io.github.gaming32.pyjabr.python;
 
-import org.python.PyCompilerFlags;
-
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.Map;
@@ -11,6 +9,8 @@ import static org.python.Python_h.*;
 
 // Based on builtin_eval_impl
 public final class PythonEval {
+    private static final MemorySegment FILENAME = Arena.global().allocateFrom("<PythonEval>");
+
     private PythonEval() {
     }
 
@@ -33,16 +33,13 @@ public final class PythonEval {
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
         checkGlobalsLocals(globals, locals);
 
+        final MemorySegment code;
         try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment cf = PyCompilerFlags.allocate(arena);
-            PyCompilerFlags.cf_flags(cf, PyCF_SOURCE_IS_UTF8());
-            PyCompilerFlags.cf_feature_version(cf, PY_MINOR_VERSION()); // This is ignored anyway
-
-            final MemorySegment sourceC = arena.allocateFrom(trimSource(source));
-
-            PyEval_MergeCompilerFlags(cf);
-            return PythonObject.checkAndSteal(PyRun_StringFlags(sourceC, Py_eval_input(), globals.borrow(), locals.borrow(), cf));
+            code = Py_CompileString(arena.allocateFrom(trimSource(source)), FILENAME, Py_eval_input());
         }
+        final MemorySegment result = PyEval_EvalCode(code, globals.borrow(), locals.borrow());
+        Py_DecRef(code);
+        return PythonObject.checkAndSteal(result);
     }
 
     private static String trimSource(String source) {
@@ -71,16 +68,7 @@ public final class PythonEval {
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
         checkGlobalsLocals(globals, locals);
-
-        final MemorySegment codeObj = code.borrow();
-        if (!PyCode_Check(codeObj)) {
-            throw new IllegalArgumentException("code must be a code object");
-        }
-        if (PyCode_GetNumFree(codeObj) > 0) {
-            throw new IllegalArgumentException("code may not contain free variables");
-        }
-
-        return PythonObject.checkAndSteal(PyEval_EvalCode(codeObj, globals.borrow(), locals.borrow()));
+        return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
     }
 
     private static void checkGlobalsLocals(PythonObject globals, PythonObject locals) {

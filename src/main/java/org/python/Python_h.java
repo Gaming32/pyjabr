@@ -18,6 +18,4031 @@ public class Python_h extends Python_h_1 {
         // Should not be called directly
     }
 
+    private static class PyModule_AddObjectRef {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddObjectRef");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddObjectRef(PyObject *mod, const char *name, PyObject *value)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddObjectRef$descriptor() {
+        return PyModule_AddObjectRef.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddObjectRef(PyObject *mod, const char *name, PyObject *value)
+     * }
+     */
+    public static MethodHandle PyModule_AddObjectRef$handle() {
+        return PyModule_AddObjectRef.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddObjectRef(PyObject *mod, const char *name, PyObject *value)
+     * }
+     */
+    public static MemorySegment PyModule_AddObjectRef$address() {
+        return PyModule_AddObjectRef.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddObjectRef(PyObject *mod, const char *name, PyObject *value)
+     * }
+     */
+    public static int PyModule_AddObjectRef(MemorySegment mod, MemorySegment name, MemorySegment value) {
+        var mh$ = PyModule_AddObjectRef.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddObjectRef", mod, name, value);
+            }
+            return (int)mh$.invokeExact(mod, name, value);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_AddObject {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddObject");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddObject(PyObject *mod, const char *, PyObject *value)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddObject$descriptor() {
+        return PyModule_AddObject.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddObject(PyObject *mod, const char *, PyObject *value)
+     * }
+     */
+    public static MethodHandle PyModule_AddObject$handle() {
+        return PyModule_AddObject.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddObject(PyObject *mod, const char *, PyObject *value)
+     * }
+     */
+    public static MemorySegment PyModule_AddObject$address() {
+        return PyModule_AddObject.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddObject(PyObject *mod, const char *, PyObject *value)
+     * }
+     */
+    public static int PyModule_AddObject(MemorySegment mod, MemorySegment x1, MemorySegment value) {
+        var mh$ = PyModule_AddObject.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddObject", mod, x1, value);
+            }
+            return (int)mh$.invokeExact(mod, x1, value);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_AddIntConstant {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_LONG
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddIntConstant");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddIntConstant(PyObject *, const char *, long)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddIntConstant$descriptor() {
+        return PyModule_AddIntConstant.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddIntConstant(PyObject *, const char *, long)
+     * }
+     */
+    public static MethodHandle PyModule_AddIntConstant$handle() {
+        return PyModule_AddIntConstant.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddIntConstant(PyObject *, const char *, long)
+     * }
+     */
+    public static MemorySegment PyModule_AddIntConstant$address() {
+        return PyModule_AddIntConstant.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddIntConstant(PyObject *, const char *, long)
+     * }
+     */
+    public static int PyModule_AddIntConstant(MemorySegment x0, MemorySegment x1, int x2) {
+        var mh$ = PyModule_AddIntConstant.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddIntConstant", x0, x1, x2);
+            }
+            return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_AddStringConstant {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddStringConstant");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddStringConstant(PyObject *, const char *, const char *)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddStringConstant$descriptor() {
+        return PyModule_AddStringConstant.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddStringConstant(PyObject *, const char *, const char *)
+     * }
+     */
+    public static MethodHandle PyModule_AddStringConstant$handle() {
+        return PyModule_AddStringConstant.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddStringConstant(PyObject *, const char *, const char *)
+     * }
+     */
+    public static MemorySegment PyModule_AddStringConstant$address() {
+        return PyModule_AddStringConstant.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddStringConstant(PyObject *, const char *, const char *)
+     * }
+     */
+    public static int PyModule_AddStringConstant(MemorySegment x0, MemorySegment x1, MemorySegment x2) {
+        var mh$ = PyModule_AddStringConstant.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddStringConstant", x0, x1, x2);
+            }
+            return (int)mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_AddType {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddType");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddType(PyObject *module, PyTypeObject *type)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddType$descriptor() {
+        return PyModule_AddType.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddType(PyObject *module, PyTypeObject *type)
+     * }
+     */
+    public static MethodHandle PyModule_AddType$handle() {
+        return PyModule_AddType.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddType(PyObject *module, PyTypeObject *type)
+     * }
+     */
+    public static MemorySegment PyModule_AddType$address() {
+        return PyModule_AddType.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddType(PyObject *module, PyTypeObject *type)
+     * }
+     */
+    public static int PyModule_AddType(MemorySegment module, MemorySegment type) {
+        var mh$ = PyModule_AddType.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddType", module, type);
+            }
+            return (int)mh$.invokeExact(module, type);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_SetDocString {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_SetDocString");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_SetDocString(PyObject *, const char *)
+     * }
+     */
+    public static FunctionDescriptor PyModule_SetDocString$descriptor() {
+        return PyModule_SetDocString.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_SetDocString(PyObject *, const char *)
+     * }
+     */
+    public static MethodHandle PyModule_SetDocString$handle() {
+        return PyModule_SetDocString.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_SetDocString(PyObject *, const char *)
+     * }
+     */
+    public static MemorySegment PyModule_SetDocString$address() {
+        return PyModule_SetDocString.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_SetDocString(PyObject *, const char *)
+     * }
+     */
+    public static int PyModule_SetDocString(MemorySegment x0, MemorySegment x1) {
+        var mh$ = PyModule_SetDocString.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_SetDocString", x0, x1);
+            }
+            return (int)mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_AddFunctions {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_AddFunctions");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_AddFunctions(PyObject *, PyMethodDef *)
+     * }
+     */
+    public static FunctionDescriptor PyModule_AddFunctions$descriptor() {
+        return PyModule_AddFunctions.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_AddFunctions(PyObject *, PyMethodDef *)
+     * }
+     */
+    public static MethodHandle PyModule_AddFunctions$handle() {
+        return PyModule_AddFunctions.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_AddFunctions(PyObject *, PyMethodDef *)
+     * }
+     */
+    public static MemorySegment PyModule_AddFunctions$address() {
+        return PyModule_AddFunctions.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_AddFunctions(PyObject *, PyMethodDef *)
+     * }
+     */
+    public static int PyModule_AddFunctions(MemorySegment x0, MemorySegment x1) {
+        var mh$ = PyModule_AddFunctions.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_AddFunctions", x0, x1);
+            }
+            return (int)mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_ExecDef {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_ExecDef");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyModule_ExecDef(PyObject *module, PyModuleDef *def)
+     * }
+     */
+    public static FunctionDescriptor PyModule_ExecDef$descriptor() {
+        return PyModule_ExecDef.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyModule_ExecDef(PyObject *module, PyModuleDef *def)
+     * }
+     */
+    public static MethodHandle PyModule_ExecDef$handle() {
+        return PyModule_ExecDef.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyModule_ExecDef(PyObject *module, PyModuleDef *def)
+     * }
+     */
+    public static MemorySegment PyModule_ExecDef$address() {
+        return PyModule_ExecDef.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyModule_ExecDef(PyObject *module, PyModuleDef *def)
+     * }
+     */
+    public static int PyModule_ExecDef(MemorySegment module, MemorySegment def) {
+        var mh$ = PyModule_ExecDef.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_ExecDef", module, def);
+            }
+            return (int)mh$.invokeExact(module, def);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_Create2 {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_Create2");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_Create2(PyModuleDef *, int apiver)
+     * }
+     */
+    public static FunctionDescriptor PyModule_Create2$descriptor() {
+        return PyModule_Create2.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_Create2(PyModuleDef *, int apiver)
+     * }
+     */
+    public static MethodHandle PyModule_Create2$handle() {
+        return PyModule_Create2.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_Create2(PyModuleDef *, int apiver)
+     * }
+     */
+    public static MemorySegment PyModule_Create2$address() {
+        return PyModule_Create2.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyModule_Create2(PyModuleDef *, int apiver)
+     * }
+     */
+    public static MemorySegment PyModule_Create2(MemorySegment x0, int apiver) {
+        var mh$ = PyModule_Create2.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_Create2", x0, apiver);
+            }
+            return (MemorySegment)mh$.invokeExact(x0, apiver);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyModule_FromDefAndSpec2 {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyModule_FromDefAndSpec2");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_FromDefAndSpec2(PyModuleDef *def, PyObject *spec, int module_api_version)
+     * }
+     */
+    public static FunctionDescriptor PyModule_FromDefAndSpec2$descriptor() {
+        return PyModule_FromDefAndSpec2.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_FromDefAndSpec2(PyModuleDef *def, PyObject *spec, int module_api_version)
+     * }
+     */
+    public static MethodHandle PyModule_FromDefAndSpec2$handle() {
+        return PyModule_FromDefAndSpec2.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyModule_FromDefAndSpec2(PyModuleDef *def, PyObject *spec, int module_api_version)
+     * }
+     */
+    public static MemorySegment PyModule_FromDefAndSpec2$address() {
+        return PyModule_FromDefAndSpec2.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyModule_FromDefAndSpec2(PyModuleDef *def, PyObject *spec, int module_api_version)
+     * }
+     */
+    public static MemorySegment PyModule_FromDefAndSpec2(MemorySegment def, MemorySegment spec, int module_api_version) {
+        var mh$ = PyModule_FromDefAndSpec2.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyModule_FromDefAndSpec2", def, spec, module_api_version);
+            }
+            return (MemorySegment)mh$.invokeExact(def, spec, module_api_version);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_CompileString {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_CompileString");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *Py_CompileString(const char *, const char *, int)
+     * }
+     */
+    public static FunctionDescriptor Py_CompileString$descriptor() {
+        return Py_CompileString.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *Py_CompileString(const char *, const char *, int)
+     * }
+     */
+    public static MethodHandle Py_CompileString$handle() {
+        return Py_CompileString.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *Py_CompileString(const char *, const char *, int)
+     * }
+     */
+    public static MemorySegment Py_CompileString$address() {
+        return Py_CompileString.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *Py_CompileString(const char *, const char *, int)
+     * }
+     */
+    public static MemorySegment Py_CompileString(MemorySegment x0, MemorySegment x1, int x2) {
+        var mh$ = Py_CompileString.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_CompileString", x0, x1, x2);
+            }
+            return (MemorySegment)mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyErr_Print {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyErr_Print");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyErr_Print()
+     * }
+     */
+    public static FunctionDescriptor PyErr_Print$descriptor() {
+        return PyErr_Print.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyErr_Print()
+     * }
+     */
+    public static MethodHandle PyErr_Print$handle() {
+        return PyErr_Print.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyErr_Print()
+     * }
+     */
+    public static MemorySegment PyErr_Print$address() {
+        return PyErr_Print.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyErr_Print()
+     * }
+     */
+    public static void PyErr_Print() {
+        var mh$ = PyErr_Print.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyErr_Print");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyErr_PrintEx {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyErr_PrintEx");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyErr_PrintEx(int)
+     * }
+     */
+    public static FunctionDescriptor PyErr_PrintEx$descriptor() {
+        return PyErr_PrintEx.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyErr_PrintEx(int)
+     * }
+     */
+    public static MethodHandle PyErr_PrintEx$handle() {
+        return PyErr_PrintEx.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyErr_PrintEx(int)
+     * }
+     */
+    public static MemorySegment PyErr_PrintEx$address() {
+        return PyErr_PrintEx.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyErr_PrintEx(int)
+     * }
+     */
+    public static void PyErr_PrintEx(int x0) {
+        var mh$ = PyErr_PrintEx.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyErr_PrintEx", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyErr_Display {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyErr_Display");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyErr_Display(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static FunctionDescriptor PyErr_Display$descriptor() {
+        return PyErr_Display.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyErr_Display(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static MethodHandle PyErr_Display$handle() {
+        return PyErr_Display.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyErr_Display(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static MemorySegment PyErr_Display$address() {
+        return PyErr_Display.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyErr_Display(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static void PyErr_Display(MemorySegment x0, MemorySegment x1, MemorySegment x2) {
+        var mh$ = PyErr_Display.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyErr_Display", x0, x1, x2);
+            }
+            mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyErr_DisplayException {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyErr_DisplayException");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyErr_DisplayException(PyObject *)
+     * }
+     */
+    public static FunctionDescriptor PyErr_DisplayException$descriptor() {
+        return PyErr_DisplayException.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyErr_DisplayException(PyObject *)
+     * }
+     */
+    public static MethodHandle PyErr_DisplayException$handle() {
+        return PyErr_DisplayException.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyErr_DisplayException(PyObject *)
+     * }
+     */
+    public static MemorySegment PyErr_DisplayException$address() {
+        return PyErr_DisplayException.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyErr_DisplayException(PyObject *)
+     * }
+     */
+    public static void PyErr_DisplayException(MemorySegment x0) {
+        var mh$ = PyErr_DisplayException.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyErr_DisplayException", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyOS_InputHook$constants {
+        public static final AddressLayout LAYOUT = Python_h.C_POINTER;
+        public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyOS_InputHook").reinterpret(LAYOUT.byteSize());
+    }
+
+    /**
+     * Layout for variable:
+     * {@snippet lang=c :
+     * extern int (*PyOS_InputHook)(void)
+     * }
+     */
+    public static AddressLayout PyOS_InputHook$layout() {
+        return PyOS_InputHook$constants.LAYOUT;
+    }
+
+    /**
+     * Segment for variable:
+     * {@snippet lang=c :
+     * extern int (*PyOS_InputHook)(void)
+     * }
+     */
+    public static MemorySegment PyOS_InputHook$segment() {
+        return PyOS_InputHook$constants.SEGMENT;
+    }
+
+    /**
+     * Getter for variable:
+     * {@snippet lang=c :
+     * extern int (*PyOS_InputHook)(void)
+     * }
+     */
+    public static MemorySegment PyOS_InputHook() {
+        return PyOS_InputHook$constants.SEGMENT.get(PyOS_InputHook$constants.LAYOUT, 0L);
+    }
+
+    /**
+     * Setter for variable:
+     * {@snippet lang=c :
+     * extern int (*PyOS_InputHook)(void)
+     * }
+     */
+    public static void PyOS_InputHook(MemorySegment varValue) {
+        PyOS_InputHook$constants.SEGMENT.set(PyOS_InputHook$constants.LAYOUT, 0L, varValue);
+    }
+
+    private static class Py_Initialize {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_Initialize");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_Initialize()
+     * }
+     */
+    public static FunctionDescriptor Py_Initialize$descriptor() {
+        return Py_Initialize.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_Initialize()
+     * }
+     */
+    public static MethodHandle Py_Initialize$handle() {
+        return Py_Initialize.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_Initialize()
+     * }
+     */
+    public static MemorySegment Py_Initialize$address() {
+        return Py_Initialize.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_Initialize()
+     * }
+     */
+    public static void Py_Initialize() {
+        var mh$ = Py_Initialize.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_Initialize");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_InitializeEx {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_InitializeEx");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_InitializeEx(int)
+     * }
+     */
+    public static FunctionDescriptor Py_InitializeEx$descriptor() {
+        return Py_InitializeEx.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_InitializeEx(int)
+     * }
+     */
+    public static MethodHandle Py_InitializeEx$handle() {
+        return Py_InitializeEx.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_InitializeEx(int)
+     * }
+     */
+    public static MemorySegment Py_InitializeEx$address() {
+        return Py_InitializeEx.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_InitializeEx(int)
+     * }
+     */
+    public static void Py_InitializeEx(int x0) {
+        var mh$ = Py_InitializeEx.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_InitializeEx", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_Finalize {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_Finalize");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_Finalize()
+     * }
+     */
+    public static FunctionDescriptor Py_Finalize$descriptor() {
+        return Py_Finalize.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_Finalize()
+     * }
+     */
+    public static MethodHandle Py_Finalize$handle() {
+        return Py_Finalize.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_Finalize()
+     * }
+     */
+    public static MemorySegment Py_Finalize$address() {
+        return Py_Finalize.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_Finalize()
+     * }
+     */
+    public static void Py_Finalize() {
+        var mh$ = Py_Finalize.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_Finalize");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_FinalizeEx {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_FinalizeEx");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_FinalizeEx()
+     * }
+     */
+    public static FunctionDescriptor Py_FinalizeEx$descriptor() {
+        return Py_FinalizeEx.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_FinalizeEx()
+     * }
+     */
+    public static MethodHandle Py_FinalizeEx$handle() {
+        return Py_FinalizeEx.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_FinalizeEx()
+     * }
+     */
+    public static MemorySegment Py_FinalizeEx$address() {
+        return Py_FinalizeEx.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_FinalizeEx()
+     * }
+     */
+    public static int Py_FinalizeEx() {
+        var mh$ = Py_FinalizeEx.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_FinalizeEx");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_IsInitialized {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_IsInitialized");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_IsInitialized()
+     * }
+     */
+    public static FunctionDescriptor Py_IsInitialized$descriptor() {
+        return Py_IsInitialized.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_IsInitialized()
+     * }
+     */
+    public static MethodHandle Py_IsInitialized$handle() {
+        return Py_IsInitialized.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_IsInitialized()
+     * }
+     */
+    public static MemorySegment Py_IsInitialized$address() {
+        return Py_IsInitialized.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_IsInitialized()
+     * }
+     */
+    public static int Py_IsInitialized() {
+        var mh$ = Py_IsInitialized.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_IsInitialized");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_NewInterpreter {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_NewInterpreter");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyThreadState *Py_NewInterpreter()
+     * }
+     */
+    public static FunctionDescriptor Py_NewInterpreter$descriptor() {
+        return Py_NewInterpreter.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyThreadState *Py_NewInterpreter()
+     * }
+     */
+    public static MethodHandle Py_NewInterpreter$handle() {
+        return Py_NewInterpreter.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyThreadState *Py_NewInterpreter()
+     * }
+     */
+    public static MemorySegment Py_NewInterpreter$address() {
+        return Py_NewInterpreter.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyThreadState *Py_NewInterpreter()
+     * }
+     */
+    public static MemorySegment Py_NewInterpreter() {
+        var mh$ = Py_NewInterpreter.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_NewInterpreter");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_EndInterpreter {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_EndInterpreter");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_EndInterpreter(PyThreadState *)
+     * }
+     */
+    public static FunctionDescriptor Py_EndInterpreter$descriptor() {
+        return Py_EndInterpreter.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_EndInterpreter(PyThreadState *)
+     * }
+     */
+    public static MethodHandle Py_EndInterpreter$handle() {
+        return Py_EndInterpreter.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_EndInterpreter(PyThreadState *)
+     * }
+     */
+    public static MemorySegment Py_EndInterpreter$address() {
+        return Py_EndInterpreter.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_EndInterpreter(PyThreadState *)
+     * }
+     */
+    public static void Py_EndInterpreter(MemorySegment x0) {
+        var mh$ = Py_EndInterpreter.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_EndInterpreter", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_AtExit {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_AtExit");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_AtExit(void (*func)(void))
+     * }
+     */
+    public static FunctionDescriptor Py_AtExit$descriptor() {
+        return Py_AtExit.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_AtExit(void (*func)(void))
+     * }
+     */
+    public static MethodHandle Py_AtExit$handle() {
+        return Py_AtExit.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_AtExit(void (*func)(void))
+     * }
+     */
+    public static MemorySegment Py_AtExit$address() {
+        return Py_AtExit.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_AtExit(void (*func)(void))
+     * }
+     */
+    public static int Py_AtExit(MemorySegment func) {
+        var mh$ = Py_AtExit.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_AtExit", func);
+            }
+            return (int)mh$.invokeExact(func);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_Exit {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_Exit");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_Exit(int)
+     * }
+     */
+    public static FunctionDescriptor Py_Exit$descriptor() {
+        return Py_Exit.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_Exit(int)
+     * }
+     */
+    public static MethodHandle Py_Exit$handle() {
+        return Py_Exit.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_Exit(int)
+     * }
+     */
+    public static MemorySegment Py_Exit$address() {
+        return Py_Exit.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_Exit(int)
+     * }
+     */
+    public static void Py_Exit(int x0) {
+        var mh$ = Py_Exit.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_Exit", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_Main {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_INT,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_Main");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_Main(int argc, wchar_t **argv)
+     * }
+     */
+    public static FunctionDescriptor Py_Main$descriptor() {
+        return Py_Main.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_Main(int argc, wchar_t **argv)
+     * }
+     */
+    public static MethodHandle Py_Main$handle() {
+        return Py_Main.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_Main(int argc, wchar_t **argv)
+     * }
+     */
+    public static MemorySegment Py_Main$address() {
+        return Py_Main.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_Main(int argc, wchar_t **argv)
+     * }
+     */
+    public static int Py_Main(int argc, MemorySegment argv) {
+        var mh$ = Py_Main.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_Main", argc, argv);
+            }
+            return (int)mh$.invokeExact(argc, argv);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_BytesMain {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_INT,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_BytesMain");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_BytesMain(int argc, char **argv)
+     * }
+     */
+    public static FunctionDescriptor Py_BytesMain$descriptor() {
+        return Py_BytesMain.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_BytesMain(int argc, char **argv)
+     * }
+     */
+    public static MethodHandle Py_BytesMain$handle() {
+        return Py_BytesMain.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_BytesMain(int argc, char **argv)
+     * }
+     */
+    public static MemorySegment Py_BytesMain$address() {
+        return Py_BytesMain.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_BytesMain(int argc, char **argv)
+     * }
+     */
+    public static int Py_BytesMain(int argc, MemorySegment argv) {
+        var mh$ = Py_BytesMain.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_BytesMain", argc, argv);
+            }
+            return (int)mh$.invokeExact(argc, argv);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_SetProgramName {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_SetProgramName");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_SetProgramName(const wchar_t *)
+     * }
+     */
+    public static FunctionDescriptor Py_SetProgramName$descriptor() {
+        return Py_SetProgramName.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_SetProgramName(const wchar_t *)
+     * }
+     */
+    public static MethodHandle Py_SetProgramName$handle() {
+        return Py_SetProgramName.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_SetProgramName(const wchar_t *)
+     * }
+     */
+    public static MemorySegment Py_SetProgramName$address() {
+        return Py_SetProgramName.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_SetProgramName(const wchar_t *)
+     * }
+     */
+    public static void Py_SetProgramName(MemorySegment x0) {
+        var mh$ = Py_SetProgramName.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_SetProgramName", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetProgramName {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetProgramName");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramName()
+     * }
+     */
+    public static FunctionDescriptor Py_GetProgramName$descriptor() {
+        return Py_GetProgramName.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramName()
+     * }
+     */
+    public static MethodHandle Py_GetProgramName$handle() {
+        return Py_GetProgramName.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramName()
+     * }
+     */
+    public static MemorySegment Py_GetProgramName$address() {
+        return Py_GetProgramName.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramName()
+     * }
+     */
+    public static MemorySegment Py_GetProgramName() {
+        var mh$ = Py_GetProgramName.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetProgramName");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_SetPythonHome {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_SetPythonHome");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_SetPythonHome(const wchar_t *)
+     * }
+     */
+    public static FunctionDescriptor Py_SetPythonHome$descriptor() {
+        return Py_SetPythonHome.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_SetPythonHome(const wchar_t *)
+     * }
+     */
+    public static MethodHandle Py_SetPythonHome$handle() {
+        return Py_SetPythonHome.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_SetPythonHome(const wchar_t *)
+     * }
+     */
+    public static MemorySegment Py_SetPythonHome$address() {
+        return Py_SetPythonHome.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_SetPythonHome(const wchar_t *)
+     * }
+     */
+    public static void Py_SetPythonHome(MemorySegment x0) {
+        var mh$ = Py_SetPythonHome.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_SetPythonHome", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetPythonHome {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetPythonHome");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPythonHome()
+     * }
+     */
+    public static FunctionDescriptor Py_GetPythonHome$descriptor() {
+        return Py_GetPythonHome.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPythonHome()
+     * }
+     */
+    public static MethodHandle Py_GetPythonHome$handle() {
+        return Py_GetPythonHome.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPythonHome()
+     * }
+     */
+    public static MemorySegment Py_GetPythonHome$address() {
+        return Py_GetPythonHome.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPythonHome()
+     * }
+     */
+    public static MemorySegment Py_GetPythonHome() {
+        var mh$ = Py_GetPythonHome.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetPythonHome");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetProgramFullPath {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetProgramFullPath");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramFullPath()
+     * }
+     */
+    public static FunctionDescriptor Py_GetProgramFullPath$descriptor() {
+        return Py_GetProgramFullPath.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramFullPath()
+     * }
+     */
+    public static MethodHandle Py_GetProgramFullPath$handle() {
+        return Py_GetProgramFullPath.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramFullPath()
+     * }
+     */
+    public static MemorySegment Py_GetProgramFullPath$address() {
+        return Py_GetProgramFullPath.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetProgramFullPath()
+     * }
+     */
+    public static MemorySegment Py_GetProgramFullPath() {
+        var mh$ = Py_GetProgramFullPath.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetProgramFullPath");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetPrefix {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetPrefix");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPrefix()
+     * }
+     */
+    public static FunctionDescriptor Py_GetPrefix$descriptor() {
+        return Py_GetPrefix.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPrefix()
+     * }
+     */
+    public static MethodHandle Py_GetPrefix$handle() {
+        return Py_GetPrefix.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPrefix()
+     * }
+     */
+    public static MemorySegment Py_GetPrefix$address() {
+        return Py_GetPrefix.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPrefix()
+     * }
+     */
+    public static MemorySegment Py_GetPrefix() {
+        var mh$ = Py_GetPrefix.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetPrefix");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetExecPrefix {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetExecPrefix");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetExecPrefix()
+     * }
+     */
+    public static FunctionDescriptor Py_GetExecPrefix$descriptor() {
+        return Py_GetExecPrefix.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetExecPrefix()
+     * }
+     */
+    public static MethodHandle Py_GetExecPrefix$handle() {
+        return Py_GetExecPrefix.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetExecPrefix()
+     * }
+     */
+    public static MemorySegment Py_GetExecPrefix$address() {
+        return Py_GetExecPrefix.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetExecPrefix()
+     * }
+     */
+    public static MemorySegment Py_GetExecPrefix() {
+        var mh$ = Py_GetExecPrefix.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetExecPrefix");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetPath {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetPath");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPath()
+     * }
+     */
+    public static FunctionDescriptor Py_GetPath$descriptor() {
+        return Py_GetPath.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPath()
+     * }
+     */
+    public static MethodHandle Py_GetPath$handle() {
+        return Py_GetPath.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPath()
+     * }
+     */
+    public static MemorySegment Py_GetPath$address() {
+        return Py_GetPath.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * wchar_t *Py_GetPath()
+     * }
+     */
+    public static MemorySegment Py_GetPath() {
+        var mh$ = Py_GetPath.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetPath");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_SetPath {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_SetPath");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_SetPath(const wchar_t *)
+     * }
+     */
+    public static FunctionDescriptor Py_SetPath$descriptor() {
+        return Py_SetPath.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_SetPath(const wchar_t *)
+     * }
+     */
+    public static MethodHandle Py_SetPath$handle() {
+        return Py_SetPath.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_SetPath(const wchar_t *)
+     * }
+     */
+    public static MemorySegment Py_SetPath$address() {
+        return Py_SetPath.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_SetPath(const wchar_t *)
+     * }
+     */
+    public static void Py_SetPath(MemorySegment x0) {
+        var mh$ = Py_SetPath.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_SetPath", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class _Py_CheckPython3 {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_CheckPython3");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int _Py_CheckPython3()
+     * }
+     */
+    public static FunctionDescriptor _Py_CheckPython3$descriptor() {
+        return _Py_CheckPython3.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int _Py_CheckPython3()
+     * }
+     */
+    public static MethodHandle _Py_CheckPython3$handle() {
+        return _Py_CheckPython3.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int _Py_CheckPython3()
+     * }
+     */
+    public static MemorySegment _Py_CheckPython3$address() {
+        return _Py_CheckPython3.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int _Py_CheckPython3()
+     * }
+     */
+    public static int _Py_CheckPython3() {
+        var mh$ = _Py_CheckPython3.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("_Py_CheckPython3");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetVersion {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetVersion");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *Py_GetVersion()
+     * }
+     */
+    public static FunctionDescriptor Py_GetVersion$descriptor() {
+        return Py_GetVersion.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *Py_GetVersion()
+     * }
+     */
+    public static MethodHandle Py_GetVersion$handle() {
+        return Py_GetVersion.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *Py_GetVersion()
+     * }
+     */
+    public static MemorySegment Py_GetVersion$address() {
+        return Py_GetVersion.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *Py_GetVersion()
+     * }
+     */
+    public static MemorySegment Py_GetVersion() {
+        var mh$ = Py_GetVersion.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetVersion");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetPlatform {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetPlatform");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *Py_GetPlatform()
+     * }
+     */
+    public static FunctionDescriptor Py_GetPlatform$descriptor() {
+        return Py_GetPlatform.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *Py_GetPlatform()
+     * }
+     */
+    public static MethodHandle Py_GetPlatform$handle() {
+        return Py_GetPlatform.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *Py_GetPlatform()
+     * }
+     */
+    public static MemorySegment Py_GetPlatform$address() {
+        return Py_GetPlatform.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *Py_GetPlatform()
+     * }
+     */
+    public static MemorySegment Py_GetPlatform() {
+        var mh$ = Py_GetPlatform.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetPlatform");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetCopyright {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetCopyright");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *Py_GetCopyright()
+     * }
+     */
+    public static FunctionDescriptor Py_GetCopyright$descriptor() {
+        return Py_GetCopyright.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *Py_GetCopyright()
+     * }
+     */
+    public static MethodHandle Py_GetCopyright$handle() {
+        return Py_GetCopyright.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *Py_GetCopyright()
+     * }
+     */
+    public static MemorySegment Py_GetCopyright$address() {
+        return Py_GetCopyright.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *Py_GetCopyright()
+     * }
+     */
+    public static MemorySegment Py_GetCopyright() {
+        var mh$ = Py_GetCopyright.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetCopyright");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetCompiler {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetCompiler");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *Py_GetCompiler()
+     * }
+     */
+    public static FunctionDescriptor Py_GetCompiler$descriptor() {
+        return Py_GetCompiler.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *Py_GetCompiler()
+     * }
+     */
+    public static MethodHandle Py_GetCompiler$handle() {
+        return Py_GetCompiler.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *Py_GetCompiler()
+     * }
+     */
+    public static MemorySegment Py_GetCompiler$address() {
+        return Py_GetCompiler.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *Py_GetCompiler()
+     * }
+     */
+    public static MemorySegment Py_GetCompiler() {
+        var mh$ = Py_GetCompiler.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetCompiler");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetBuildInfo {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetBuildInfo");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *Py_GetBuildInfo()
+     * }
+     */
+    public static FunctionDescriptor Py_GetBuildInfo$descriptor() {
+        return Py_GetBuildInfo.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *Py_GetBuildInfo()
+     * }
+     */
+    public static MethodHandle Py_GetBuildInfo$handle() {
+        return Py_GetBuildInfo.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *Py_GetBuildInfo()
+     * }
+     */
+    public static MemorySegment Py_GetBuildInfo$address() {
+        return Py_GetBuildInfo.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *Py_GetBuildInfo()
+     * }
+     */
+    public static MemorySegment Py_GetBuildInfo() {
+        var mh$ = Py_GetBuildInfo.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetBuildInfo");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyOS_getsig {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyOS_getsig");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_getsig(int)
+     * }
+     */
+    public static FunctionDescriptor PyOS_getsig$descriptor() {
+        return PyOS_getsig.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_getsig(int)
+     * }
+     */
+    public static MethodHandle PyOS_getsig$handle() {
+        return PyOS_getsig.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_getsig(int)
+     * }
+     */
+    public static MemorySegment PyOS_getsig$address() {
+        return PyOS_getsig.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_getsig(int)
+     * }
+     */
+    public static MemorySegment PyOS_getsig(int x0) {
+        var mh$ = PyOS_getsig.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyOS_getsig", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyOS_setsig {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_INT,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyOS_setsig");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_setsig(int, PyOS_sighandler_t)
+     * }
+     */
+    public static FunctionDescriptor PyOS_setsig$descriptor() {
+        return PyOS_setsig.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_setsig(int, PyOS_sighandler_t)
+     * }
+     */
+    public static MethodHandle PyOS_setsig$handle() {
+        return PyOS_setsig.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_setsig(int, PyOS_sighandler_t)
+     * }
+     */
+    public static MemorySegment PyOS_setsig$address() {
+        return PyOS_setsig.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyOS_sighandler_t PyOS_setsig(int, PyOS_sighandler_t)
+     * }
+     */
+    public static MemorySegment PyOS_setsig(int x0, MemorySegment x1) {
+        var mh$ = PyOS_setsig.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyOS_setsig", x0, x1);
+            }
+            return (MemorySegment)mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_Version$constants {
+        public static final OfInt LAYOUT = Python_h.C_LONG;
+        public static final MemorySegment SEGMENT = Python_h.findOrThrow("Py_Version").reinterpret(LAYOUT.byteSize());
+    }
+
+    /**
+     * Layout for variable:
+     * {@snippet lang=c :
+     * extern const unsigned long Py_Version
+     * }
+     */
+    public static OfInt Py_Version$layout() {
+        return Py_Version$constants.LAYOUT;
+    }
+
+    /**
+     * Segment for variable:
+     * {@snippet lang=c :
+     * extern const unsigned long Py_Version
+     * }
+     */
+    public static MemorySegment Py_Version$segment() {
+        return Py_Version$constants.SEGMENT;
+    }
+
+    /**
+     * Getter for variable:
+     * {@snippet lang=c :
+     * extern const unsigned long Py_Version
+     * }
+     */
+    public static int Py_Version() {
+        return Py_Version$constants.SEGMENT.get(Py_Version$constants.LAYOUT, 0L);
+    }
+
+    /**
+     * Setter for variable:
+     * {@snippet lang=c :
+     * extern const unsigned long Py_Version
+     * }
+     */
+    public static void Py_Version(int varValue) {
+        Py_Version$constants.SEGMENT.set(Py_Version$constants.LAYOUT, 0L, varValue);
+    }
+
+    private static class PyEval_EvalCode {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_EvalCode");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCode(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static FunctionDescriptor PyEval_EvalCode$descriptor() {
+        return PyEval_EvalCode.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCode(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static MethodHandle PyEval_EvalCode$handle() {
+        return PyEval_EvalCode.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCode(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_EvalCode$address() {
+        return PyEval_EvalCode.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCode(PyObject *, PyObject *, PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_EvalCode(MemorySegment x0, MemorySegment x1, MemorySegment x2) {
+        var mh$ = PyEval_EvalCode.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_EvalCode", x0, x1, x2);
+            }
+            return (MemorySegment)mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_EvalCodeEx {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_EvalCodeEx");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCodeEx(PyObject *co, PyObject *globals, PyObject *locals, PyObject *const *args, int argc, PyObject *const *kwds, int kwdc, PyObject *const *defs, int defc, PyObject *kwdefs, PyObject *closure)
+     * }
+     */
+    public static FunctionDescriptor PyEval_EvalCodeEx$descriptor() {
+        return PyEval_EvalCodeEx.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCodeEx(PyObject *co, PyObject *globals, PyObject *locals, PyObject *const *args, int argc, PyObject *const *kwds, int kwdc, PyObject *const *defs, int defc, PyObject *kwdefs, PyObject *closure)
+     * }
+     */
+    public static MethodHandle PyEval_EvalCodeEx$handle() {
+        return PyEval_EvalCodeEx.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCodeEx(PyObject *co, PyObject *globals, PyObject *locals, PyObject *const *args, int argc, PyObject *const *kwds, int kwdc, PyObject *const *defs, int defc, PyObject *kwdefs, PyObject *closure)
+     * }
+     */
+    public static MemorySegment PyEval_EvalCodeEx$address() {
+        return PyEval_EvalCodeEx.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalCodeEx(PyObject *co, PyObject *globals, PyObject *locals, PyObject *const *args, int argc, PyObject *const *kwds, int kwdc, PyObject *const *defs, int defc, PyObject *kwdefs, PyObject *closure)
+     * }
+     */
+    public static MemorySegment PyEval_EvalCodeEx(MemorySegment co, MemorySegment globals, MemorySegment locals, MemorySegment args, int argc, MemorySegment kwds, int kwdc, MemorySegment defs, int defc, MemorySegment kwdefs, MemorySegment closure) {
+        var mh$ = PyEval_EvalCodeEx.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_EvalCodeEx", co, globals, locals, args, argc, kwds, kwdc, defs, defc, kwdefs, closure);
+            }
+            return (MemorySegment)mh$.invokeExact(co, globals, locals, args, argc, kwds, kwdc, defs, defc, kwdefs, closure);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_CallObjectWithKeywords {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_CallObjectWithKeywords");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallObjectWithKeywords(PyObject *callable, PyObject *args, PyObject *kwargs)
+     * }
+     */
+    public static FunctionDescriptor PyEval_CallObjectWithKeywords$descriptor() {
+        return PyEval_CallObjectWithKeywords.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallObjectWithKeywords(PyObject *callable, PyObject *args, PyObject *kwargs)
+     * }
+     */
+    public static MethodHandle PyEval_CallObjectWithKeywords$handle() {
+        return PyEval_CallObjectWithKeywords.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallObjectWithKeywords(PyObject *callable, PyObject *args, PyObject *kwargs)
+     * }
+     */
+    public static MemorySegment PyEval_CallObjectWithKeywords$address() {
+        return PyEval_CallObjectWithKeywords.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallObjectWithKeywords(PyObject *callable, PyObject *args, PyObject *kwargs)
+     * }
+     */
+    public static MemorySegment PyEval_CallObjectWithKeywords(MemorySegment callable, MemorySegment args, MemorySegment kwargs) {
+        var mh$ = PyEval_CallObjectWithKeywords.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_CallObjectWithKeywords", callable, args, kwargs);
+            }
+            return (MemorySegment)mh$.invokeExact(callable, args, kwargs);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallFunction(PyObject *callable, const char *format, ...)
+     * }
+     */
+    public static class PyEval_CallFunction {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Python_h.C_POINTER,
+                Python_h.C_POINTER,
+                Python_h.C_POINTER
+            );
+        private static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_CallFunction");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private PyEval_CallFunction(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * PyObject *PyEval_CallFunction(PyObject *callable, const char *format, ...)
+         * }
+         */
+        public static PyEval_CallFunction makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new PyEval_CallFunction(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(MemorySegment callable, MemorySegment format, Object... x2) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("PyEval_CallFunction", callable, format, x2);
+                }
+                return (MemorySegment)spreader.invokeExact(callable, format, x2);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_CallMethod(PyObject *obj, const char *name, const char *format, ...)
+     * }
+     */
+    public static class PyEval_CallMethod {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Python_h.C_POINTER,
+                Python_h.C_POINTER,
+                Python_h.C_POINTER,
+                Python_h.C_POINTER
+            );
+        private static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_CallMethod");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private PyEval_CallMethod(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * PyObject *PyEval_CallMethod(PyObject *obj, const char *name, const char *format, ...)
+         * }
+         */
+        public static PyEval_CallMethod makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new PyEval_CallMethod(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(MemorySegment obj, MemorySegment name, MemorySegment format, Object... x3) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("PyEval_CallMethod", obj, name, format, x3);
+                }
+                return (MemorySegment)spreader.invokeExact(obj, name, format, x3);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    private static class PyEval_GetBuiltins {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetBuiltins");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetBuiltins()
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetBuiltins$descriptor() {
+        return PyEval_GetBuiltins.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetBuiltins()
+     * }
+     */
+    public static MethodHandle PyEval_GetBuiltins$handle() {
+        return PyEval_GetBuiltins.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetBuiltins()
+     * }
+     */
+    public static MemorySegment PyEval_GetBuiltins$address() {
+        return PyEval_GetBuiltins.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetBuiltins()
+     * }
+     */
+    public static MemorySegment PyEval_GetBuiltins() {
+        var mh$ = PyEval_GetBuiltins.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetBuiltins");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_GetGlobals {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetGlobals");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetGlobals()
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetGlobals$descriptor() {
+        return PyEval_GetGlobals.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetGlobals()
+     * }
+     */
+    public static MethodHandle PyEval_GetGlobals$handle() {
+        return PyEval_GetGlobals.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetGlobals()
+     * }
+     */
+    public static MemorySegment PyEval_GetGlobals$address() {
+        return PyEval_GetGlobals.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetGlobals()
+     * }
+     */
+    public static MemorySegment PyEval_GetGlobals() {
+        var mh$ = PyEval_GetGlobals.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetGlobals");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_GetLocals {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetLocals");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetLocals()
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetLocals$descriptor() {
+        return PyEval_GetLocals.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetLocals()
+     * }
+     */
+    public static MethodHandle PyEval_GetLocals$handle() {
+        return PyEval_GetLocals.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetLocals()
+     * }
+     */
+    public static MemorySegment PyEval_GetLocals$address() {
+        return PyEval_GetLocals.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_GetLocals()
+     * }
+     */
+    public static MemorySegment PyEval_GetLocals() {
+        var mh$ = PyEval_GetLocals.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetLocals");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_GetFrame {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetFrame");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyFrameObject *PyEval_GetFrame()
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetFrame$descriptor() {
+        return PyEval_GetFrame.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyFrameObject *PyEval_GetFrame()
+     * }
+     */
+    public static MethodHandle PyEval_GetFrame$handle() {
+        return PyEval_GetFrame.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyFrameObject *PyEval_GetFrame()
+     * }
+     */
+    public static MemorySegment PyEval_GetFrame$address() {
+        return PyEval_GetFrame.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyFrameObject *PyEval_GetFrame()
+     * }
+     */
+    public static MemorySegment PyEval_GetFrame() {
+        var mh$ = PyEval_GetFrame.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetFrame");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_AddPendingCall {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_AddPendingCall");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_AddPendingCall(int (*func)(void *), void *arg)
+     * }
+     */
+    public static FunctionDescriptor Py_AddPendingCall$descriptor() {
+        return Py_AddPendingCall.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_AddPendingCall(int (*func)(void *), void *arg)
+     * }
+     */
+    public static MethodHandle Py_AddPendingCall$handle() {
+        return Py_AddPendingCall.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_AddPendingCall(int (*func)(void *), void *arg)
+     * }
+     */
+    public static MemorySegment Py_AddPendingCall$address() {
+        return Py_AddPendingCall.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_AddPendingCall(int (*func)(void *), void *arg)
+     * }
+     */
+    public static int Py_AddPendingCall(MemorySegment func, MemorySegment arg) {
+        var mh$ = Py_AddPendingCall.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_AddPendingCall", func, arg);
+            }
+            return (int)mh$.invokeExact(func, arg);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_MakePendingCalls {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_MakePendingCalls");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_MakePendingCalls()
+     * }
+     */
+    public static FunctionDescriptor Py_MakePendingCalls$descriptor() {
+        return Py_MakePendingCalls.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_MakePendingCalls()
+     * }
+     */
+    public static MethodHandle Py_MakePendingCalls$handle() {
+        return Py_MakePendingCalls.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_MakePendingCalls()
+     * }
+     */
+    public static MemorySegment Py_MakePendingCalls$address() {
+        return Py_MakePendingCalls.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_MakePendingCalls()
+     * }
+     */
+    public static int Py_MakePendingCalls() {
+        var mh$ = Py_MakePendingCalls.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_MakePendingCalls");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_SetRecursionLimit {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_SetRecursionLimit");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_SetRecursionLimit(int)
+     * }
+     */
+    public static FunctionDescriptor Py_SetRecursionLimit$descriptor() {
+        return Py_SetRecursionLimit.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_SetRecursionLimit(int)
+     * }
+     */
+    public static MethodHandle Py_SetRecursionLimit$handle() {
+        return Py_SetRecursionLimit.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_SetRecursionLimit(int)
+     * }
+     */
+    public static MemorySegment Py_SetRecursionLimit$address() {
+        return Py_SetRecursionLimit.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_SetRecursionLimit(int)
+     * }
+     */
+    public static void Py_SetRecursionLimit(int x0) {
+        var mh$ = Py_SetRecursionLimit.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_SetRecursionLimit", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_GetRecursionLimit {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_GetRecursionLimit");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_GetRecursionLimit()
+     * }
+     */
+    public static FunctionDescriptor Py_GetRecursionLimit$descriptor() {
+        return Py_GetRecursionLimit.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_GetRecursionLimit()
+     * }
+     */
+    public static MethodHandle Py_GetRecursionLimit$handle() {
+        return Py_GetRecursionLimit.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_GetRecursionLimit()
+     * }
+     */
+    public static MemorySegment Py_GetRecursionLimit$address() {
+        return Py_GetRecursionLimit.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_GetRecursionLimit()
+     * }
+     */
+    public static int Py_GetRecursionLimit() {
+        var mh$ = Py_GetRecursionLimit.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_GetRecursionLimit");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_EnterRecursiveCall {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_EnterRecursiveCall");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int Py_EnterRecursiveCall(const char *where)
+     * }
+     */
+    public static FunctionDescriptor Py_EnterRecursiveCall$descriptor() {
+        return Py_EnterRecursiveCall.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int Py_EnterRecursiveCall(const char *where)
+     * }
+     */
+    public static MethodHandle Py_EnterRecursiveCall$handle() {
+        return Py_EnterRecursiveCall.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int Py_EnterRecursiveCall(const char *where)
+     * }
+     */
+    public static MemorySegment Py_EnterRecursiveCall$address() {
+        return Py_EnterRecursiveCall.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int Py_EnterRecursiveCall(const char *where)
+     * }
+     */
+    public static int Py_EnterRecursiveCall(MemorySegment where) {
+        var mh$ = Py_EnterRecursiveCall.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_EnterRecursiveCall", where);
+            }
+            return (int)mh$.invokeExact(where);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class Py_LeaveRecursiveCall {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("Py_LeaveRecursiveCall");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void Py_LeaveRecursiveCall()
+     * }
+     */
+    public static FunctionDescriptor Py_LeaveRecursiveCall$descriptor() {
+        return Py_LeaveRecursiveCall.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void Py_LeaveRecursiveCall()
+     * }
+     */
+    public static MethodHandle Py_LeaveRecursiveCall$handle() {
+        return Py_LeaveRecursiveCall.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void Py_LeaveRecursiveCall()
+     * }
+     */
+    public static MemorySegment Py_LeaveRecursiveCall$address() {
+        return Py_LeaveRecursiveCall.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void Py_LeaveRecursiveCall()
+     * }
+     */
+    public static void Py_LeaveRecursiveCall() {
+        var mh$ = Py_LeaveRecursiveCall.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("Py_LeaveRecursiveCall");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_GetFuncName {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetFuncName");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncName(PyObject *)
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetFuncName$descriptor() {
+        return PyEval_GetFuncName.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncName(PyObject *)
+     * }
+     */
+    public static MethodHandle PyEval_GetFuncName$handle() {
+        return PyEval_GetFuncName.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncName(PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_GetFuncName$address() {
+        return PyEval_GetFuncName.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncName(PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_GetFuncName(MemorySegment x0) {
+        var mh$ = PyEval_GetFuncName.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetFuncName", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_GetFuncDesc {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_GetFuncDesc");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncDesc(PyObject *)
+     * }
+     */
+    public static FunctionDescriptor PyEval_GetFuncDesc$descriptor() {
+        return PyEval_GetFuncDesc.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncDesc(PyObject *)
+     * }
+     */
+    public static MethodHandle PyEval_GetFuncDesc$handle() {
+        return PyEval_GetFuncDesc.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncDesc(PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_GetFuncDesc$address() {
+        return PyEval_GetFuncDesc.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *PyEval_GetFuncDesc(PyObject *)
+     * }
+     */
+    public static MemorySegment PyEval_GetFuncDesc(MemorySegment x0) {
+        var mh$ = PyEval_GetFuncDesc.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_GetFuncDesc", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_EvalFrame {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_EvalFrame");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrame(PyFrameObject *)
+     * }
+     */
+    public static FunctionDescriptor PyEval_EvalFrame$descriptor() {
+        return PyEval_EvalFrame.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrame(PyFrameObject *)
+     * }
+     */
+    public static MethodHandle PyEval_EvalFrame$handle() {
+        return PyEval_EvalFrame.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrame(PyFrameObject *)
+     * }
+     */
+    public static MemorySegment PyEval_EvalFrame$address() {
+        return PyEval_EvalFrame.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrame(PyFrameObject *)
+     * }
+     */
+    public static MemorySegment PyEval_EvalFrame(MemorySegment x0) {
+        var mh$ = PyEval_EvalFrame.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_EvalFrame", x0);
+            }
+            return (MemorySegment)mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_EvalFrameEx {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER,
+            Python_h.C_POINTER,
+            Python_h.C_INT
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_EvalFrameEx");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrameEx(PyFrameObject *f, int exc)
+     * }
+     */
+    public static FunctionDescriptor PyEval_EvalFrameEx$descriptor() {
+        return PyEval_EvalFrameEx.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrameEx(PyFrameObject *f, int exc)
+     * }
+     */
+    public static MethodHandle PyEval_EvalFrameEx$handle() {
+        return PyEval_EvalFrameEx.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrameEx(PyFrameObject *f, int exc)
+     * }
+     */
+    public static MemorySegment PyEval_EvalFrameEx$address() {
+        return PyEval_EvalFrameEx.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyObject *PyEval_EvalFrameEx(PyFrameObject *f, int exc)
+     * }
+     */
+    public static MemorySegment PyEval_EvalFrameEx(MemorySegment f, int exc) {
+        var mh$ = PyEval_EvalFrameEx.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_EvalFrameEx", f, exc);
+            }
+            return (MemorySegment)mh$.invokeExact(f, exc);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_SaveThread {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_POINTER    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_SaveThread");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * PyThreadState *PyEval_SaveThread()
+     * }
+     */
+    public static FunctionDescriptor PyEval_SaveThread$descriptor() {
+        return PyEval_SaveThread.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * PyThreadState *PyEval_SaveThread()
+     * }
+     */
+    public static MethodHandle PyEval_SaveThread$handle() {
+        return PyEval_SaveThread.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * PyThreadState *PyEval_SaveThread()
+     * }
+     */
+    public static MemorySegment PyEval_SaveThread$address() {
+        return PyEval_SaveThread.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * PyThreadState *PyEval_SaveThread()
+     * }
+     */
+    public static MemorySegment PyEval_SaveThread() {
+        var mh$ = PyEval_SaveThread.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_SaveThread");
+            }
+            return (MemorySegment)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_RestoreThread {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Python_h.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_RestoreThread");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyEval_RestoreThread(PyThreadState *)
+     * }
+     */
+    public static FunctionDescriptor PyEval_RestoreThread$descriptor() {
+        return PyEval_RestoreThread.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyEval_RestoreThread(PyThreadState *)
+     * }
+     */
+    public static MethodHandle PyEval_RestoreThread$handle() {
+        return PyEval_RestoreThread.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyEval_RestoreThread(PyThreadState *)
+     * }
+     */
+    public static MemorySegment PyEval_RestoreThread$address() {
+        return PyEval_RestoreThread.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyEval_RestoreThread(PyThreadState *)
+     * }
+     */
+    public static void PyEval_RestoreThread(MemorySegment x0) {
+        var mh$ = PyEval_RestoreThread.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_RestoreThread", x0);
+            }
+            mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_ThreadsInitialized {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Python_h.C_INT    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_ThreadsInitialized");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int PyEval_ThreadsInitialized()
+     * }
+     */
+    public static FunctionDescriptor PyEval_ThreadsInitialized$descriptor() {
+        return PyEval_ThreadsInitialized.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int PyEval_ThreadsInitialized()
+     * }
+     */
+    public static MethodHandle PyEval_ThreadsInitialized$handle() {
+        return PyEval_ThreadsInitialized.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int PyEval_ThreadsInitialized()
+     * }
+     */
+    public static MemorySegment PyEval_ThreadsInitialized$address() {
+        return PyEval_ThreadsInitialized.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int PyEval_ThreadsInitialized()
+     * }
+     */
+    public static int PyEval_ThreadsInitialized() {
+        var mh$ = PyEval_ThreadsInitialized.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_ThreadsInitialized");
+            }
+            return (int)mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_InitThreads {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_InitThreads");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyEval_InitThreads()
+     * }
+     */
+    public static FunctionDescriptor PyEval_InitThreads$descriptor() {
+        return PyEval_InitThreads.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyEval_InitThreads()
+     * }
+     */
+    public static MethodHandle PyEval_InitThreads$handle() {
+        return PyEval_InitThreads.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyEval_InitThreads()
+     * }
+     */
+    public static MemorySegment PyEval_InitThreads$address() {
+        return PyEval_InitThreads.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyEval_InitThreads()
+     * }
+     */
+    public static void PyEval_InitThreads() {
+        var mh$ = PyEval_InitThreads.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_InitThreads");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_AcquireLock {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_AcquireLock");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyEval_AcquireLock()
+     * }
+     */
+    public static FunctionDescriptor PyEval_AcquireLock$descriptor() {
+        return PyEval_AcquireLock.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyEval_AcquireLock()
+     * }
+     */
+    public static MethodHandle PyEval_AcquireLock$handle() {
+        return PyEval_AcquireLock.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyEval_AcquireLock()
+     * }
+     */
+    public static MemorySegment PyEval_AcquireLock$address() {
+        return PyEval_AcquireLock.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyEval_AcquireLock()
+     * }
+     */
+    public static void PyEval_AcquireLock() {
+        var mh$ = PyEval_AcquireLock.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_AcquireLock");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class PyEval_ReleaseLock {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
+
+        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_ReleaseLock");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void PyEval_ReleaseLock()
+     * }
+     */
+    public static FunctionDescriptor PyEval_ReleaseLock$descriptor() {
+        return PyEval_ReleaseLock.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void PyEval_ReleaseLock()
+     * }
+     */
+    public static MethodHandle PyEval_ReleaseLock$handle() {
+        return PyEval_ReleaseLock.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void PyEval_ReleaseLock()
+     * }
+     */
+    public static MemorySegment PyEval_ReleaseLock$address() {
+        return PyEval_ReleaseLock.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void PyEval_ReleaseLock()
+     * }
+     */
+    public static void PyEval_ReleaseLock() {
+        var mh$ = PyEval_ReleaseLock.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("PyEval_ReleaseLock");
+            }
+            mh$.invokeExact();
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class PyEval_AcquireThread {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Python_h.C_POINTER
@@ -127,939 +4152,6 @@ public class Python_h extends Python_h_1 {
                 traceDowncall("PyEval_ReleaseThread", tstate);
             }
             mh$.invokeExact(tstate);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyEval_SetProfile {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_SetProfile");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfile(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor PyEval_SetProfile$descriptor() {
-        return PyEval_SetProfile.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfile(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MethodHandle PyEval_SetProfile$handle() {
-        return PyEval_SetProfile.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfile(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MemorySegment PyEval_SetProfile$address() {
-        return PyEval_SetProfile.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void PyEval_SetProfile(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static void PyEval_SetProfile(MemorySegment x0, MemorySegment x1) {
-        var mh$ = PyEval_SetProfile.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyEval_SetProfile", x0, x1);
-            }
-            mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyEval_SetProfileAllThreads {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_SetProfileAllThreads");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfileAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor PyEval_SetProfileAllThreads$descriptor() {
-        return PyEval_SetProfileAllThreads.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfileAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MethodHandle PyEval_SetProfileAllThreads$handle() {
-        return PyEval_SetProfileAllThreads.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void PyEval_SetProfileAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MemorySegment PyEval_SetProfileAllThreads$address() {
-        return PyEval_SetProfileAllThreads.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void PyEval_SetProfileAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static void PyEval_SetProfileAllThreads(MemorySegment x0, MemorySegment x1) {
-        var mh$ = PyEval_SetProfileAllThreads.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyEval_SetProfileAllThreads", x0, x1);
-            }
-            mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_SetProfile {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_SetProfile");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * extern int _PyEval_SetProfile(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_SetProfile$descriptor() {
-        return _PyEval_SetProfile.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * extern int _PyEval_SetProfile(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static MethodHandle _PyEval_SetProfile$handle() {
-        return _PyEval_SetProfile.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * extern int _PyEval_SetProfile(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static MemorySegment _PyEval_SetProfile$address() {
-        return _PyEval_SetProfile.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * extern int _PyEval_SetProfile(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static int _PyEval_SetProfile(MemorySegment tstate, MemorySegment func, MemorySegment arg) {
-        var mh$ = _PyEval_SetProfile.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_SetProfile", tstate, func, arg);
-            }
-            return (int)mh$.invokeExact(tstate, func, arg);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyEval_SetTrace {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_SetTrace");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void PyEval_SetTrace(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor PyEval_SetTrace$descriptor() {
-        return PyEval_SetTrace.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void PyEval_SetTrace(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MethodHandle PyEval_SetTrace$handle() {
-        return PyEval_SetTrace.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void PyEval_SetTrace(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MemorySegment PyEval_SetTrace$address() {
-        return PyEval_SetTrace.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void PyEval_SetTrace(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static void PyEval_SetTrace(MemorySegment x0, MemorySegment x1) {
-        var mh$ = PyEval_SetTrace.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyEval_SetTrace", x0, x1);
-            }
-            mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyEval_SetTraceAllThreads {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_SetTraceAllThreads");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void PyEval_SetTraceAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor PyEval_SetTraceAllThreads$descriptor() {
-        return PyEval_SetTraceAllThreads.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void PyEval_SetTraceAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MethodHandle PyEval_SetTraceAllThreads$handle() {
-        return PyEval_SetTraceAllThreads.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void PyEval_SetTraceAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static MemorySegment PyEval_SetTraceAllThreads$address() {
-        return PyEval_SetTraceAllThreads.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void PyEval_SetTraceAllThreads(Py_tracefunc, PyObject *)
-     * }
-     */
-    public static void PyEval_SetTraceAllThreads(MemorySegment x0, MemorySegment x1) {
-        var mh$ = PyEval_SetTraceAllThreads.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyEval_SetTraceAllThreads", x0, x1);
-            }
-            mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_SetTrace {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_SetTrace");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyEval_SetTrace(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_SetTrace$descriptor() {
-        return _PyEval_SetTrace.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyEval_SetTrace(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static MethodHandle _PyEval_SetTrace$handle() {
-        return _PyEval_SetTrace.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyEval_SetTrace(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static MemorySegment _PyEval_SetTrace$address() {
-        return _PyEval_SetTrace.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyEval_SetTrace(PyThreadState *tstate, Py_tracefunc func, PyObject *arg)
-     * }
-     */
-    public static int _PyEval_SetTrace(MemorySegment tstate, MemorySegment func, MemorySegment arg) {
-        var mh$ = _PyEval_SetTrace.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_SetTrace", tstate, func, arg);
-            }
-            return (int)mh$.invokeExact(tstate, func, arg);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_GetBuiltin {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_GetBuiltin");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltin(PyObject *)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_GetBuiltin$descriptor() {
-        return _PyEval_GetBuiltin.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltin(PyObject *)
-     * }
-     */
-    public static MethodHandle _PyEval_GetBuiltin$handle() {
-        return _PyEval_GetBuiltin.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltin(PyObject *)
-     * }
-     */
-    public static MemorySegment _PyEval_GetBuiltin$address() {
-        return _PyEval_GetBuiltin.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltin(PyObject *)
-     * }
-     */
-    public static MemorySegment _PyEval_GetBuiltin(MemorySegment x0) {
-        var mh$ = _PyEval_GetBuiltin.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_GetBuiltin", x0);
-            }
-            return (MemorySegment)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_GetBuiltinId {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_GetBuiltinId");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltinId(_Py_Identifier *)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_GetBuiltinId$descriptor() {
-        return _PyEval_GetBuiltinId.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltinId(_Py_Identifier *)
-     * }
-     */
-    public static MethodHandle _PyEval_GetBuiltinId$handle() {
-        return _PyEval_GetBuiltinId.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltinId(_Py_Identifier *)
-     * }
-     */
-    public static MemorySegment _PyEval_GetBuiltinId$address() {
-        return _PyEval_GetBuiltinId.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyEval_GetBuiltinId(_Py_Identifier *)
-     * }
-     */
-    public static MemorySegment _PyEval_GetBuiltinId(MemorySegment x0) {
-        var mh$ = _PyEval_GetBuiltinId.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_GetBuiltinId", x0);
-            }
-            return (MemorySegment)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyEval_MergeCompilerFlags {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyEval_MergeCompilerFlags");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyEval_MergeCompilerFlags(PyCompilerFlags *cf)
-     * }
-     */
-    public static FunctionDescriptor PyEval_MergeCompilerFlags$descriptor() {
-        return PyEval_MergeCompilerFlags.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyEval_MergeCompilerFlags(PyCompilerFlags *cf)
-     * }
-     */
-    public static MethodHandle PyEval_MergeCompilerFlags$handle() {
-        return PyEval_MergeCompilerFlags.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyEval_MergeCompilerFlags(PyCompilerFlags *cf)
-     * }
-     */
-    public static MemorySegment PyEval_MergeCompilerFlags$address() {
-        return PyEval_MergeCompilerFlags.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyEval_MergeCompilerFlags(PyCompilerFlags *cf)
-     * }
-     */
-    public static int PyEval_MergeCompilerFlags(MemorySegment cf) {
-        var mh$ = PyEval_MergeCompilerFlags.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyEval_MergeCompilerFlags", cf);
-            }
-            return (int)mh$.invokeExact(cf);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_EvalFrameDefault {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_INT
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_EvalFrameDefault");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_EvalFrameDefault(PyThreadState *tstate, struct _PyInterpreterFrame *f, int exc)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_EvalFrameDefault$descriptor() {
-        return _PyEval_EvalFrameDefault.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_EvalFrameDefault(PyThreadState *tstate, struct _PyInterpreterFrame *f, int exc)
-     * }
-     */
-    public static MethodHandle _PyEval_EvalFrameDefault$handle() {
-        return _PyEval_EvalFrameDefault.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyEval_EvalFrameDefault(PyThreadState *tstate, struct _PyInterpreterFrame *f, int exc)
-     * }
-     */
-    public static MemorySegment _PyEval_EvalFrameDefault$address() {
-        return _PyEval_EvalFrameDefault.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyEval_EvalFrameDefault(PyThreadState *tstate, struct _PyInterpreterFrame *f, int exc)
-     * }
-     */
-    public static MemorySegment _PyEval_EvalFrameDefault(MemorySegment tstate, MemorySegment f, int exc) {
-        var mh$ = _PyEval_EvalFrameDefault.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_EvalFrameDefault", tstate, f, exc);
-            }
-            return (MemorySegment)mh$.invokeExact(tstate, f, exc);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_SetSwitchInterval {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_SetSwitchInterval");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _PyEval_SetSwitchInterval(unsigned long microseconds)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_SetSwitchInterval$descriptor() {
-        return _PyEval_SetSwitchInterval.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _PyEval_SetSwitchInterval(unsigned long microseconds)
-     * }
-     */
-    public static MethodHandle _PyEval_SetSwitchInterval$handle() {
-        return _PyEval_SetSwitchInterval.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _PyEval_SetSwitchInterval(unsigned long microseconds)
-     * }
-     */
-    public static MemorySegment _PyEval_SetSwitchInterval$address() {
-        return _PyEval_SetSwitchInterval.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _PyEval_SetSwitchInterval(unsigned long microseconds)
-     * }
-     */
-    public static void _PyEval_SetSwitchInterval(int microseconds) {
-        var mh$ = _PyEval_SetSwitchInterval.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_SetSwitchInterval", microseconds);
-            }
-            mh$.invokeExact(microseconds);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_GetSwitchInterval {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_GetSwitchInterval");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * unsigned long _PyEval_GetSwitchInterval()
-     * }
-     */
-    public static FunctionDescriptor _PyEval_GetSwitchInterval$descriptor() {
-        return _PyEval_GetSwitchInterval.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * unsigned long _PyEval_GetSwitchInterval()
-     * }
-     */
-    public static MethodHandle _PyEval_GetSwitchInterval$handle() {
-        return _PyEval_GetSwitchInterval.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * unsigned long _PyEval_GetSwitchInterval()
-     * }
-     */
-    public static MemorySegment _PyEval_GetSwitchInterval$address() {
-        return _PyEval_GetSwitchInterval.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * unsigned long _PyEval_GetSwitchInterval()
-     * }
-     */
-    public static int _PyEval_GetSwitchInterval() {
-        var mh$ = _PyEval_GetSwitchInterval.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_GetSwitchInterval");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_MakePendingCalls {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_MakePendingCalls");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyEval_MakePendingCalls(PyThreadState *)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_MakePendingCalls$descriptor() {
-        return _PyEval_MakePendingCalls.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyEval_MakePendingCalls(PyThreadState *)
-     * }
-     */
-    public static MethodHandle _PyEval_MakePendingCalls$handle() {
-        return _PyEval_MakePendingCalls.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyEval_MakePendingCalls(PyThreadState *)
-     * }
-     */
-    public static MemorySegment _PyEval_MakePendingCalls$address() {
-        return _PyEval_MakePendingCalls.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyEval_MakePendingCalls(PyThreadState *)
-     * }
-     */
-    public static int _PyEval_MakePendingCalls(MemorySegment x0) {
-        var mh$ = _PyEval_MakePendingCalls.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_MakePendingCalls", x0);
-            }
-            return (int)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyUnstable_Eval_RequestCodeExtraIndex {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyUnstable_Eval_RequestCodeExtraIndex");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyUnstable_Eval_RequestCodeExtraIndex(freefunc)
-     * }
-     */
-    public static FunctionDescriptor PyUnstable_Eval_RequestCodeExtraIndex$descriptor() {
-        return PyUnstable_Eval_RequestCodeExtraIndex.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyUnstable_Eval_RequestCodeExtraIndex(freefunc)
-     * }
-     */
-    public static MethodHandle PyUnstable_Eval_RequestCodeExtraIndex$handle() {
-        return PyUnstable_Eval_RequestCodeExtraIndex.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyUnstable_Eval_RequestCodeExtraIndex(freefunc)
-     * }
-     */
-    public static MemorySegment PyUnstable_Eval_RequestCodeExtraIndex$address() {
-        return PyUnstable_Eval_RequestCodeExtraIndex.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * Py_ssize_t PyUnstable_Eval_RequestCodeExtraIndex(freefunc)
-     * }
-     */
-    public static long PyUnstable_Eval_RequestCodeExtraIndex(MemorySegment x0) {
-        var mh$ = PyUnstable_Eval_RequestCodeExtraIndex.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyUnstable_Eval_RequestCodeExtraIndex", x0);
-            }
-            return (long)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_SliceIndex {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_SliceIndex");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndex(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_SliceIndex$descriptor() {
-        return _PyEval_SliceIndex.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndex(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static MethodHandle _PyEval_SliceIndex$handle() {
-        return _PyEval_SliceIndex.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndex(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static MemorySegment _PyEval_SliceIndex$address() {
-        return _PyEval_SliceIndex.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndex(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static int _PyEval_SliceIndex(MemorySegment x0, MemorySegment x1) {
-        var mh$ = _PyEval_SliceIndex.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_SliceIndex", x0, x1);
-            }
-            return (int)mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyEval_SliceIndexNotNone {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyEval_SliceIndexNotNone");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndexNotNone(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static FunctionDescriptor _PyEval_SliceIndexNotNone$descriptor() {
-        return _PyEval_SliceIndexNotNone.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndexNotNone(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static MethodHandle _PyEval_SliceIndexNotNone$handle() {
-        return _PyEval_SliceIndexNotNone.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndexNotNone(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static MemorySegment _PyEval_SliceIndexNotNone$address() {
-        return _PyEval_SliceIndexNotNone.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyEval_SliceIndexNotNone(PyObject *, Py_ssize_t *)
-     * }
-     */
-    public static int _PyEval_SliceIndexNotNone(MemorySegment x0, MemorySegment x1) {
-        var mh$ = _PyEval_SliceIndexNotNone.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyEval_SliceIndexNotNone", x0, x1);
-            }
-            return (int)mh$.invokeExact(x0, x1);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -1978,426 +5070,6 @@ public class Python_h extends Python_h_1 {
         }
     }
 
-    private static class PyUnstable_PerfMapState_Init {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyUnstable_PerfMapState_Init");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyUnstable_PerfMapState_Init()
-     * }
-     */
-    public static FunctionDescriptor PyUnstable_PerfMapState_Init$descriptor() {
-        return PyUnstable_PerfMapState_Init.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyUnstable_PerfMapState_Init()
-     * }
-     */
-    public static MethodHandle PyUnstable_PerfMapState_Init$handle() {
-        return PyUnstable_PerfMapState_Init.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyUnstable_PerfMapState_Init()
-     * }
-     */
-    public static MemorySegment PyUnstable_PerfMapState_Init$address() {
-        return PyUnstable_PerfMapState_Init.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyUnstable_PerfMapState_Init()
-     * }
-     */
-    public static int PyUnstable_PerfMapState_Init() {
-        var mh$ = PyUnstable_PerfMapState_Init.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyUnstable_PerfMapState_Init");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyUnstable_WritePerfMapEntry {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyUnstable_WritePerfMapEntry");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyUnstable_WritePerfMapEntry(const void *code_addr, unsigned int code_size, const char *entry_name)
-     * }
-     */
-    public static FunctionDescriptor PyUnstable_WritePerfMapEntry$descriptor() {
-        return PyUnstable_WritePerfMapEntry.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyUnstable_WritePerfMapEntry(const void *code_addr, unsigned int code_size, const char *entry_name)
-     * }
-     */
-    public static MethodHandle PyUnstable_WritePerfMapEntry$handle() {
-        return PyUnstable_WritePerfMapEntry.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyUnstable_WritePerfMapEntry(const void *code_addr, unsigned int code_size, const char *entry_name)
-     * }
-     */
-    public static MemorySegment PyUnstable_WritePerfMapEntry$address() {
-        return PyUnstable_WritePerfMapEntry.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyUnstable_WritePerfMapEntry(const void *code_addr, unsigned int code_size, const char *entry_name)
-     * }
-     */
-    public static int PyUnstable_WritePerfMapEntry(MemorySegment code_addr, int code_size, MemorySegment entry_name) {
-        var mh$ = PyUnstable_WritePerfMapEntry.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyUnstable_WritePerfMapEntry", code_addr, code_size, entry_name);
-            }
-            return (int)mh$.invokeExact(code_addr, code_size, entry_name);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyUnstable_PerfMapState_Fini {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyUnstable_PerfMapState_Fini");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void PyUnstable_PerfMapState_Fini()
-     * }
-     */
-    public static FunctionDescriptor PyUnstable_PerfMapState_Fini$descriptor() {
-        return PyUnstable_PerfMapState_Fini.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void PyUnstable_PerfMapState_Fini()
-     * }
-     */
-    public static MethodHandle PyUnstable_PerfMapState_Fini$handle() {
-        return PyUnstable_PerfMapState_Fini.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void PyUnstable_PerfMapState_Fini()
-     * }
-     */
-    public static MemorySegment PyUnstable_PerfMapState_Fini$address() {
-        return PyUnstable_PerfMapState_Fini.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void PyUnstable_PerfMapState_Fini()
-     * }
-     */
-    public static void PyUnstable_PerfMapState_Fini() {
-        var mh$ = PyUnstable_PerfMapState_Fini.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyUnstable_PerfMapState_Fini");
-            }
-            mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PySys_GetAttr {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PySys_GetAttr");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PySys_GetAttr(PyThreadState *tstate, PyObject *name)
-     * }
-     */
-    public static FunctionDescriptor _PySys_GetAttr$descriptor() {
-        return _PySys_GetAttr.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PySys_GetAttr(PyThreadState *tstate, PyObject *name)
-     * }
-     */
-    public static MethodHandle _PySys_GetAttr$handle() {
-        return _PySys_GetAttr.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PySys_GetAttr(PyThreadState *tstate, PyObject *name)
-     * }
-     */
-    public static MemorySegment _PySys_GetAttr$address() {
-        return _PySys_GetAttr.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PySys_GetAttr(PyThreadState *tstate, PyObject *name)
-     * }
-     */
-    public static MemorySegment _PySys_GetAttr(MemorySegment tstate, MemorySegment name) {
-        var mh$ = _PySys_GetAttr.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PySys_GetAttr", tstate, name);
-            }
-            return (MemorySegment)mh$.invokeExact(tstate, name);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PySys_GetSizeOf {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PySys_GetSizeOf");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * size_t _PySys_GetSizeOf(PyObject *)
-     * }
-     */
-    public static FunctionDescriptor _PySys_GetSizeOf$descriptor() {
-        return _PySys_GetSizeOf.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * size_t _PySys_GetSizeOf(PyObject *)
-     * }
-     */
-    public static MethodHandle _PySys_GetSizeOf$handle() {
-        return _PySys_GetSizeOf.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * size_t _PySys_GetSizeOf(PyObject *)
-     * }
-     */
-    public static MemorySegment _PySys_GetSizeOf$address() {
-        return _PySys_GetSizeOf.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * size_t _PySys_GetSizeOf(PyObject *)
-     * }
-     */
-    public static long _PySys_GetSizeOf(MemorySegment x0) {
-        var mh$ = _PySys_GetSizeOf.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PySys_GetSizeOf", x0);
-            }
-            return (long)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * int PySys_Audit(const char *event, const char *argFormat, ...)
-     * }
-     */
-    public static class PySys_Audit {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
-                Python_h.C_INT,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER
-            );
-        private static final MemorySegment ADDR = Python_h.findOrThrow("PySys_Audit");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private PySys_Audit(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * int PySys_Audit(const char *event, const char *argFormat, ...)
-         * }
-         */
-        public static PySys_Audit makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new PySys_Audit(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public int apply(MemorySegment event, MemorySegment argFormat, Object... x2) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("PySys_Audit", event, argFormat, x2);
-                }
-                return (int)spreader.invokeExact(event, argFormat, x2);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static class PySys_AddAuditHook {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PySys_AddAuditHook");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PySys_AddAuditHook(Py_AuditHookFunction, void *)
-     * }
-     */
-    public static FunctionDescriptor PySys_AddAuditHook$descriptor() {
-        return PySys_AddAuditHook.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PySys_AddAuditHook(Py_AuditHookFunction, void *)
-     * }
-     */
-    public static MethodHandle PySys_AddAuditHook$handle() {
-        return PySys_AddAuditHook.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PySys_AddAuditHook(Py_AuditHookFunction, void *)
-     * }
-     */
-    public static MemorySegment PySys_AddAuditHook$address() {
-        return PySys_AddAuditHook.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PySys_AddAuditHook(Py_AuditHookFunction, void *)
-     * }
-     */
-    public static int PySys_AddAuditHook(MemorySegment x0, MemorySegment x1) {
-        var mh$ = PySys_AddAuditHook.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PySys_AddAuditHook", x0, x1);
-            }
-            return (int)mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
     private static class PyOS_FSPath {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Python_h.C_POINTER,
@@ -2562,118 +5234,6 @@ public class Python_h extends Python_h_1 {
                 traceDowncall("PyOS_AfterFork");
             }
             mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyOS_IsMainThread {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyOS_IsMainThread");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyOS_IsMainThread()
-     * }
-     */
-    public static FunctionDescriptor _PyOS_IsMainThread$descriptor() {
-        return _PyOS_IsMainThread.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyOS_IsMainThread()
-     * }
-     */
-    public static MethodHandle _PyOS_IsMainThread$handle() {
-        return _PyOS_IsMainThread.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyOS_IsMainThread()
-     * }
-     */
-    public static MemorySegment _PyOS_IsMainThread$address() {
-        return _PyOS_IsMainThread.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyOS_IsMainThread()
-     * }
-     */
-    public static int _PyOS_IsMainThread() {
-        var mh$ = _PyOS_IsMainThread.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyOS_IsMainThread");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyOS_SigintEvent {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyOS_SigintEvent");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void *_PyOS_SigintEvent()
-     * }
-     */
-    public static FunctionDescriptor _PyOS_SigintEvent$descriptor() {
-        return _PyOS_SigintEvent.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void *_PyOS_SigintEvent()
-     * }
-     */
-    public static MethodHandle _PyOS_SigintEvent$handle() {
-        return _PyOS_SigintEvent.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void *_PyOS_SigintEvent()
-     * }
-     */
-    public static MemorySegment _PyOS_SigintEvent$address() {
-        return _PyOS_SigintEvent.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void *_PyOS_SigintEvent()
-     * }
-     */
-    public static MemorySegment _PyOS_SigintEvent() {
-        var mh$ = _PyOS_SigintEvent.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyOS_SigintEvent");
-            }
-            return (MemorySegment)mh$.invokeExact();
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -3846,798 +6406,6 @@ public class Python_h extends Python_h_1 {
                 traceDowncall("PyImport_AppendInittab", name, initfunc);
             }
             return (int)mh$.invokeExact(name, initfunc);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyInit__imp {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyInit__imp");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *PyInit__imp()
-     * }
-     */
-    public static FunctionDescriptor PyInit__imp$descriptor() {
-        return PyInit__imp.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *PyInit__imp()
-     * }
-     */
-    public static MethodHandle PyInit__imp$handle() {
-        return PyInit__imp.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *PyInit__imp()
-     * }
-     */
-    public static MemorySegment PyInit__imp$address() {
-        return PyInit__imp.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *PyInit__imp()
-     * }
-     */
-    public static MemorySegment PyInit__imp() {
-        var mh$ = PyInit__imp.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyInit__imp");
-            }
-            return (MemorySegment)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_IsInitialized {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_IsInitialized");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_IsInitialized(PyInterpreterState *)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_IsInitialized$descriptor() {
-        return _PyImport_IsInitialized.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_IsInitialized(PyInterpreterState *)
-     * }
-     */
-    public static MethodHandle _PyImport_IsInitialized$handle() {
-        return _PyImport_IsInitialized.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_IsInitialized(PyInterpreterState *)
-     * }
-     */
-    public static MemorySegment _PyImport_IsInitialized$address() {
-        return _PyImport_IsInitialized.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_IsInitialized(PyInterpreterState *)
-     * }
-     */
-    public static int _PyImport_IsInitialized(MemorySegment x0) {
-        var mh$ = _PyImport_IsInitialized.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_IsInitialized", x0);
-            }
-            return (int)mh$.invokeExact(x0);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_GetModuleId {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_GetModuleId");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyImport_GetModuleId(_Py_Identifier *name)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_GetModuleId$descriptor() {
-        return _PyImport_GetModuleId.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyImport_GetModuleId(_Py_Identifier *name)
-     * }
-     */
-    public static MethodHandle _PyImport_GetModuleId$handle() {
-        return _PyImport_GetModuleId.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyImport_GetModuleId(_Py_Identifier *name)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleId$address() {
-        return _PyImport_GetModuleId.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyImport_GetModuleId(_Py_Identifier *name)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleId(MemorySegment name) {
-        var mh$ = _PyImport_GetModuleId.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_GetModuleId", name);
-            }
-            return (MemorySegment)mh$.invokeExact(name);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_SetModule {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_SetModule");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModule(PyObject *name, PyObject *module)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_SetModule$descriptor() {
-        return _PyImport_SetModule.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModule(PyObject *name, PyObject *module)
-     * }
-     */
-    public static MethodHandle _PyImport_SetModule$handle() {
-        return _PyImport_SetModule.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModule(PyObject *name, PyObject *module)
-     * }
-     */
-    public static MemorySegment _PyImport_SetModule$address() {
-        return _PyImport_SetModule.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_SetModule(PyObject *name, PyObject *module)
-     * }
-     */
-    public static int _PyImport_SetModule(MemorySegment name, MemorySegment module) {
-        var mh$ = _PyImport_SetModule.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_SetModule", name, module);
-            }
-            return (int)mh$.invokeExact(name, module);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_SetModuleString {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_SetModuleString");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModuleString(const char *name, PyObject *module)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_SetModuleString$descriptor() {
-        return _PyImport_SetModuleString.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModuleString(const char *name, PyObject *module)
-     * }
-     */
-    public static MethodHandle _PyImport_SetModuleString$handle() {
-        return _PyImport_SetModuleString.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_SetModuleString(const char *name, PyObject *module)
-     * }
-     */
-    public static MemorySegment _PyImport_SetModuleString$address() {
-        return _PyImport_SetModuleString.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_SetModuleString(const char *name, PyObject *module)
-     * }
-     */
-    public static int _PyImport_SetModuleString(MemorySegment name, MemorySegment module) {
-        var mh$ = _PyImport_SetModuleString.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_SetModuleString", name, module);
-            }
-            return (int)mh$.invokeExact(name, module);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_AcquireLock {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_AcquireLock");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _PyImport_AcquireLock(PyInterpreterState *interp)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_AcquireLock$descriptor() {
-        return _PyImport_AcquireLock.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _PyImport_AcquireLock(PyInterpreterState *interp)
-     * }
-     */
-    public static MethodHandle _PyImport_AcquireLock$handle() {
-        return _PyImport_AcquireLock.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _PyImport_AcquireLock(PyInterpreterState *interp)
-     * }
-     */
-    public static MemorySegment _PyImport_AcquireLock$address() {
-        return _PyImport_AcquireLock.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _PyImport_AcquireLock(PyInterpreterState *interp)
-     * }
-     */
-    public static void _PyImport_AcquireLock(MemorySegment interp) {
-        var mh$ = _PyImport_AcquireLock.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_AcquireLock", interp);
-            }
-            mh$.invokeExact(interp);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_ReleaseLock {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_ReleaseLock");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_ReleaseLock(PyInterpreterState *interp)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_ReleaseLock$descriptor() {
-        return _PyImport_ReleaseLock.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_ReleaseLock(PyInterpreterState *interp)
-     * }
-     */
-    public static MethodHandle _PyImport_ReleaseLock$handle() {
-        return _PyImport_ReleaseLock.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_ReleaseLock(PyInterpreterState *interp)
-     * }
-     */
-    public static MemorySegment _PyImport_ReleaseLock$address() {
-        return _PyImport_ReleaseLock.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_ReleaseLock(PyInterpreterState *interp)
-     * }
-     */
-    public static int _PyImport_ReleaseLock(MemorySegment interp) {
-        var mh$ = _PyImport_ReleaseLock.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_ReleaseLock", interp);
-            }
-            return (int)mh$.invokeExact(interp);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_FixupBuiltin {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_FixupBuiltin");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupBuiltin(PyObject *mod, const char *name, PyObject *modules)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_FixupBuiltin$descriptor() {
-        return _PyImport_FixupBuiltin.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupBuiltin(PyObject *mod, const char *name, PyObject *modules)
-     * }
-     */
-    public static MethodHandle _PyImport_FixupBuiltin$handle() {
-        return _PyImport_FixupBuiltin.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupBuiltin(PyObject *mod, const char *name, PyObject *modules)
-     * }
-     */
-    public static MemorySegment _PyImport_FixupBuiltin$address() {
-        return _PyImport_FixupBuiltin.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_FixupBuiltin(PyObject *mod, const char *name, PyObject *modules)
-     * }
-     */
-    public static int _PyImport_FixupBuiltin(MemorySegment mod, MemorySegment name, MemorySegment modules) {
-        var mh$ = _PyImport_FixupBuiltin.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_FixupBuiltin", mod, name, modules);
-            }
-            return (int)mh$.invokeExact(mod, name, modules);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_FixupExtensionObject {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_FixupExtensionObject");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupExtensionObject(PyObject *, PyObject *, PyObject *, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_FixupExtensionObject$descriptor() {
-        return _PyImport_FixupExtensionObject.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupExtensionObject(PyObject *, PyObject *, PyObject *, PyObject *)
-     * }
-     */
-    public static MethodHandle _PyImport_FixupExtensionObject$handle() {
-        return _PyImport_FixupExtensionObject.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyImport_FixupExtensionObject(PyObject *, PyObject *, PyObject *, PyObject *)
-     * }
-     */
-    public static MemorySegment _PyImport_FixupExtensionObject$address() {
-        return _PyImport_FixupExtensionObject.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyImport_FixupExtensionObject(PyObject *, PyObject *, PyObject *, PyObject *)
-     * }
-     */
-    public static int _PyImport_FixupExtensionObject(MemorySegment x0, MemorySegment x1, MemorySegment x2, MemorySegment x3) {
-        var mh$ = _PyImport_FixupExtensionObject.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_FixupExtensionObject", x0, x1, x2, x3);
-            }
-            return (int)mh$.invokeExact(x0, x1, x2, x3);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyImport_Inittab$constants {
-        public static final AddressLayout LAYOUT = Python_h.C_POINTER;
-        public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyImport_Inittab").reinterpret(LAYOUT.byteSize());
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern struct _inittab *PyImport_Inittab
-     * }
-     */
-    public static AddressLayout PyImport_Inittab$layout() {
-        return PyImport_Inittab$constants.LAYOUT;
-    }
-
-    /**
-     * Segment for variable:
-     * {@snippet lang=c :
-     * extern struct _inittab *PyImport_Inittab
-     * }
-     */
-    public static MemorySegment PyImport_Inittab$segment() {
-        return PyImport_Inittab$constants.SEGMENT;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern struct _inittab *PyImport_Inittab
-     * }
-     */
-    public static MemorySegment PyImport_Inittab() {
-        return PyImport_Inittab$constants.SEGMENT.get(PyImport_Inittab$constants.LAYOUT, 0L);
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern struct _inittab *PyImport_Inittab
-     * }
-     */
-    public static void PyImport_Inittab(MemorySegment varValue) {
-        PyImport_Inittab$constants.SEGMENT.set(PyImport_Inittab$constants.LAYOUT, 0L, varValue);
-    }
-
-    private static class PyImport_ExtendInittab {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyImport_ExtendInittab");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyImport_ExtendInittab(struct _inittab *newtab)
-     * }
-     */
-    public static FunctionDescriptor PyImport_ExtendInittab$descriptor() {
-        return PyImport_ExtendInittab.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyImport_ExtendInittab(struct _inittab *newtab)
-     * }
-     */
-    public static MethodHandle PyImport_ExtendInittab$handle() {
-        return PyImport_ExtendInittab.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyImport_ExtendInittab(struct _inittab *newtab)
-     * }
-     */
-    public static MemorySegment PyImport_ExtendInittab$address() {
-        return PyImport_ExtendInittab.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyImport_ExtendInittab(struct _inittab *newtab)
-     * }
-     */
-    public static int PyImport_ExtendInittab(MemorySegment newtab) {
-        var mh$ = PyImport_ExtendInittab.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyImport_ExtendInittab", newtab);
-            }
-            return (int)mh$.invokeExact(newtab);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyImport_FrozenModules$constants {
-        public static final AddressLayout LAYOUT = Python_h.C_POINTER;
-        public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyImport_FrozenModules").reinterpret(LAYOUT.byteSize());
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern const struct _frozen *PyImport_FrozenModules
-     * }
-     */
-    public static AddressLayout PyImport_FrozenModules$layout() {
-        return PyImport_FrozenModules$constants.LAYOUT;
-    }
-
-    /**
-     * Segment for variable:
-     * {@snippet lang=c :
-     * extern const struct _frozen *PyImport_FrozenModules
-     * }
-     */
-    public static MemorySegment PyImport_FrozenModules$segment() {
-        return PyImport_FrozenModules$constants.SEGMENT;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern const struct _frozen *PyImport_FrozenModules
-     * }
-     */
-    public static MemorySegment PyImport_FrozenModules() {
-        return PyImport_FrozenModules$constants.SEGMENT.get(PyImport_FrozenModules$constants.LAYOUT, 0L);
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern const struct _frozen *PyImport_FrozenModules
-     * }
-     */
-    public static void PyImport_FrozenModules(MemorySegment varValue) {
-        PyImport_FrozenModules$constants.SEGMENT.set(PyImport_FrozenModules$constants.LAYOUT, 0L, varValue);
-    }
-
-    private static class _PyImport_GetModuleAttr {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_GetModuleAttr");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttr(PyObject *, PyObject *)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_GetModuleAttr$descriptor() {
-        return _PyImport_GetModuleAttr.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttr(PyObject *, PyObject *)
-     * }
-     */
-    public static MethodHandle _PyImport_GetModuleAttr$handle() {
-        return _PyImport_GetModuleAttr.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttr(PyObject *, PyObject *)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleAttr$address() {
-        return _PyImport_GetModuleAttr.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttr(PyObject *, PyObject *)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleAttr(MemorySegment x0, MemorySegment x1) {
-        var mh$ = _PyImport_GetModuleAttr.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_GetModuleAttr", x0, x1);
-            }
-            return (MemorySegment)mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyImport_GetModuleAttrString {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyImport_GetModuleAttrString");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttrString(const char *, const char *)
-     * }
-     */
-    public static FunctionDescriptor _PyImport_GetModuleAttrString$descriptor() {
-        return _PyImport_GetModuleAttrString.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttrString(const char *, const char *)
-     * }
-     */
-    public static MethodHandle _PyImport_GetModuleAttrString$handle() {
-        return _PyImport_GetModuleAttrString.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttrString(const char *, const char *)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleAttrString$address() {
-        return _PyImport_GetModuleAttrString.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * extern PyObject *_PyImport_GetModuleAttrString(const char *, const char *)
-     * }
-     */
-    public static MemorySegment _PyImport_GetModuleAttrString(MemorySegment x0, MemorySegment x1) {
-        var mh$ = _PyImport_GetModuleAttrString.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyImport_GetModuleAttrString", x0, x1);
-            }
-            return (MemorySegment)mh$.invokeExact(x0, x1);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -10675,1368 +12443,8 @@ public class Python_h extends Python_h_1 {
         }
     }
 
-    private static class _PyStack_AsDict {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyStack_AsDict");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyStack_AsDict(PyObject *const *values, PyObject *kwnames)
-     * }
-     */
-    public static FunctionDescriptor _PyStack_AsDict$descriptor() {
-        return _PyStack_AsDict.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyStack_AsDict(PyObject *const *values, PyObject *kwnames)
-     * }
-     */
-    public static MethodHandle _PyStack_AsDict$handle() {
-        return _PyStack_AsDict.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyStack_AsDict(PyObject *const *values, PyObject *kwnames)
-     * }
-     */
-    public static MemorySegment _PyStack_AsDict$address() {
-        return _PyStack_AsDict.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyStack_AsDict(PyObject *const *values, PyObject *kwnames)
-     * }
-     */
-    public static MemorySegment _PyStack_AsDict(MemorySegment values, MemorySegment kwnames) {
-        var mh$ = _PyStack_AsDict.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyStack_AsDict", values, kwnames);
-            }
-            return (MemorySegment)mh$.invokeExact(values, kwnames);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_CheckFunctionResult {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_CheckFunctionResult");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_Py_CheckFunctionResult(PyThreadState *tstate, PyObject *callable, PyObject *result, const char *where)
-     * }
-     */
-    public static FunctionDescriptor _Py_CheckFunctionResult$descriptor() {
-        return _Py_CheckFunctionResult.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_Py_CheckFunctionResult(PyThreadState *tstate, PyObject *callable, PyObject *result, const char *where)
-     * }
-     */
-    public static MethodHandle _Py_CheckFunctionResult$handle() {
-        return _Py_CheckFunctionResult.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_Py_CheckFunctionResult(PyThreadState *tstate, PyObject *callable, PyObject *result, const char *where)
-     * }
-     */
-    public static MemorySegment _Py_CheckFunctionResult$address() {
-        return _Py_CheckFunctionResult.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_Py_CheckFunctionResult(PyThreadState *tstate, PyObject *callable, PyObject *result, const char *where)
-     * }
-     */
-    public static MemorySegment _Py_CheckFunctionResult(MemorySegment tstate, MemorySegment callable, MemorySegment result, MemorySegment where) {
-        var mh$ = _Py_CheckFunctionResult.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_CheckFunctionResult", tstate, callable, result, where);
-            }
-            return (MemorySegment)mh$.invokeExact(tstate, callable, result, where);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyObject_MakeTpCall {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_MakeTpCall");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_MakeTpCall(PyThreadState *tstate, PyObject *callable, PyObject *const *args, Py_ssize_t nargs, PyObject *keywords)
-     * }
-     */
-    public static FunctionDescriptor _PyObject_MakeTpCall$descriptor() {
-        return _PyObject_MakeTpCall.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_MakeTpCall(PyThreadState *tstate, PyObject *callable, PyObject *const *args, Py_ssize_t nargs, PyObject *keywords)
-     * }
-     */
-    public static MethodHandle _PyObject_MakeTpCall$handle() {
-        return _PyObject_MakeTpCall.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_MakeTpCall(PyThreadState *tstate, PyObject *callable, PyObject *const *args, Py_ssize_t nargs, PyObject *keywords)
-     * }
-     */
-    public static MemorySegment _PyObject_MakeTpCall$address() {
-        return _PyObject_MakeTpCall.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyObject_MakeTpCall(PyThreadState *tstate, PyObject *callable, PyObject *const *args, Py_ssize_t nargs, PyObject *keywords)
-     * }
-     */
-    public static MemorySegment _PyObject_MakeTpCall(MemorySegment tstate, MemorySegment callable, MemorySegment args, long nargs, MemorySegment keywords) {
-        var mh$ = _PyObject_MakeTpCall.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyObject_MakeTpCall", tstate, callable, args, nargs, keywords);
-            }
-            return (MemorySegment)mh$.invokeExact(tstate, callable, args, nargs, keywords);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyVectorcall_Function {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyVectorcall_Function");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * vectorcallfunc PyVectorcall_Function(PyObject *callable)
-     * }
-     */
-    public static FunctionDescriptor PyVectorcall_Function$descriptor() {
-        return PyVectorcall_Function.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * vectorcallfunc PyVectorcall_Function(PyObject *callable)
-     * }
-     */
-    public static MethodHandle PyVectorcall_Function$handle() {
-        return PyVectorcall_Function.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * vectorcallfunc PyVectorcall_Function(PyObject *callable)
-     * }
-     */
-    public static MemorySegment PyVectorcall_Function$address() {
-        return PyVectorcall_Function.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * vectorcallfunc PyVectorcall_Function(PyObject *callable)
-     * }
-     */
-    public static MemorySegment PyVectorcall_Function(MemorySegment callable) {
-        var mh$ = PyVectorcall_Function.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyVectorcall_Function", callable);
-            }
-            return (MemorySegment)mh$.invokeExact(callable);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyObject_VectorcallDict {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyObject_VectorcallDict");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_VectorcallDict(PyObject *callable, PyObject *const *args, size_t nargsf, PyObject *kwargs)
-     * }
-     */
-    public static FunctionDescriptor PyObject_VectorcallDict$descriptor() {
-        return PyObject_VectorcallDict.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_VectorcallDict(PyObject *callable, PyObject *const *args, size_t nargsf, PyObject *kwargs)
-     * }
-     */
-    public static MethodHandle PyObject_VectorcallDict$handle() {
-        return PyObject_VectorcallDict.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_VectorcallDict(PyObject *callable, PyObject *const *args, size_t nargsf, PyObject *kwargs)
-     * }
-     */
-    public static MemorySegment PyObject_VectorcallDict$address() {
-        return PyObject_VectorcallDict.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *PyObject_VectorcallDict(PyObject *callable, PyObject *const *args, size_t nargsf, PyObject *kwargs)
-     * }
-     */
-    public static MemorySegment PyObject_VectorcallDict(MemorySegment callable, MemorySegment args, long nargsf, MemorySegment kwargs) {
-        var mh$ = PyObject_VectorcallDict.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyObject_VectorcallDict", callable, args, nargsf, kwargs);
-            }
-            return (MemorySegment)mh$.invokeExact(callable, args, nargsf, kwargs);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyObject_FastCall {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_LONG_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_FastCall");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_FastCall(PyObject *func, PyObject *const *args, Py_ssize_t nargs)
-     * }
-     */
-    public static FunctionDescriptor _PyObject_FastCall$descriptor() {
-        return _PyObject_FastCall.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_FastCall(PyObject *func, PyObject *const *args, Py_ssize_t nargs)
-     * }
-     */
-    public static MethodHandle _PyObject_FastCall$handle() {
-        return _PyObject_FastCall.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_FastCall(PyObject *func, PyObject *const *args, Py_ssize_t nargs)
-     * }
-     */
-    public static MemorySegment _PyObject_FastCall$address() {
-        return _PyObject_FastCall.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyObject_FastCall(PyObject *func, PyObject *const *args, Py_ssize_t nargs)
-     * }
-     */
-    public static MemorySegment _PyObject_FastCall(MemorySegment func, MemorySegment args, long nargs) {
-        var mh$ = _PyObject_FastCall.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyObject_FastCall", func, args, nargs);
-            }
-            return (MemorySegment)mh$.invokeExact(func, args, nargs);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyObject_CallOneArg {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyObject_CallOneArg");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_CallOneArg(PyObject *func, PyObject *arg)
-     * }
-     */
-    public static FunctionDescriptor PyObject_CallOneArg$descriptor() {
-        return PyObject_CallOneArg.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_CallOneArg(PyObject *func, PyObject *arg)
-     * }
-     */
-    public static MethodHandle PyObject_CallOneArg$handle() {
-        return PyObject_CallOneArg.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *PyObject_CallOneArg(PyObject *func, PyObject *arg)
-     * }
-     */
-    public static MemorySegment PyObject_CallOneArg$address() {
-        return PyObject_CallOneArg.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *PyObject_CallOneArg(PyObject *func, PyObject *arg)
-     * }
-     */
-    public static MemorySegment PyObject_CallOneArg(MemorySegment func, MemorySegment arg) {
-        var mh$ = PyObject_CallOneArg.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyObject_CallOneArg", func, arg);
-            }
-            return (MemorySegment)mh$.invokeExact(func, arg);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_CallMethod(PyObject *obj, PyObject *name, const char *format, ...)
-     * }
-     */
-    public static class _PyObject_CallMethod {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER
-            );
-        private static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_CallMethod");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private _PyObject_CallMethod(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * PyObject *_PyObject_CallMethod(PyObject *obj, PyObject *name, const char *format, ...)
-         * }
-         */
-        public static _PyObject_CallMethod makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new _PyObject_CallMethod(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public MemorySegment apply(MemorySegment obj, MemorySegment name, MemorySegment format, Object... x3) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("_PyObject_CallMethod", obj, name, format, x3);
-                }
-                return (MemorySegment)spreader.invokeExact(obj, name, format, x3);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_CallMethodId(PyObject *obj, _Py_Identifier *name, const char *format, ...)
-     * }
-     */
-    public static class _PyObject_CallMethodId {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER
-            );
-        private static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_CallMethodId");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private _PyObject_CallMethodId(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * PyObject *_PyObject_CallMethodId(PyObject *obj, _Py_Identifier *name, const char *format, ...)
-         * }
-         */
-        public static _PyObject_CallMethodId makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new _PyObject_CallMethodId(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public MemorySegment apply(MemorySegment obj, MemorySegment name, MemorySegment format, Object... x3) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("_PyObject_CallMethodId", obj, name, format, x3);
-                }
-                return (MemorySegment)spreader.invokeExact(obj, name, format, x3);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_CallMethodId_SizeT(PyObject *obj, _Py_Identifier *name, const char *format, ...)
-     * }
-     */
-    public static class _PyObject_CallMethodId_SizeT {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER
-            );
-        private static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_CallMethodId_SizeT");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private _PyObject_CallMethodId_SizeT(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * PyObject *_PyObject_CallMethodId_SizeT(PyObject *obj, _Py_Identifier *name, const char *format, ...)
-         * }
-         */
-        public static _PyObject_CallMethodId_SizeT makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new _PyObject_CallMethodId_SizeT(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public MemorySegment apply(MemorySegment obj, MemorySegment name, MemorySegment format, Object... x3) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("_PyObject_CallMethodId_SizeT", obj, name, format, x3);
-                }
-                return (MemorySegment)spreader.invokeExact(obj, name, format, x3);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * PyObject *_PyObject_CallMethodIdObjArgs(PyObject *obj, _Py_Identifier *name, ...)
-     * }
-     */
-    public static class _PyObject_CallMethodIdObjArgs {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
-                Python_h.C_POINTER,
-                Python_h.C_POINTER,
-                Python_h.C_POINTER
-            );
-        private static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_CallMethodIdObjArgs");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private _PyObject_CallMethodIdObjArgs(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * PyObject *_PyObject_CallMethodIdObjArgs(PyObject *obj, _Py_Identifier *name, ...)
-         * }
-         */
-        public static _PyObject_CallMethodIdObjArgs makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new _PyObject_CallMethodIdObjArgs(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public MemorySegment apply(MemorySegment obj, MemorySegment name, Object... x2) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("_PyObject_CallMethodIdObjArgs", obj, name, x2);
-                }
-                return (MemorySegment)spreader.invokeExact(obj, name, x2);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static class _PyObject_HasLen {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_HasLen");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyObject_HasLen(PyObject *o)
-     * }
-     */
-    public static FunctionDescriptor _PyObject_HasLen$descriptor() {
-        return _PyObject_HasLen.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyObject_HasLen(PyObject *o)
-     * }
-     */
-    public static MethodHandle _PyObject_HasLen$handle() {
-        return _PyObject_HasLen.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyObject_HasLen(PyObject *o)
-     * }
-     */
-    public static MemorySegment _PyObject_HasLen$address() {
-        return _PyObject_HasLen.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyObject_HasLen(PyObject *o)
-     * }
-     */
-    public static int _PyObject_HasLen(MemorySegment o) {
-        var mh$ = _PyObject_HasLen.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyObject_HasLen", o);
-            }
-            return (int)mh$.invokeExact(o);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyObject_LengthHint {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER,
-            Python_h.C_LONG_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyObject_LengthHint");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyObject_LengthHint(PyObject *o, Py_ssize_t)
-     * }
-     */
-    public static FunctionDescriptor PyObject_LengthHint$descriptor() {
-        return PyObject_LengthHint.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyObject_LengthHint(PyObject *o, Py_ssize_t)
-     * }
-     */
-    public static MethodHandle PyObject_LengthHint$handle() {
-        return PyObject_LengthHint.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * Py_ssize_t PyObject_LengthHint(PyObject *o, Py_ssize_t)
-     * }
-     */
-    public static MemorySegment PyObject_LengthHint$address() {
-        return PyObject_LengthHint.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * Py_ssize_t PyObject_LengthHint(PyObject *o, Py_ssize_t)
-     * }
-     */
-    public static long PyObject_LengthHint(MemorySegment o, long x1) {
-        var mh$ = PyObject_LengthHint.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyObject_LengthHint", o, x1);
-            }
-            return (long)mh$.invokeExact(o, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PySequence_IterSearch {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_INT
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PySequence_IterSearch");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * Py_ssize_t _PySequence_IterSearch(PyObject *seq, PyObject *obj, int operation)
-     * }
-     */
-    public static FunctionDescriptor _PySequence_IterSearch$descriptor() {
-        return _PySequence_IterSearch.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * Py_ssize_t _PySequence_IterSearch(PyObject *seq, PyObject *obj, int operation)
-     * }
-     */
-    public static MethodHandle _PySequence_IterSearch$handle() {
-        return _PySequence_IterSearch.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * Py_ssize_t _PySequence_IterSearch(PyObject *seq, PyObject *obj, int operation)
-     * }
-     */
-    public static MemorySegment _PySequence_IterSearch$address() {
-        return _PySequence_IterSearch.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * Py_ssize_t _PySequence_IterSearch(PyObject *seq, PyObject *obj, int operation)
-     * }
-     */
-    public static long _PySequence_IterSearch(MemorySegment seq, MemorySegment obj, int operation) {
-        var mh$ = _PySequence_IterSearch.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PySequence_IterSearch", seq, obj, operation);
-            }
-            return (long)mh$.invokeExact(seq, obj, operation);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyObject_RealIsInstance {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_RealIsInstance");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsInstance(PyObject *inst, PyObject *cls)
-     * }
-     */
-    public static FunctionDescriptor _PyObject_RealIsInstance$descriptor() {
-        return _PyObject_RealIsInstance.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsInstance(PyObject *inst, PyObject *cls)
-     * }
-     */
-    public static MethodHandle _PyObject_RealIsInstance$handle() {
-        return _PyObject_RealIsInstance.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsInstance(PyObject *inst, PyObject *cls)
-     * }
-     */
-    public static MemorySegment _PyObject_RealIsInstance$address() {
-        return _PyObject_RealIsInstance.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyObject_RealIsInstance(PyObject *inst, PyObject *cls)
-     * }
-     */
-    public static int _PyObject_RealIsInstance(MemorySegment inst, MemorySegment cls) {
-        var mh$ = _PyObject_RealIsInstance.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyObject_RealIsInstance", inst, cls);
-            }
-            return (int)mh$.invokeExact(inst, cls);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyObject_RealIsSubclass {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyObject_RealIsSubclass");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsSubclass(PyObject *derived, PyObject *cls)
-     * }
-     */
-    public static FunctionDescriptor _PyObject_RealIsSubclass$descriptor() {
-        return _PyObject_RealIsSubclass.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsSubclass(PyObject *derived, PyObject *cls)
-     * }
-     */
-    public static MethodHandle _PyObject_RealIsSubclass$handle() {
-        return _PyObject_RealIsSubclass.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyObject_RealIsSubclass(PyObject *derived, PyObject *cls)
-     * }
-     */
-    public static MemorySegment _PyObject_RealIsSubclass$address() {
-        return _PyObject_RealIsSubclass.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyObject_RealIsSubclass(PyObject *derived, PyObject *cls)
-     * }
-     */
-    public static int _PyObject_RealIsSubclass(MemorySegment derived, MemorySegment cls) {
-        var mh$ = _PyObject_RealIsSubclass.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyObject_RealIsSubclass", derived, cls);
-            }
-            return (int)mh$.invokeExact(derived, cls);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PySequence_BytesToCharpArray {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PySequence_BytesToCharpArray");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * char *const *_PySequence_BytesToCharpArray(PyObject *self)
-     * }
-     */
-    public static FunctionDescriptor _PySequence_BytesToCharpArray$descriptor() {
-        return _PySequence_BytesToCharpArray.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * char *const *_PySequence_BytesToCharpArray(PyObject *self)
-     * }
-     */
-    public static MethodHandle _PySequence_BytesToCharpArray$handle() {
-        return _PySequence_BytesToCharpArray.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * char *const *_PySequence_BytesToCharpArray(PyObject *self)
-     * }
-     */
-    public static MemorySegment _PySequence_BytesToCharpArray$address() {
-        return _PySequence_BytesToCharpArray.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * char *const *_PySequence_BytesToCharpArray(PyObject *self)
-     * }
-     */
-    public static MemorySegment _PySequence_BytesToCharpArray(MemorySegment self) {
-        var mh$ = _PySequence_BytesToCharpArray.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PySequence_BytesToCharpArray", self);
-            }
-            return (MemorySegment)mh$.invokeExact(self);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_FreeCharPArray {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_FreeCharPArray");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _Py_FreeCharPArray(char *const array[])
-     * }
-     */
-    public static FunctionDescriptor _Py_FreeCharPArray$descriptor() {
-        return _Py_FreeCharPArray.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _Py_FreeCharPArray(char *const array[])
-     * }
-     */
-    public static MethodHandle _Py_FreeCharPArray$handle() {
-        return _Py_FreeCharPArray.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _Py_FreeCharPArray(char *const array[])
-     * }
-     */
-    public static MemorySegment _Py_FreeCharPArray$address() {
-        return _Py_FreeCharPArray.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _Py_FreeCharPArray(char *const array[])
-     * }
-     */
-    public static void _Py_FreeCharPArray(MemorySegment array) {
-        var mh$ = _Py_FreeCharPArray.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_FreeCharPArray", array);
-            }
-            mh$.invokeExact(array);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_add_one_to_index_F {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_add_one_to_index_F");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_F(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static FunctionDescriptor _Py_add_one_to_index_F$descriptor() {
-        return _Py_add_one_to_index_F.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_F(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static MethodHandle _Py_add_one_to_index_F$handle() {
-        return _Py_add_one_to_index_F.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_F(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static MemorySegment _Py_add_one_to_index_F$address() {
-        return _Py_add_one_to_index_F.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_F(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static void _Py_add_one_to_index_F(int nd, MemorySegment index, MemorySegment shape) {
-        var mh$ = _Py_add_one_to_index_F.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_add_one_to_index_F", nd, index, shape);
-            }
-            mh$.invokeExact(nd, index, shape);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_add_one_to_index_C {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_add_one_to_index_C");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_C(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static FunctionDescriptor _Py_add_one_to_index_C$descriptor() {
-        return _Py_add_one_to_index_C.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_C(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static MethodHandle _Py_add_one_to_index_C$handle() {
-        return _Py_add_one_to_index_C.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_C(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static MemorySegment _Py_add_one_to_index_C$address() {
-        return _Py_add_one_to_index_C.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _Py_add_one_to_index_C(int nd, Py_ssize_t *index, const Py_ssize_t *shape)
-     * }
-     */
-    public static void _Py_add_one_to_index_C(int nd, MemorySegment index, MemorySegment shape) {
-        var mh$ = _Py_add_one_to_index_C.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_add_one_to_index_C", nd, index, shape);
-            }
-            mh$.invokeExact(nd, index, shape);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_convert_optional_to_ssize_t {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_convert_optional_to_ssize_t");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _Py_convert_optional_to_ssize_t(PyObject *, void *)
-     * }
-     */
-    public static FunctionDescriptor _Py_convert_optional_to_ssize_t$descriptor() {
-        return _Py_convert_optional_to_ssize_t.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _Py_convert_optional_to_ssize_t(PyObject *, void *)
-     * }
-     */
-    public static MethodHandle _Py_convert_optional_to_ssize_t$handle() {
-        return _Py_convert_optional_to_ssize_t.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _Py_convert_optional_to_ssize_t(PyObject *, void *)
-     * }
-     */
-    public static MemorySegment _Py_convert_optional_to_ssize_t$address() {
-        return _Py_convert_optional_to_ssize_t.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _Py_convert_optional_to_ssize_t(PyObject *, void *)
-     * }
-     */
-    public static int _Py_convert_optional_to_ssize_t(MemorySegment x0, MemorySegment x1) {
-        var mh$ = _Py_convert_optional_to_ssize_t.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_convert_optional_to_ssize_t", x0, x1);
-            }
-            return (int)mh$.invokeExact(x0, x1);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyNumber_Index {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyNumber_Index");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyNumber_Index(PyObject *o)
-     * }
-     */
-    public static FunctionDescriptor _PyNumber_Index$descriptor() {
-        return _PyNumber_Index.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyNumber_Index(PyObject *o)
-     * }
-     */
-    public static MethodHandle _PyNumber_Index$handle() {
-        return _PyNumber_Index.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyNumber_Index(PyObject *o)
-     * }
-     */
-    public static MemorySegment _PyNumber_Index$address() {
-        return _PyNumber_Index.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyNumber_Index(PyObject *o)
-     * }
-     */
-    public static MemorySegment _PyNumber_Index(MemorySegment o) {
-        var mh$ = _PyNumber_Index.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyNumber_Index", o);
-            }
-            return (MemorySegment)mh$.invokeExact(o);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
     private static class PyFilter_Type$constants {
-        public static final GroupLayout LAYOUT = _typeobject.layout();
+        public static final GroupLayout LAYOUT = _object.layout();
         public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyFilter_Type").reinterpret(LAYOUT.byteSize());
     }
 
@@ -12071,7 +12479,7 @@ public class Python_h extends Python_h_1 {
     }
 
     private static class PyMap_Type$constants {
-        public static final GroupLayout LAYOUT = _typeobject.layout();
+        public static final GroupLayout LAYOUT = _object.layout();
         public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyMap_Type").reinterpret(LAYOUT.byteSize());
     }
 
@@ -12106,7 +12514,7 @@ public class Python_h extends Python_h_1 {
     }
 
     private static class PyZip_Type$constants {
-        public static final GroupLayout LAYOUT = _typeobject.layout();
+        public static final GroupLayout LAYOUT = _object.layout();
         public static final MemorySegment SEGMENT = Python_h.findOrThrow("PyZip_Type").reinterpret(LAYOUT.byteSize());
     }
 
@@ -12138,210 +12546,6 @@ public class Python_h extends Python_h_1 {
      */
     public static void PyZip_Type(MemorySegment varValue) {
         MemorySegment.copy(varValue, 0L, PyZip_Type$constants.SEGMENT, 0L, PyZip_Type$constants.LAYOUT.byteSize());
-    }
-
-    private static class _Py_ctype_table$constants {
-        public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(256, Python_h.C_INT);
-        public static final MemorySegment SEGMENT = Python_h.findOrThrow("_Py_ctype_table").reinterpret(LAYOUT.byteSize());
-        public static final VarHandle HANDLE = LAYOUT.varHandle(sequenceElement());
-
-        public static final long[] DIMS = { 256 };
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static SequenceLayout _Py_ctype_table$layout() {
-        return _Py_ctype_table$constants.LAYOUT;
-    }
-
-    /**
-     * Dimensions for array variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static long[] _Py_ctype_table$dimensions() {
-        return _Py_ctype_table$constants.DIMS;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static MemorySegment _Py_ctype_table() {
-        return _Py_ctype_table$constants.SEGMENT;
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static void _Py_ctype_table(MemorySegment varValue) {
-        MemorySegment.copy(varValue, 0L, _Py_ctype_table$constants.SEGMENT, 0L, _Py_ctype_table$constants.LAYOUT.byteSize());
-    }
-
-    /**
-     * Indexed getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static int _Py_ctype_table(long index0) {
-        return (int)_Py_ctype_table$constants.HANDLE.get(_Py_ctype_table$constants.SEGMENT, 0L, index0);
-    }
-
-    /**
-     * Indexed setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned int _Py_ctype_table[256]
-     * }
-     */
-    public static void _Py_ctype_table(long index0, int varValue) {
-        _Py_ctype_table$constants.HANDLE.set(_Py_ctype_table$constants.SEGMENT, 0L, index0, varValue);
-    }
-
-    private static class _Py_ctype_tolower$constants {
-        public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(256, Python_h.C_CHAR);
-        public static final MemorySegment SEGMENT = Python_h.findOrThrow("_Py_ctype_tolower").reinterpret(LAYOUT.byteSize());
-        public static final VarHandle HANDLE = LAYOUT.varHandle(sequenceElement());
-
-        public static final long[] DIMS = { 256 };
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static SequenceLayout _Py_ctype_tolower$layout() {
-        return _Py_ctype_tolower$constants.LAYOUT;
-    }
-
-    /**
-     * Dimensions for array variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static long[] _Py_ctype_tolower$dimensions() {
-        return _Py_ctype_tolower$constants.DIMS;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static MemorySegment _Py_ctype_tolower() {
-        return _Py_ctype_tolower$constants.SEGMENT;
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static void _Py_ctype_tolower(MemorySegment varValue) {
-        MemorySegment.copy(varValue, 0L, _Py_ctype_tolower$constants.SEGMENT, 0L, _Py_ctype_tolower$constants.LAYOUT.byteSize());
-    }
-
-    /**
-     * Indexed getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static byte _Py_ctype_tolower(long index0) {
-        return (byte)_Py_ctype_tolower$constants.HANDLE.get(_Py_ctype_tolower$constants.SEGMENT, 0L, index0);
-    }
-
-    /**
-     * Indexed setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_tolower[256]
-     * }
-     */
-    public static void _Py_ctype_tolower(long index0, byte varValue) {
-        _Py_ctype_tolower$constants.HANDLE.set(_Py_ctype_tolower$constants.SEGMENT, 0L, index0, varValue);
-    }
-
-    private static class _Py_ctype_toupper$constants {
-        public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(256, Python_h.C_CHAR);
-        public static final MemorySegment SEGMENT = Python_h.findOrThrow("_Py_ctype_toupper").reinterpret(LAYOUT.byteSize());
-        public static final VarHandle HANDLE = LAYOUT.varHandle(sequenceElement());
-
-        public static final long[] DIMS = { 256 };
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static SequenceLayout _Py_ctype_toupper$layout() {
-        return _Py_ctype_toupper$constants.LAYOUT;
-    }
-
-    /**
-     * Dimensions for array variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static long[] _Py_ctype_toupper$dimensions() {
-        return _Py_ctype_toupper$constants.DIMS;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static MemorySegment _Py_ctype_toupper() {
-        return _Py_ctype_toupper$constants.SEGMENT;
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static void _Py_ctype_toupper(MemorySegment varValue) {
-        MemorySegment.copy(varValue, 0L, _Py_ctype_toupper$constants.SEGMENT, 0L, _Py_ctype_toupper$constants.LAYOUT.byteSize());
-    }
-
-    /**
-     * Indexed getter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static byte _Py_ctype_toupper(long index0) {
-        return (byte)_Py_ctype_toupper$constants.HANDLE.get(_Py_ctype_toupper$constants.SEGMENT, 0L, index0);
-    }
-
-    /**
-     * Indexed setter for variable:
-     * {@snippet lang=c :
-     * extern const unsigned char _Py_ctype_toupper[256]
-     * }
-     */
-    public static void _Py_ctype_toupper(long index0, byte varValue) {
-        _Py_ctype_toupper$constants.HANDLE.set(_Py_ctype_toupper$constants.SEGMENT, 0L, index0, varValue);
     }
 
     private static class PyOS_string_to_double {
@@ -12461,128 +12665,6 @@ public class Python_h extends Python_h_1 {
                 traceDowncall("PyOS_double_to_string", val, format_code, precision, flags, type);
             }
             return (MemorySegment)mh$.invokeExact(val, format_code, precision, flags, type);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_string_to_number_with_underscores {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_LONG_LONG,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_string_to_number_with_underscores");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_Py_string_to_number_with_underscores(const char *str, Py_ssize_t len, const char *what, PyObject *obj, void *arg, PyObject *(*innerfunc)(const char *, Py_ssize_t, void *))
-     * }
-     */
-    public static FunctionDescriptor _Py_string_to_number_with_underscores$descriptor() {
-        return _Py_string_to_number_with_underscores.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_Py_string_to_number_with_underscores(const char *str, Py_ssize_t len, const char *what, PyObject *obj, void *arg, PyObject *(*innerfunc)(const char *, Py_ssize_t, void *))
-     * }
-     */
-    public static MethodHandle _Py_string_to_number_with_underscores$handle() {
-        return _Py_string_to_number_with_underscores.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_Py_string_to_number_with_underscores(const char *str, Py_ssize_t len, const char *what, PyObject *obj, void *arg, PyObject *(*innerfunc)(const char *, Py_ssize_t, void *))
-     * }
-     */
-    public static MemorySegment _Py_string_to_number_with_underscores$address() {
-        return _Py_string_to_number_with_underscores.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_Py_string_to_number_with_underscores(const char *str, Py_ssize_t len, const char *what, PyObject *obj, void *arg, PyObject *(*innerfunc)(const char *, Py_ssize_t, void *))
-     * }
-     */
-    public static MemorySegment _Py_string_to_number_with_underscores(MemorySegment str, long len, MemorySegment what, MemorySegment obj, MemorySegment arg, MemorySegment innerfunc) {
-        var mh$ = _Py_string_to_number_with_underscores.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_string_to_number_with_underscores", str, len, what, obj, arg, innerfunc);
-            }
-            return (MemorySegment)mh$.invokeExact(str, len, what, obj, arg, innerfunc);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_parse_inf_or_nan {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_DOUBLE,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_parse_inf_or_nan");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double _Py_parse_inf_or_nan(const char *p, char **endptr)
-     * }
-     */
-    public static FunctionDescriptor _Py_parse_inf_or_nan$descriptor() {
-        return _Py_parse_inf_or_nan.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double _Py_parse_inf_or_nan(const char *p, char **endptr)
-     * }
-     */
-    public static MethodHandle _Py_parse_inf_or_nan$handle() {
-        return _Py_parse_inf_or_nan.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double _Py_parse_inf_or_nan(const char *p, char **endptr)
-     * }
-     */
-    public static MemorySegment _Py_parse_inf_or_nan$address() {
-        return _Py_parse_inf_or_nan.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double _Py_parse_inf_or_nan(const char *p, char **endptr)
-     * }
-     */
-    public static double _Py_parse_inf_or_nan(MemorySegment p, MemorySegment endptr) {
-        var mh$ = _Py_parse_inf_or_nan.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_parse_inf_or_nan", p, endptr);
-            }
-            return (double)mh$.invokeExact(p, endptr);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -12820,860 +12902,6 @@ public class Python_h extends Python_h_1 {
                 traceDowncall("Py_EncodeLocale", text, error_pos);
             }
             return (MemorySegment)mh$.invokeExact(text, error_pos);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _Py_fopen_obj {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_Py_fopen_obj");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * FILE *_Py_fopen_obj(PyObject *path, const char *mode)
-     * }
-     */
-    public static FunctionDescriptor _Py_fopen_obj$descriptor() {
-        return _Py_fopen_obj.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * FILE *_Py_fopen_obj(PyObject *path, const char *mode)
-     * }
-     */
-    public static MethodHandle _Py_fopen_obj$handle() {
-        return _Py_fopen_obj.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * FILE *_Py_fopen_obj(PyObject *path, const char *mode)
-     * }
-     */
-    public static MemorySegment _Py_fopen_obj$address() {
-        return _Py_fopen_obj.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * FILE *_Py_fopen_obj(PyObject *path, const char *mode)
-     * }
-     */
-    public static MemorySegment _Py_fopen_obj(MemorySegment path, MemorySegment mode) {
-        var mh$ = _Py_fopen_obj.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_Py_fopen_obj", path, mode);
-            }
-            return (MemorySegment)mh$.invokeExact(path, mode);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyTraceMalloc_Track {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_INT,
-            Python_h.C_LONG_LONG,
-            Python_h.C_LONG_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyTraceMalloc_Track");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Track(unsigned int domain, uintptr_t ptr, size_t size)
-     * }
-     */
-    public static FunctionDescriptor PyTraceMalloc_Track$descriptor() {
-        return PyTraceMalloc_Track.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Track(unsigned int domain, uintptr_t ptr, size_t size)
-     * }
-     */
-    public static MethodHandle PyTraceMalloc_Track$handle() {
-        return PyTraceMalloc_Track.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Track(unsigned int domain, uintptr_t ptr, size_t size)
-     * }
-     */
-    public static MemorySegment PyTraceMalloc_Track$address() {
-        return PyTraceMalloc_Track.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Track(unsigned int domain, uintptr_t ptr, size_t size)
-     * }
-     */
-    public static int PyTraceMalloc_Track(int domain, long ptr, long size) {
-        var mh$ = PyTraceMalloc_Track.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyTraceMalloc_Track", domain, ptr, size);
-            }
-            return (int)mh$.invokeExact(domain, ptr, size);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class PyTraceMalloc_Untrack {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_INT,
-            Python_h.C_LONG_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("PyTraceMalloc_Untrack");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Untrack(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static FunctionDescriptor PyTraceMalloc_Untrack$descriptor() {
-        return PyTraceMalloc_Untrack.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Untrack(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static MethodHandle PyTraceMalloc_Untrack$handle() {
-        return PyTraceMalloc_Untrack.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Untrack(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static MemorySegment PyTraceMalloc_Untrack$address() {
-        return PyTraceMalloc_Untrack.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int PyTraceMalloc_Untrack(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static int PyTraceMalloc_Untrack(int domain, long ptr) {
-        var mh$ = PyTraceMalloc_Untrack.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("PyTraceMalloc_Untrack", domain, ptr);
-            }
-            return (int)mh$.invokeExact(domain, ptr);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetTraceback {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_INT,
-            Python_h.C_LONG_LONG
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetTraceback");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraceback(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetTraceback$descriptor() {
-        return _PyTraceMalloc_GetTraceback.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraceback(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetTraceback$handle() {
-        return _PyTraceMalloc_GetTraceback.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraceback(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTraceback$address() {
-        return _PyTraceMalloc_GetTraceback.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraceback(unsigned int domain, uintptr_t ptr)
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTraceback(int domain, long ptr) {
-        var mh$ = _PyTraceMalloc_GetTraceback.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetTraceback", domain, ptr);
-            }
-            return (MemorySegment)mh$.invokeExact(domain, ptr);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_IsTracing {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_IsTracing");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_IsTracing()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_IsTracing$descriptor() {
-        return _PyTraceMalloc_IsTracing.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_IsTracing()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_IsTracing$handle() {
-        return _PyTraceMalloc_IsTracing.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_IsTracing()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_IsTracing$address() {
-        return _PyTraceMalloc_IsTracing.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_IsTracing()
-     * }
-     */
-    public static int _PyTraceMalloc_IsTracing() {
-        var mh$ = _PyTraceMalloc_IsTracing.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_IsTracing");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_ClearTraces {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_ClearTraces");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ClearTraces()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_ClearTraces$descriptor() {
-        return _PyTraceMalloc_ClearTraces.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ClearTraces()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_ClearTraces$handle() {
-        return _PyTraceMalloc_ClearTraces.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ClearTraces()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_ClearTraces$address() {
-        return _PyTraceMalloc_ClearTraces.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ClearTraces()
-     * }
-     */
-    public static void _PyTraceMalloc_ClearTraces() {
-        var mh$ = _PyTraceMalloc_ClearTraces.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_ClearTraces");
-            }
-            mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetTraces {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetTraces");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraces()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetTraces$descriptor() {
-        return _PyTraceMalloc_GetTraces.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraces()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetTraces$handle() {
-        return _PyTraceMalloc_GetTraces.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraces()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTraces$address() {
-        return _PyTraceMalloc_GetTraces.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTraces()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTraces() {
-        var mh$ = _PyTraceMalloc_GetTraces.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetTraces");
-            }
-            return (MemorySegment)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetObjectTraceback {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER,
-            Python_h.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetObjectTraceback");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetObjectTraceback(PyObject *obj)
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetObjectTraceback$descriptor() {
-        return _PyTraceMalloc_GetObjectTraceback.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetObjectTraceback(PyObject *obj)
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetObjectTraceback$handle() {
-        return _PyTraceMalloc_GetObjectTraceback.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetObjectTraceback(PyObject *obj)
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetObjectTraceback$address() {
-        return _PyTraceMalloc_GetObjectTraceback.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetObjectTraceback(PyObject *obj)
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetObjectTraceback(MemorySegment obj) {
-        var mh$ = _PyTraceMalloc_GetObjectTraceback.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetObjectTraceback", obj);
-            }
-            return (MemorySegment)mh$.invokeExact(obj);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_Init {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_Init");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Init()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_Init$descriptor() {
-        return _PyTraceMalloc_Init.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Init()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_Init$handle() {
-        return _PyTraceMalloc_Init.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Init()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_Init$address() {
-        return _PyTraceMalloc_Init.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Init()
-     * }
-     */
-    public static int _PyTraceMalloc_Init() {
-        var mh$ = _PyTraceMalloc_Init.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_Init");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_Start {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT,
-            Python_h.C_INT
-        );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_Start");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Start(int max_nframe)
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_Start$descriptor() {
-        return _PyTraceMalloc_Start.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Start(int max_nframe)
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_Start$handle() {
-        return _PyTraceMalloc_Start.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Start(int max_nframe)
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_Start$address() {
-        return _PyTraceMalloc_Start.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_Start(int max_nframe)
-     * }
-     */
-    public static int _PyTraceMalloc_Start(int max_nframe) {
-        var mh$ = _PyTraceMalloc_Start.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_Start", max_nframe);
-            }
-            return (int)mh$.invokeExact(max_nframe);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_Stop {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_Stop");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_Stop()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_Stop$descriptor() {
-        return _PyTraceMalloc_Stop.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_Stop()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_Stop$handle() {
-        return _PyTraceMalloc_Stop.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_Stop()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_Stop$address() {
-        return _PyTraceMalloc_Stop.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_Stop()
-     * }
-     */
-    public static void _PyTraceMalloc_Stop() {
-        var mh$ = _PyTraceMalloc_Stop.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_Stop");
-            }
-            mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetTracebackLimit {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_INT    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetTracebackLimit");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_GetTracebackLimit()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetTracebackLimit$descriptor() {
-        return _PyTraceMalloc_GetTracebackLimit.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_GetTracebackLimit()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetTracebackLimit$handle() {
-        return _PyTraceMalloc_GetTracebackLimit.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_GetTracebackLimit()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTracebackLimit$address() {
-        return _PyTraceMalloc_GetTracebackLimit.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int _PyTraceMalloc_GetTracebackLimit()
-     * }
-     */
-    public static int _PyTraceMalloc_GetTracebackLimit() {
-        var mh$ = _PyTraceMalloc_GetTracebackLimit.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetTracebackLimit");
-            }
-            return (int)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetMemory {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_LONG_LONG    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetMemory");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * size_t _PyTraceMalloc_GetMemory()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetMemory$descriptor() {
-        return _PyTraceMalloc_GetMemory.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * size_t _PyTraceMalloc_GetMemory()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetMemory$handle() {
-        return _PyTraceMalloc_GetMemory.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * size_t _PyTraceMalloc_GetMemory()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetMemory$address() {
-        return _PyTraceMalloc_GetMemory.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * size_t _PyTraceMalloc_GetMemory()
-     * }
-     */
-    public static long _PyTraceMalloc_GetMemory() {
-        var mh$ = _PyTraceMalloc_GetMemory.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetMemory");
-            }
-            return (long)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_GetTracedMemory {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Python_h.C_POINTER    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_GetTracedMemory");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTracedMemory()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_GetTracedMemory$descriptor() {
-        return _PyTraceMalloc_GetTracedMemory.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTracedMemory()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_GetTracedMemory$handle() {
-        return _PyTraceMalloc_GetTracedMemory.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTracedMemory()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTracedMemory$address() {
-        return _PyTraceMalloc_GetTracedMemory.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * PyObject *_PyTraceMalloc_GetTracedMemory()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_GetTracedMemory() {
-        var mh$ = _PyTraceMalloc_GetTracedMemory.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_GetTracedMemory");
-            }
-            return (MemorySegment)mh$.invokeExact();
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class _PyTraceMalloc_ResetPeak {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(    );
-
-        public static final MemorySegment ADDR = Python_h.findOrThrow("_PyTraceMalloc_ResetPeak");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ResetPeak()
-     * }
-     */
-    public static FunctionDescriptor _PyTraceMalloc_ResetPeak$descriptor() {
-        return _PyTraceMalloc_ResetPeak.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ResetPeak()
-     * }
-     */
-    public static MethodHandle _PyTraceMalloc_ResetPeak$handle() {
-        return _PyTraceMalloc_ResetPeak.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ResetPeak()
-     * }
-     */
-    public static MemorySegment _PyTraceMalloc_ResetPeak$address() {
-        return _PyTraceMalloc_ResetPeak.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void _PyTraceMalloc_ResetPeak()
-     * }
-     */
-    public static void _PyTraceMalloc_ResetPeak() {
-        var mh$ = _PyTraceMalloc_ResetPeak.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("_PyTraceMalloc_ResetPeak");
-            }
-            mh$.invokeExact();
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -14155,6 +13383,24 @@ public class Python_h extends Python_h_1 {
         }
         return Holder._PYTHONFRAMEWORK;
     }
+    private static final int EDEADLOCK = (int)36L;
+    /**
+     * {@snippet lang=c :
+     * #define EDEADLOCK 36
+     * }
+     */
+    public static int EDEADLOCK() {
+        return EDEADLOCK;
+    }
+    private static final int _ALPHA = (int)259L;
+    /**
+     * {@snippet lang=c :
+     * #define _ALPHA 259
+     * }
+     */
+    public static int _ALPHA() {
+        return _ALPHA;
+    }
     private static final int _MAX_ITOSTR_BASE16_COUNT = (int)9L;
     /**
      * {@snippet lang=c :
@@ -14334,303 +13580,6 @@ public class Python_h extends Python_h_1 {
      */
     public static int _MAX_U64TOSTR_BASE2_COUNT() {
         return _MAX_U64TOSTR_BASE2_COUNT;
-    }
-    private static final int SCHAR_MIN = (int)-128L;
-    /**
-     * {@snippet lang=c :
-     * #define SCHAR_MIN -128
-     * }
-     */
-    public static int SCHAR_MIN() {
-        return SCHAR_MIN;
-    }
-    private static final int CHAR_MIN = (int)-128L;
-    /**
-     * {@snippet lang=c :
-     * #define CHAR_MIN -128
-     * }
-     */
-    public static int CHAR_MIN() {
-        return CHAR_MIN;
-    }
-    private static final int CHAR_MAX = (int)127L;
-    /**
-     * {@snippet lang=c :
-     * #define CHAR_MAX 127
-     * }
-     */
-    public static int CHAR_MAX() {
-        return CHAR_MAX;
-    }
-    private static final int SHRT_MIN = (int)-32768L;
-    /**
-     * {@snippet lang=c :
-     * #define SHRT_MIN -32768
-     * }
-     */
-    public static int SHRT_MIN() {
-        return SHRT_MIN;
-    }
-    private static final int INT_MIN = (int)-2147483648L;
-    /**
-     * {@snippet lang=c :
-     * #define INT_MIN -2147483648
-     * }
-     */
-    public static int INT_MIN() {
-        return INT_MIN;
-    }
-    private static final int UINT_MAX = (int)4294967295L;
-    /**
-     * {@snippet lang=c :
-     * #define UINT_MAX 4294967295
-     * }
-     */
-    public static int UINT_MAX() {
-        return UINT_MAX;
-    }
-    private static final int LONG_MIN = (int)-2147483648L;
-    /**
-     * {@snippet lang=c :
-     * #define LONG_MIN -2147483648
-     * }
-     */
-    public static int LONG_MIN() {
-        return LONG_MIN;
-    }
-    private static final int LONG_MAX = (int)2147483647L;
-    /**
-     * {@snippet lang=c :
-     * #define LONG_MAX 2147483647
-     * }
-     */
-    public static int LONG_MAX() {
-        return LONG_MAX;
-    }
-    private static final int ULONG_MAX = (int)4294967295L;
-    /**
-     * {@snippet lang=c :
-     * #define ULONG_MAX 4294967295
-     * }
-     */
-    public static int ULONG_MAX() {
-        return ULONG_MAX;
-    }
-    private static final long LLONG_MAX = 9223372036854775807L;
-    /**
-     * {@snippet lang=c :
-     * #define LLONG_MAX 9223372036854775807
-     * }
-     */
-    public static long LLONG_MAX() {
-        return LLONG_MAX;
-    }
-    private static final long LLONG_MIN = -9223372036854775808L;
-    /**
-     * {@snippet lang=c :
-     * #define LLONG_MIN -9223372036854775808
-     * }
-     */
-    public static long LLONG_MIN() {
-        return LLONG_MIN;
-    }
-    private static final long ULLONG_MAX = -1L;
-    /**
-     * {@snippet lang=c :
-     * #define ULLONG_MAX -1
-     * }
-     */
-    public static long ULLONG_MAX() {
-        return ULLONG_MAX;
-    }
-    private static final int _I8_MIN = (int)-128L;
-    /**
-     * {@snippet lang=c :
-     * #define _I8_MIN -128
-     * }
-     */
-    public static int _I8_MIN() {
-        return _I8_MIN;
-    }
-    private static final byte _I8_MAX = (byte)127L;
-    /**
-     * {@snippet lang=c :
-     * #define _I8_MAX 127
-     * }
-     */
-    public static byte _I8_MAX() {
-        return _I8_MAX;
-    }
-    private static final byte _UI8_MAX = (byte)255L;
-    /**
-     * {@snippet lang=c :
-     * #define _UI8_MAX 255
-     * }
-     */
-    public static byte _UI8_MAX() {
-        return _UI8_MAX;
-    }
-    private static final int _I16_MIN = (int)-32768L;
-    /**
-     * {@snippet lang=c :
-     * #define _I16_MIN -32768
-     * }
-     */
-    public static int _I16_MIN() {
-        return _I16_MIN;
-    }
-    private static final short _I16_MAX = (short)32767L;
-    /**
-     * {@snippet lang=c :
-     * #define _I16_MAX 32767
-     * }
-     */
-    public static short _I16_MAX() {
-        return _I16_MAX;
-    }
-    private static final short _UI16_MAX = (short)65535L;
-    /**
-     * {@snippet lang=c :
-     * #define _UI16_MAX 65535
-     * }
-     */
-    public static short _UI16_MAX() {
-        return _UI16_MAX;
-    }
-    private static final int _I32_MIN = (int)-2147483648L;
-    /**
-     * {@snippet lang=c :
-     * #define _I32_MIN -2147483648
-     * }
-     */
-    public static int _I32_MIN() {
-        return _I32_MIN;
-    }
-    private static final int _I32_MAX = (int)2147483647L;
-    /**
-     * {@snippet lang=c :
-     * #define _I32_MAX 2147483647
-     * }
-     */
-    public static int _I32_MAX() {
-        return _I32_MAX;
-    }
-    private static final int _UI32_MAX = (int)4294967295L;
-    /**
-     * {@snippet lang=c :
-     * #define _UI32_MAX 4294967295
-     * }
-     */
-    public static int _UI32_MAX() {
-        return _UI32_MAX;
-    }
-    private static final long _I64_MIN = -9223372036854775808L;
-    /**
-     * {@snippet lang=c :
-     * #define _I64_MIN -9223372036854775808
-     * }
-     */
-    public static long _I64_MIN() {
-        return _I64_MIN;
-    }
-    private static final long _I64_MAX = 9223372036854775807L;
-    /**
-     * {@snippet lang=c :
-     * #define _I64_MAX 9223372036854775807
-     * }
-     */
-    public static long _I64_MAX() {
-        return _I64_MAX;
-    }
-    private static final long _UI64_MAX = -1L;
-    /**
-     * {@snippet lang=c :
-     * #define _UI64_MAX -1
-     * }
-     */
-    public static long _UI64_MAX() {
-        return _UI64_MAX;
-    }
-    private static final long SIZE_MAX = -1L;
-    /**
-     * {@snippet lang=c :
-     * #define SIZE_MAX -1
-     * }
-     */
-    public static long SIZE_MAX() {
-        return SIZE_MAX;
-    }
-    private static final long RSIZE_MAX = 9223372036854775807L;
-    /**
-     * {@snippet lang=c :
-     * #define RSIZE_MAX 9223372036854775807
-     * }
-     */
-    public static long RSIZE_MAX() {
-        return RSIZE_MAX;
-    }
-    private static final long LONG_LONG_MAX = 9223372036854775807L;
-    /**
-     * {@snippet lang=c :
-     * #define LONG_LONG_MAX 9223372036854775807
-     * }
-     */
-    public static long LONG_LONG_MAX() {
-        return LONG_LONG_MAX;
-    }
-    private static final long LONG_LONG_MIN = -9223372036854775808L;
-    /**
-     * {@snippet lang=c :
-     * #define LONG_LONG_MIN -9223372036854775808
-     * }
-     */
-    public static long LONG_LONG_MIN() {
-        return LONG_LONG_MIN;
-    }
-    private static final long ULONG_LONG_MAX = -1L;
-    /**
-     * {@snippet lang=c :
-     * #define ULONG_LONG_MAX -1
-     * }
-     */
-    public static long ULONG_LONG_MAX() {
-        return ULONG_LONG_MAX;
-    }
-    private static final int _CVTBUFSIZE = (int)349L;
-    /**
-     * {@snippet lang=c :
-     * #define _CVTBUFSIZE 349
-     * }
-     */
-    public static int _CVTBUFSIZE() {
-        return _CVTBUFSIZE;
-    }
-    private static final int EDEADLOCK = (int)36L;
-    /**
-     * {@snippet lang=c :
-     * #define EDEADLOCK 36
-     * }
-     */
-    public static int EDEADLOCK() {
-        return EDEADLOCK;
-    }
-    private static final int _NLSCMPERROR = (int)2147483647L;
-    /**
-     * {@snippet lang=c :
-     * #define _NLSCMPERROR 2147483647
-     * }
-     */
-    public static int _NLSCMPERROR() {
-        return _NLSCMPERROR;
-    }
-    private static final int _ALPHA = (int)259L;
-    /**
-     * {@snippet lang=c :
-     * #define _ALPHA 259
-     * }
-     */
-    public static int _ALPHA() {
-        return _ALPHA;
     }
     private static final int S_IFMT = (int)61440L;
     /**
@@ -15090,6 +14039,15 @@ public class Python_h extends Python_h_1 {
      */
     public static long PTRDIFF_MAX() {
         return PTRDIFF_MAX;
+    }
+    private static final long SIZE_MAX = -1L;
+    /**
+     * {@snippet lang=c :
+     * #define SIZE_MAX -1
+     * }
+     */
+    public static long SIZE_MAX() {
+        return SIZE_MAX;
     }
     private static final int SIG_ATOMIC_MIN = (int)-2147483648L;
     /**
@@ -16957,6 +15915,258 @@ public class Python_h extends Python_h_1 {
         }
         return Holder.SCNxPTR;
     }
+    private static final int SCHAR_MIN = (int)-128L;
+    /**
+     * {@snippet lang=c :
+     * #define SCHAR_MIN -128
+     * }
+     */
+    public static int SCHAR_MIN() {
+        return SCHAR_MIN;
+    }
+    private static final int CHAR_MIN = (int)-128L;
+    /**
+     * {@snippet lang=c :
+     * #define CHAR_MIN -128
+     * }
+     */
+    public static int CHAR_MIN() {
+        return CHAR_MIN;
+    }
+    private static final int CHAR_MAX = (int)127L;
+    /**
+     * {@snippet lang=c :
+     * #define CHAR_MAX 127
+     * }
+     */
+    public static int CHAR_MAX() {
+        return CHAR_MAX;
+    }
+    private static final int SHRT_MIN = (int)-32768L;
+    /**
+     * {@snippet lang=c :
+     * #define SHRT_MIN -32768
+     * }
+     */
+    public static int SHRT_MIN() {
+        return SHRT_MIN;
+    }
+    private static final int INT_MIN = (int)-2147483648L;
+    /**
+     * {@snippet lang=c :
+     * #define INT_MIN -2147483648
+     * }
+     */
+    public static int INT_MIN() {
+        return INT_MIN;
+    }
+    private static final int UINT_MAX = (int)4294967295L;
+    /**
+     * {@snippet lang=c :
+     * #define UINT_MAX 4294967295
+     * }
+     */
+    public static int UINT_MAX() {
+        return UINT_MAX;
+    }
+    private static final int LONG_MIN = (int)-2147483648L;
+    /**
+     * {@snippet lang=c :
+     * #define LONG_MIN -2147483648
+     * }
+     */
+    public static int LONG_MIN() {
+        return LONG_MIN;
+    }
+    private static final int LONG_MAX = (int)2147483647L;
+    /**
+     * {@snippet lang=c :
+     * #define LONG_MAX 2147483647
+     * }
+     */
+    public static int LONG_MAX() {
+        return LONG_MAX;
+    }
+    private static final int ULONG_MAX = (int)4294967295L;
+    /**
+     * {@snippet lang=c :
+     * #define ULONG_MAX 4294967295
+     * }
+     */
+    public static int ULONG_MAX() {
+        return ULONG_MAX;
+    }
+    private static final long LLONG_MAX = 9223372036854775807L;
+    /**
+     * {@snippet lang=c :
+     * #define LLONG_MAX 9223372036854775807
+     * }
+     */
+    public static long LLONG_MAX() {
+        return LLONG_MAX;
+    }
+    private static final long LLONG_MIN = -9223372036854775808L;
+    /**
+     * {@snippet lang=c :
+     * #define LLONG_MIN -9223372036854775808
+     * }
+     */
+    public static long LLONG_MIN() {
+        return LLONG_MIN;
+    }
+    private static final long ULLONG_MAX = -1L;
+    /**
+     * {@snippet lang=c :
+     * #define ULLONG_MAX -1
+     * }
+     */
+    public static long ULLONG_MAX() {
+        return ULLONG_MAX;
+    }
+    private static final int _I8_MIN = (int)-128L;
+    /**
+     * {@snippet lang=c :
+     * #define _I8_MIN -128
+     * }
+     */
+    public static int _I8_MIN() {
+        return _I8_MIN;
+    }
+    private static final byte _I8_MAX = (byte)127L;
+    /**
+     * {@snippet lang=c :
+     * #define _I8_MAX 127
+     * }
+     */
+    public static byte _I8_MAX() {
+        return _I8_MAX;
+    }
+    private static final byte _UI8_MAX = (byte)255L;
+    /**
+     * {@snippet lang=c :
+     * #define _UI8_MAX 255
+     * }
+     */
+    public static byte _UI8_MAX() {
+        return _UI8_MAX;
+    }
+    private static final int _I16_MIN = (int)-32768L;
+    /**
+     * {@snippet lang=c :
+     * #define _I16_MIN -32768
+     * }
+     */
+    public static int _I16_MIN() {
+        return _I16_MIN;
+    }
+    private static final short _I16_MAX = (short)32767L;
+    /**
+     * {@snippet lang=c :
+     * #define _I16_MAX 32767
+     * }
+     */
+    public static short _I16_MAX() {
+        return _I16_MAX;
+    }
+    private static final short _UI16_MAX = (short)65535L;
+    /**
+     * {@snippet lang=c :
+     * #define _UI16_MAX 65535
+     * }
+     */
+    public static short _UI16_MAX() {
+        return _UI16_MAX;
+    }
+    private static final int _I32_MIN = (int)-2147483648L;
+    /**
+     * {@snippet lang=c :
+     * #define _I32_MIN -2147483648
+     * }
+     */
+    public static int _I32_MIN() {
+        return _I32_MIN;
+    }
+    private static final int _I32_MAX = (int)2147483647L;
+    /**
+     * {@snippet lang=c :
+     * #define _I32_MAX 2147483647
+     * }
+     */
+    public static int _I32_MAX() {
+        return _I32_MAX;
+    }
+    private static final int _UI32_MAX = (int)4294967295L;
+    /**
+     * {@snippet lang=c :
+     * #define _UI32_MAX 4294967295
+     * }
+     */
+    public static int _UI32_MAX() {
+        return _UI32_MAX;
+    }
+    private static final long _I64_MIN = -9223372036854775808L;
+    /**
+     * {@snippet lang=c :
+     * #define _I64_MIN -9223372036854775808
+     * }
+     */
+    public static long _I64_MIN() {
+        return _I64_MIN;
+    }
+    private static final long _I64_MAX = 9223372036854775807L;
+    /**
+     * {@snippet lang=c :
+     * #define _I64_MAX 9223372036854775807
+     * }
+     */
+    public static long _I64_MAX() {
+        return _I64_MAX;
+    }
+    private static final long _UI64_MAX = -1L;
+    /**
+     * {@snippet lang=c :
+     * #define _UI64_MAX -1
+     * }
+     */
+    public static long _UI64_MAX() {
+        return _UI64_MAX;
+    }
+    private static final long RSIZE_MAX = 9223372036854775807L;
+    /**
+     * {@snippet lang=c :
+     * #define RSIZE_MAX 9223372036854775807
+     * }
+     */
+    public static long RSIZE_MAX() {
+        return RSIZE_MAX;
+    }
+    private static final long LONG_LONG_MAX = 9223372036854775807L;
+    /**
+     * {@snippet lang=c :
+     * #define LONG_LONG_MAX 9223372036854775807
+     * }
+     */
+    public static long LONG_LONG_MAX() {
+        return LONG_LONG_MAX;
+    }
+    private static final long LONG_LONG_MIN = -9223372036854775808L;
+    /**
+     * {@snippet lang=c :
+     * #define LONG_LONG_MIN -9223372036854775808
+     * }
+     */
+    public static long LONG_LONG_MIN() {
+        return LONG_LONG_MIN;
+    }
+    private static final long ULONG_LONG_MAX = -1L;
+    /**
+     * {@snippet lang=c :
+     * #define ULONG_LONG_MAX -1
+     * }
+     */
+    public static long ULONG_LONG_MAX() {
+        return ULONG_LONG_MAX;
+    }
     private static final MemorySegment _Py_NULL = MemorySegment.ofAddress(0L);
     /**
      * {@snippet lang=c :
@@ -17428,15 +16638,6 @@ public class Python_h extends Python_h_1 {
     public static double Py_NAN() {
         return Py_NAN;
     }
-    private static final int PyBUF_WRITEABLE = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * #define PyBUF_WRITEABLE 1
-     * }
-     */
-    public static int PyBUF_WRITEABLE() {
-        return PyBUF_WRITEABLE;
-    }
     private static final int PyBUF_STRIDES = (int)24L;
     /**
      * {@snippet lang=c :
@@ -17572,60 +16773,6 @@ public class Python_h extends Python_h_1 {
     public static long Py_INVALID_SIZE() {
         return Py_INVALID_SIZE;
     }
-    private static final int _Py_TPFLAGS_STATIC_BUILTIN = (int)2L;
-    /**
-     * {@snippet lang=c :
-     * #define _Py_TPFLAGS_STATIC_BUILTIN 2
-     * }
-     */
-    public static int _Py_TPFLAGS_STATIC_BUILTIN() {
-        return _Py_TPFLAGS_STATIC_BUILTIN;
-    }
-    private static final int Py_TPFLAGS_MANAGED_WEAKREF = (int)8L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_TPFLAGS_MANAGED_WEAKREF 8
-     * }
-     */
-    public static int Py_TPFLAGS_MANAGED_WEAKREF() {
-        return Py_TPFLAGS_MANAGED_WEAKREF;
-    }
-    private static final int Py_TPFLAGS_MANAGED_DICT = (int)16L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_TPFLAGS_MANAGED_DICT 16
-     * }
-     */
-    public static int Py_TPFLAGS_MANAGED_DICT() {
-        return Py_TPFLAGS_MANAGED_DICT;
-    }
-    private static final int Py_TPFLAGS_PREHEADER = (int)24L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_TPFLAGS_PREHEADER 24
-     * }
-     */
-    public static int Py_TPFLAGS_PREHEADER() {
-        return Py_TPFLAGS_PREHEADER;
-    }
-    private static final int Py_TPFLAGS_SEQUENCE = (int)32L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_TPFLAGS_SEQUENCE 32
-     * }
-     */
-    public static int Py_TPFLAGS_SEQUENCE() {
-        return Py_TPFLAGS_SEQUENCE;
-    }
-    private static final int Py_TPFLAGS_MAPPING = (int)64L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_TPFLAGS_MAPPING 64
-     * }
-     */
-    public static int Py_TPFLAGS_MAPPING() {
-        return Py_TPFLAGS_MAPPING;
-    }
     private static final int Py_TPFLAGS_DISALLOW_INSTANTIATION = (int)128L;
     /**
      * {@snippet lang=c :
@@ -17670,15 +16817,6 @@ public class Python_h extends Python_h_1 {
      */
     public static int Py_TPFLAGS_HAVE_VECTORCALL() {
         return Py_TPFLAGS_HAVE_VECTORCALL;
-    }
-    private static final int _Py_TPFLAGS_HAVE_VECTORCALL = (int)2048L;
-    /**
-     * {@snippet lang=c :
-     * #define _Py_TPFLAGS_HAVE_VECTORCALL 2048
-     * }
-     */
-    public static int _Py_TPFLAGS_HAVE_VECTORCALL() {
-        return _Py_TPFLAGS_HAVE_VECTORCALL;
     }
     private static final int Py_TPFLAGS_READY = (int)4096L;
     /**
@@ -17941,33 +17079,6 @@ public class Python_h extends Python_h_1 {
         }
         return Holder._Py_PARSE_UINTPTR;
     }
-    private static final int _PyLong_DECIMAL_BASE = (int)1000000000L;
-    /**
-     * {@snippet lang=c :
-     * #define _PyLong_DECIMAL_BASE 1000000000
-     * }
-     */
-    public static int _PyLong_DECIMAL_BASE() {
-        return _PyLong_DECIMAL_BASE;
-    }
-    private static final int PyLong_BASE = (int)1073741824L;
-    /**
-     * {@snippet lang=c :
-     * #define PyLong_BASE 1073741824
-     * }
-     */
-    public static int PyLong_BASE() {
-        return PyLong_BASE;
-    }
-    private static final int PyLong_MASK = (int)1073741823L;
-    /**
-     * {@snippet lang=c :
-     * #define PyLong_MASK 1073741823
-     * }
-     */
-    public static int PyLong_MASK() {
-        return PyLong_MASK;
-    }
     private static final MemorySegment Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED = MemorySegment.ofAddress(0L);
     /**
      * {@snippet lang=c :
@@ -18007,78 +17118,6 @@ public class Python_h extends Python_h_1 {
         }
         return Holder.PY_STDIOTEXTMODE;
     }
-    private static final int Py_RTFLAGS_USE_MAIN_OBMALLOC = (int)32L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_USE_MAIN_OBMALLOC 32
-     * }
-     */
-    public static int Py_RTFLAGS_USE_MAIN_OBMALLOC() {
-        return Py_RTFLAGS_USE_MAIN_OBMALLOC;
-    }
-    private static final int Py_RTFLAGS_MULTI_INTERP_EXTENSIONS = (int)256L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_MULTI_INTERP_EXTENSIONS 256
-     * }
-     */
-    public static int Py_RTFLAGS_MULTI_INTERP_EXTENSIONS() {
-        return Py_RTFLAGS_MULTI_INTERP_EXTENSIONS;
-    }
-    private static final int Py_RTFLAGS_THREADS = (int)1024L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_THREADS 1024
-     * }
-     */
-    public static int Py_RTFLAGS_THREADS() {
-        return Py_RTFLAGS_THREADS;
-    }
-    private static final int Py_RTFLAGS_DAEMON_THREADS = (int)2048L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_DAEMON_THREADS 2048
-     * }
-     */
-    public static int Py_RTFLAGS_DAEMON_THREADS() {
-        return Py_RTFLAGS_DAEMON_THREADS;
-    }
-    private static final int Py_RTFLAGS_FORK = (int)32768L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_FORK 32768
-     * }
-     */
-    public static int Py_RTFLAGS_FORK() {
-        return Py_RTFLAGS_FORK;
-    }
-    private static final int Py_RTFLAGS_EXEC = (int)65536L;
-    /**
-     * {@snippet lang=c :
-     * #define Py_RTFLAGS_EXEC 65536
-     * }
-     */
-    public static int Py_RTFLAGS_EXEC() {
-        return Py_RTFLAGS_EXEC;
-    }
-    private static final long _PyTime_MIN = -9223372036854775808L;
-    /**
-     * {@snippet lang=c :
-     * #define _PyTime_MIN -9223372036854775808
-     * }
-     */
-    public static long _PyTime_MIN() {
-        return _PyTime_MIN;
-    }
-    private static final long _PyTime_MAX = 9223372036854775807L;
-    /**
-     * {@snippet lang=c :
-     * #define _PyTime_MAX 9223372036854775807
-     * }
-     */
-    public static long _PyTime_MAX() {
-        return _PyTime_MAX;
-    }
     private static final long PY_TIMEOUT_MAX = 4294967294000L;
     /**
      * {@snippet lang=c :
@@ -18087,15 +17126,6 @@ public class Python_h extends Python_h_1 {
      */
     public static long PY_TIMEOUT_MAX() {
         return PY_TIMEOUT_MAX;
-    }
-    private static final int PYTHREAD_INVALID_THREAD_ID = (int)4294967295L;
-    /**
-     * {@snippet lang=c :
-     * #define PYTHREAD_INVALID_THREAD_ID 4294967295
-     * }
-     */
-    public static int PYTHREAD_INVALID_THREAD_ID() {
-        return PYTHREAD_INVALID_THREAD_ID;
     }
     /**
      * {@snippet lang=c :
@@ -18121,189 +17151,6 @@ public class Python_h extends Python_h_1 {
         }
         return Holder.PYTHON_ABI_STRING;
     }
-    private static final int PyCF_MASK = (int)33423360L;
-    /**
-     * {@snippet lang=c :
-     * #define PyCF_MASK 33423360
-     * }
-     */
-    public static int PyCF_MASK() {
-        return PyCF_MASK;
-    }
-    private static final int PyCF_MASK_OBSOLETE = (int)16L;
-    /**
-     * {@snippet lang=c :
-     * #define PyCF_MASK_OBSOLETE 16
-     * }
-     */
-    public static int PyCF_MASK_OBSOLETE() {
-        return PyCF_MASK_OBSOLETE;
-    }
-    private static final int PyCF_COMPILE_MASK = (int)30208L;
-    /**
-     * {@snippet lang=c :
-     * #define PyCF_COMPILE_MASK 30208
-     * }
-     */
-    public static int PyCF_COMPILE_MASK() {
-        return PyCF_COMPILE_MASK;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_NESTED_SCOPES "nested_scopes"
-     * }
-     */
-    public static MemorySegment FUTURE_NESTED_SCOPES() {
-        class Holder {
-            static final MemorySegment FUTURE_NESTED_SCOPES
-                = Python_h.LIBRARY_ARENA.allocateFrom("nested_scopes");
-        }
-        return Holder.FUTURE_NESTED_SCOPES;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_GENERATORS "generators"
-     * }
-     */
-    public static MemorySegment FUTURE_GENERATORS() {
-        class Holder {
-            static final MemorySegment FUTURE_GENERATORS
-                = Python_h.LIBRARY_ARENA.allocateFrom("generators");
-        }
-        return Holder.FUTURE_GENERATORS;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_DIVISION "division"
-     * }
-     */
-    public static MemorySegment FUTURE_DIVISION() {
-        class Holder {
-            static final MemorySegment FUTURE_DIVISION
-                = Python_h.LIBRARY_ARENA.allocateFrom("division");
-        }
-        return Holder.FUTURE_DIVISION;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_ABSOLUTE_IMPORT "absolute_import"
-     * }
-     */
-    public static MemorySegment FUTURE_ABSOLUTE_IMPORT() {
-        class Holder {
-            static final MemorySegment FUTURE_ABSOLUTE_IMPORT
-                = Python_h.LIBRARY_ARENA.allocateFrom("absolute_import");
-        }
-        return Holder.FUTURE_ABSOLUTE_IMPORT;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_WITH_STATEMENT "with_statement"
-     * }
-     */
-    public static MemorySegment FUTURE_WITH_STATEMENT() {
-        class Holder {
-            static final MemorySegment FUTURE_WITH_STATEMENT
-                = Python_h.LIBRARY_ARENA.allocateFrom("with_statement");
-        }
-        return Holder.FUTURE_WITH_STATEMENT;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_PRINT_FUNCTION "print_function"
-     * }
-     */
-    public static MemorySegment FUTURE_PRINT_FUNCTION() {
-        class Holder {
-            static final MemorySegment FUTURE_PRINT_FUNCTION
-                = Python_h.LIBRARY_ARENA.allocateFrom("print_function");
-        }
-        return Holder.FUTURE_PRINT_FUNCTION;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_UNICODE_LITERALS "unicode_literals"
-     * }
-     */
-    public static MemorySegment FUTURE_UNICODE_LITERALS() {
-        class Holder {
-            static final MemorySegment FUTURE_UNICODE_LITERALS
-                = Python_h.LIBRARY_ARENA.allocateFrom("unicode_literals");
-        }
-        return Holder.FUTURE_UNICODE_LITERALS;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_BARRY_AS_BDFL "barry_as_FLUFL"
-     * }
-     */
-    public static MemorySegment FUTURE_BARRY_AS_BDFL() {
-        class Holder {
-            static final MemorySegment FUTURE_BARRY_AS_BDFL
-                = Python_h.LIBRARY_ARENA.allocateFrom("barry_as_FLUFL");
-        }
-        return Holder.FUTURE_BARRY_AS_BDFL;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_GENERATOR_STOP "generator_stop"
-     * }
-     */
-    public static MemorySegment FUTURE_GENERATOR_STOP() {
-        class Holder {
-            static final MemorySegment FUTURE_GENERATOR_STOP
-                = Python_h.LIBRARY_ARENA.allocateFrom("generator_stop");
-        }
-        return Holder.FUTURE_GENERATOR_STOP;
-    }
-    /**
-     * {@snippet lang=c :
-     * #define FUTURE_ANNOTATIONS "annotations"
-     * }
-     */
-    public static MemorySegment FUTURE_ANNOTATIONS() {
-        class Holder {
-            static final MemorySegment FUTURE_ANNOTATIONS
-                = Python_h.LIBRARY_ARENA.allocateFrom("annotations");
-        }
-        return Holder.FUTURE_ANNOTATIONS;
-    }
-    private static final int PY_INVALID_STACK_EFFECT = (int)2147483647L;
-    /**
-     * {@snippet lang=c :
-     * #define PY_INVALID_STACK_EFFECT 2147483647
-     * }
-     */
-    public static int PY_INVALID_STACK_EFFECT() {
-        return PY_INVALID_STACK_EFFECT;
-    }
-    private static final int PyInterpreterConfig_DEFAULT_GIL = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * #define PyInterpreterConfig_DEFAULT_GIL 0
-     * }
-     */
-    public static int PyInterpreterConfig_DEFAULT_GIL() {
-        return PyInterpreterConfig_DEFAULT_GIL;
-    }
-    private static final int PyInterpreterConfig_SHARED_GIL = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * #define PyInterpreterConfig_SHARED_GIL 1
-     * }
-     */
-    public static int PyInterpreterConfig_SHARED_GIL() {
-        return PyInterpreterConfig_SHARED_GIL;
-    }
-    private static final int PyInterpreterConfig_OWN_GIL = (int)2L;
-    /**
-     * {@snippet lang=c :
-     * #define PyInterpreterConfig_OWN_GIL 2
-     * }
-     */
-    public static int PyInterpreterConfig_OWN_GIL() {
-        return PyInterpreterConfig_OWN_GIL;
-    }
     private static final long PY_VECTORCALL_ARGUMENTS_OFFSET = -9223372036854775808L;
     /**
      * {@snippet lang=c :
@@ -18312,24 +17159,6 @@ public class Python_h extends Python_h_1 {
      */
     public static long PY_VECTORCALL_ARGUMENTS_OFFSET() {
         return PY_VECTORCALL_ARGUMENTS_OFFSET;
-    }
-    private static final int PY_CTF_ALPHA = (int)3L;
-    /**
-     * {@snippet lang=c :
-     * #define PY_CTF_ALPHA 3
-     * }
-     */
-    public static int PY_CTF_ALPHA() {
-        return PY_CTF_ALPHA;
-    }
-    private static final int PY_CTF_ALNUM = (int)7L;
-    /**
-     * {@snippet lang=c :
-     * #define PY_CTF_ALNUM 7
-     * }
-     */
-    public static int PY_CTF_ALNUM() {
-        return PY_CTF_ALNUM;
     }
 }
 
