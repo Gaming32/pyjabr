@@ -14,6 +14,9 @@ import java.util.Arrays;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonRun {
+    /**
+     * Runs a .py resource file, loaded from the current thread's context class loader.
+     */
     public static void runResource(String resourceName, String moduleName) throws IOException {
         final byte[] source;
         try (InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {

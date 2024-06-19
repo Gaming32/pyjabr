@@ -1,9 +1,11 @@
-package io.github.gaming32.pyjabr;
+package io.github.gaming32.pyjabr.test;
+
+import io.github.gaming32.pyjabr.PythonRun;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class PythonMain {
+public class PythonTestMain {
     public static void main(String[] args) throws IOException {
 //        PythonEval.eval(
 //            "__import__('threading').Thread(name='a_thread', target=arg.run, daemon=False).start()",
