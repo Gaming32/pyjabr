@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonMain {
     public static void main(String[] args) throws IOException, IllegalAccessException, InterruptedException {

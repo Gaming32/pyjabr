@@ -1,11 +1,11 @@
 package io.github.gaming32.pyjabr.lowlevel;
 
-import org.python.PyObject;
+import io.github.gaming32.pyjabr.lowlevel.cpython.PyObject;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonUtil {
     public static MemorySegment PyObject_CallOneArg(MemorySegment callable, MemorySegment arg) {

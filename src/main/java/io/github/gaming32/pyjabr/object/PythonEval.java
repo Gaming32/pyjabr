@@ -7,7 +7,7 @@ import java.lang.foreign.MemorySegment;
 import java.util.Map;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.PyDict_Check;
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 // Based on builtin_eval_impl
 public final class PythonEval {

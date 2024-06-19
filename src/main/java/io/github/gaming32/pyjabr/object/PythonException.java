@@ -6,7 +6,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonException extends RuntimeException {
     private static final MemorySegment TRACEBACK_MODULE = Arena.global().allocateFrom("traceback");

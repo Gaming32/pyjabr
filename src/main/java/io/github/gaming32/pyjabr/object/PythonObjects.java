@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonSystem.callPython;
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonObjects {
     private static final MemorySegment BUILTINS = Arena.global().allocateFrom("builtins");

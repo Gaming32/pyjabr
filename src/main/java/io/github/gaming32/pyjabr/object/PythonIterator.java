@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
 
-import static org.python.Python_h.PyErr_Occurred;
-import static org.python.Python_h.PyIter_Next;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyErr_Occurred;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyIter_Next;
 
 public final class PythonIterator extends AbstractIterator<PythonObject> {
     private final PythonObject iterator;

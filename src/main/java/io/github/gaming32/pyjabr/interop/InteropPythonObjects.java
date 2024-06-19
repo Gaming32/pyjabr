@@ -6,7 +6,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.function.Supplier;
 
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class InteropPythonObjects {
     public static final Supplier<MemorySegment> JAVA_API = Suppliers.memoize(() -> {

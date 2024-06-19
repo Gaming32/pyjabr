@@ -3,8 +3,8 @@ package io.github.gaming32.pyjabr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.python.Python_h.PY_VERSION_HEX;
-import static org.python.Python_h.Py_Version;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PY_VERSION_HEX;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.Py_Version;
 
 public class PythonVersion {
     private static final Logger LOGGER = LoggerFactory.getLogger(PythonVersion.class);

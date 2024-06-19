@@ -2,8 +2,8 @@ package io.github.gaming32.pyjabr.object;
 
 import io.github.gaming32.pyjabr.interop.InteropConversions;
 import io.github.gaming32.pyjabr.interop.InteropUtils;
+import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import org.jetbrains.annotations.NotNull;
-import org.python.Python_h;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonSystem.callPython;
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonObject implements Iterable<PythonObject> {
     private static final Cleaner CLEANER = Cleaner.create();

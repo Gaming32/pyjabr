@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 @PythonModule("_java")
 public class InteropModule {

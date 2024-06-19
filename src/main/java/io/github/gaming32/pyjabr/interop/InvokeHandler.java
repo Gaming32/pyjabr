@@ -7,8 +7,8 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static org.python.Python_h.PyEval_RestoreThread;
-import static org.python.Python_h.PyEval_SaveThread;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyEval_RestoreThread;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyEval_SaveThread;
 
 public class InvokeHandler {
     public static MemorySegment invoke(

@@ -6,9 +6,9 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import io.github.gaming32.pyjabr.ReflectUtil;
 import io.github.gaming32.pyjabr.lowlevel.PythonUtil;
+import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import io.github.gaming32.pyjabr.object.PythonException;
 import org.jetbrains.annotations.NotNull;
-import org.python.Python_h;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.LambdaConversionException;

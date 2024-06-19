@@ -1,11 +1,11 @@
 package io.github.gaming32.pyjabr.module;
 
+import io.github.gaming32.pyjabr.lowlevel.cpython.PyImport_AppendInittab$initfunc;
+import io.github.gaming32.pyjabr.lowlevel.cpython.PyModuleDef;
+import io.github.gaming32.pyjabr.lowlevel.cpython.PyModuleDef_Base;
+import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
+import io.github.gaming32.pyjabr.lowlevel.cpython._object;
 import org.jetbrains.annotations.Nullable;
-import org.python.PyImport_AppendInittab$initfunc;
-import org.python.PyModuleDef;
-import org.python.PyModuleDef_Base;
-import org.python.Python_h;
-import org.python._object;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

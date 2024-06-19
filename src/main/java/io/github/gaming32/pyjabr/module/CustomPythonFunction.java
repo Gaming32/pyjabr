@@ -1,10 +1,10 @@
 package io.github.gaming32.pyjabr.module;
 
 import com.google.common.base.CaseFormat;
+import io.github.gaming32.pyjabr.lowlevel.cpython.PyMethodDef;
+import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
+import io.github.gaming32.pyjabr.lowlevel.cpython._PyCFunctionFast;
 import org.jetbrains.annotations.Nullable;
-import org.python.PyMethodDef;
-import org.python.Python_h;
-import org.python._PyCFunctionFast;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

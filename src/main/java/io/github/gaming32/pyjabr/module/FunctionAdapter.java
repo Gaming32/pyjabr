@@ -3,7 +3,7 @@ package io.github.gaming32.pyjabr.module;
 import com.google.common.primitives.Primitives;
 import io.github.gaming32.pyjabr.interop.InteropConversions;
 import io.github.gaming32.pyjabr.interop.InteropUtils;
-import org.python.Python_h;
+import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.LambdaConversionException;
@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.python.Python_h._Py_NoneStruct;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h._Py_NoneStruct;
 
 class FunctionAdapter {
     private static final MethodHandle NULL_POINTER = MethodHandles.constant(MemorySegment.class, MemorySegment.NULL);

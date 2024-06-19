@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr.object;
 
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public enum ComparisonOperator {
     LESS_THAN(Py_LT()),

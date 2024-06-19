@@ -2,7 +2,7 @@ package io.github.gaming32.pyjabr.lowlevel;
 
 import java.lang.foreign.MemorySegment;
 
-import static org.python.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class TupleUtil {
     public static MemorySegment createTuple(MemorySegment... args) {
