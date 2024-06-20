@@ -29,7 +29,6 @@ java {
         languageVersion = JavaLanguageVersion.of(22)
     }
     withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.compileJava {
