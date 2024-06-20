@@ -203,26 +203,18 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject getAttr(String attr) {
-        try (Arena arena = Arena.ofConfined()) {
-            return checkAndSteal(runPython(() -> PyObject_GetAttrString(borrow(), arena.allocateFrom(attr))));
-        }
+        return checkAndSteal(runPython(() -> PyObject_GetAttrString(borrow(), ARENA.allocateFrom(attr))));
     }
 
     public void setAttr(String attr, PythonObject value) {
-        try (Arena arena = Arena.ofConfined()) {
-            if (runPython(() -> PyObject_SetAttrString(borrow(), arena.allocateFrom(attr), value.borrow())) == -1) {
-                throw PythonException.moveFromPython();
-            }
+        if (runPython(() -> PyObject_SetAttrString(borrow(), ARENA.allocateFrom(attr), value.borrow())) == -1) {
+            throw PythonException.moveFromPython();
         }
     }
 
     public boolean hasAttr(String attr) {
         return runPython(() -> {
-            final MemorySegment result;
-            try (Arena arena = Arena.ofConfined()) {
-                result = PyObject_GetAttrString(borrow(), arena.allocateFrom(attr));
-            }
-            if (result.equals(MemorySegment.NULL)) {
+            if (PyObject_GetAttrString(borrow(), ARENA.allocateFrom(attr)).equals(MemorySegment.NULL)) {
                 if (PyErr_ExceptionMatches(PyExc_AttributeError()) == 0) {
                     throw PythonException.moveFromPython();
                 }
@@ -233,10 +225,8 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public void delAttr(String attr) {
-        try (Arena arena = Arena.ofConfined()) {
-            if (runPython(() -> PyObject_DelAttrString(borrow(), arena.allocateFrom(attr))) == -1) {
-                throw PythonException.moveFromPython();
-            }
+        if (runPython(() -> PyObject_DelAttrString(borrow(), ARENA.allocateFrom(attr))) == -1) {
+            throw PythonException.moveFromPython();
         }
     }
 

@@ -25,22 +25,39 @@ public class PythonExec {
      * Runs a .py resource file, loaded from the current thread's context class loader.
      */
     public static void execResource(String resourceName) throws IOException {
-        final byte[] source;
+        execCode(readResource(resourceName), '/' + resourceName);
+    }
+
+    /**
+     * Runs a .py resource file, loaded from the current thread's context class loader.
+     */
+    public static void execResource(String resourceName, Map<String, PythonObject> globals) throws IOException {
+        execCode(readResource(resourceName), '/' + resourceName, globals);
+    }
+
+    static byte[] readResource(String resourceName) throws IOException {
         try (InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
             if (resource == null) {
                 throw new FileNotFoundException("Missing resource: " + resourceName);
             }
-            source = resource.readAllBytes();
+            return resource.readAllBytes();
         }
-        execCode(source, '/' + resourceName);
     }
 
     public static void execPath(Path path) throws IOException {
         execCode(Files.readAllBytes(path), path.toString());
     }
 
+    public static void execPath(Path path, Map<String, PythonObject> globals) throws IOException {
+        execCode(Files.readAllBytes(path), path.toString(), globals);
+    }
+
     public static void execString(String code, String fileName) {
         execCode(code.getBytes(StandardCharsets.UTF_8), fileName);
+    }
+
+    public static void execString(String code, String fileName, Map<String, PythonObject> globals) {
+        execCode(code.getBytes(StandardCharsets.UTF_8), fileName, globals);
     }
 
     public static void execCode(byte[] source, String filename) {
