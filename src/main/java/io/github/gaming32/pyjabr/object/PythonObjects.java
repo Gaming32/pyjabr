@@ -28,15 +28,15 @@ public final class PythonObjects {
     }
 
     public static PythonObject pythonInt(int value) {
-        return PythonObject.checkAndSteal(runPython(() -> PyLong_FromLong(value)));
+        return runPython(() -> PythonObject.checkAndSteal( PyLong_FromLong(value)));
     }
 
     public static PythonObject pythonInt(long value) {
-        return PythonObject.checkAndSteal(runPython(() -> PyLong_FromLongLong(value)));
+        return runPython(() -> PythonObject.checkAndSteal( PyLong_FromLongLong(value)));
     }
 
     public static PythonObject pythonFloat(double value) {
-        return PythonObject.checkAndSteal(runPython(() -> PyFloat_FromDouble(value)));
+        return runPython(() -> PythonObject.checkAndSteal( PyFloat_FromDouble(value)));
     }
 
     public static PythonObject str(String value) {
@@ -54,7 +54,7 @@ public final class PythonObjects {
             Py_IncRef(pyObject);
             pyObjects[i] = pyObject;
         }
-        return PythonObject.checkAndSteal(runPython(() -> TupleUtil.createTuple(pyObjects)));
+        return runPython(() -> PythonObject.checkAndSteal( TupleUtil.createTuple(pyObjects)));
     }
 
     public static PythonObject list(List<PythonObject> values) {
@@ -112,7 +112,7 @@ public final class PythonObjects {
 
     public static PythonObject importModule(String module) {
         try (Arena arena = Arena.ofConfined()) {
-            return PythonObject.checkAndSteal(runPython(() -> PyImport_ImportModuleLevel(
+            return runPython(() -> PythonObject.checkAndSteal( PyImport_ImportModuleLevel(
                 arena.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
             )));
         }

@@ -1,8 +1,6 @@
 package io.github.gaming32.pyjabr.run;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.foreign.Arena;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,14 +19,7 @@ public class PythonRun {
      * Runs a .py resource file, loaded from the current thread's context class loader.
      */
     public static void runResource(String resourceName, String moduleName) throws IOException {
-        final byte[] source;
-        try (InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
-            if (resource == null) {
-                throw new FileNotFoundException("Missing resource: " + resourceName);
-            }
-            source = resource.readAllBytes();
-        }
-        runCode(source, '/' + resourceName, moduleName);
+        runCode(PythonExec.readResource(resourceName), '/' + resourceName, moduleName);
     }
 
     public static void runPath(Path path, String moduleName) throws IOException {

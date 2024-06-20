@@ -43,7 +43,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public static PythonObject fromJavaObject(Object o) {
-        return checkAndSteal(runPython(() -> InteropConversions.javaToPython(o)));
+        return runPython(() -> checkAndSteal( InteropConversions.javaToPython(o)));
     }
 
     @Override
@@ -138,11 +138,11 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject call() {
-        return checkAndSteal(runPython(() -> PyObject_CallNoArgs(borrow())));
+        return runPython(() -> checkAndSteal( PyObject_CallNoArgs(borrow())));
     }
 
     public PythonObject call(PythonObject arg) {
-        return checkAndSteal(runPython(() -> PyObject_CallOneArg(borrow(), arg.borrow())));
+        return runPython(() -> checkAndSteal( PyObject_CallOneArg(borrow(), arg.borrow())));
     }
 
     public PythonObject call(PythonObject... args) {
@@ -152,7 +152,7 @@ public final class PythonObject implements Iterable<PythonObject> {
                 argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
             }
             final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return checkAndSteal(runPython(() -> PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
+            return runPython(() -> checkAndSteal( PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
         }
     }
 
@@ -177,13 +177,13 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject callMethod(String method) {
-        return checkAndSteal(runPython(() ->
+        return runPython(() -> checkAndSteal(
             PyObject_CallMethodNoArgs(borrow(), InteropConversions.createPythonString(method))
         ));
     }
 
     public PythonObject callMethod(String method, PythonObject arg) {
-        return checkAndSteal(runPython(() ->
+        return runPython(() -> checkAndSteal(
             PyObject_CallMethodOneArg(borrow(), InteropConversions.createPythonString(method), arg.borrow())
         ));
     }
@@ -196,14 +196,14 @@ public final class PythonObject implements Iterable<PythonObject> {
                 argsArray.setAtIndex(C_POINTER, i + 1, args[i].borrow());
             }
             final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return checkAndSteal(runPython(() ->
+            return runPython(() -> checkAndSteal(
                 PyObject_VectorcallMethod(arena.allocateFrom(method), argsArray, nargsf, _Py_NULL())
             ));
         }
     }
 
     public PythonObject getAttr(String attr) {
-        return checkAndSteal(runPython(() -> PyObject_GetAttrString(borrow(), ARENA.allocateFrom(attr))));
+        return runPython(() -> checkAndSteal( PyObject_GetAttrString(borrow(), ARENA.allocateFrom(attr))));
     }
 
     public void setAttr(String attr, PythonObject value) {
@@ -256,7 +256,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject dirList() {
-        return checkAndSteal(runPython(() -> PyObject_Dir(borrow())));
+        return runPython(() -> checkAndSteal( PyObject_Dir(borrow())));
     }
 
     public long len() {
@@ -270,19 +270,19 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject getItem(PythonObject key) {
-        return checkAndSteal(runPython(() -> PyObject_GetItem(borrow(), key.borrow())));
+        return runPython(() -> checkAndSteal( PyObject_GetItem(borrow(), key.borrow())));
     }
 
     public PythonObject getItem(long index) {
-        return checkAndSteal(runPython(() -> PySequence_GetItem(borrow(), index)));
+        return runPython(() -> checkAndSteal( PySequence_GetItem(borrow(), index)));
     }
 
     public PythonObject getItem(String key) {
-        return checkAndSteal(runPython(() -> PyMapping_GetItemString(borrow(), ARENA.allocateFrom(key))));
+        return runPython(() -> checkAndSteal( PyMapping_GetItemString(borrow(), ARENA.allocateFrom(key))));
     }
 
     public PythonObject getSlice(long start, long end) {
-        return checkAndSteal(runPython(() -> PySequence_GetSlice(borrow(), start, end)));
+        return runPython(() -> checkAndSteal( PySequence_GetSlice(borrow(), start, end)));
     }
 
     public void setItem(PythonObject key, PythonObject value) {
@@ -336,33 +336,33 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject list() {
-        return checkAndSteal(runPython(() -> PySequence_List(borrow())));
+        return runPython(() -> checkAndSteal( PySequence_List(borrow())));
     }
 
     public PythonObject tuple() {
-        return checkAndSteal(runPython(() -> PySequence_Tuple(borrow())));
+        return runPython(() -> checkAndSteal( PySequence_Tuple(borrow())));
     }
 
     public PythonObject keysList() {
-        return checkAndSteal(runPython(() -> PyMapping_Keys(borrow())));
+        return runPython(() -> checkAndSteal( PyMapping_Keys(borrow())));
     }
 
     public PythonObject valuesList() {
-        return checkAndSteal(runPython(() -> PyMapping_Values(borrow())));
+        return runPython(() -> checkAndSteal( PyMapping_Values(borrow())));
     }
 
     public PythonObject itemsList() {
-        return checkAndSteal(runPython(() -> PyMapping_Values(borrow())));
+        return runPython(() -> checkAndSteal( PyMapping_Values(borrow())));
     }
 
     public PythonObject getType() {
-        return checkAndSteal(runPython(() -> PyObject_Type(borrow())));
+        return runPython(() -> checkAndSteal( PyObject_Type(borrow())));
     }
 
     @NotNull
     @Override
     public PythonIterator iterator() {
-        return new PythonIterator(checkAndSteal(runPython(() -> PyObject_GetIter(borrow()))));
+        return new PythonIterator(runPython(() -> checkAndSteal( PyObject_GetIter(borrow()))));
     }
 
     public SendResult send(PythonObject value) {
@@ -436,7 +436,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject pow(PythonObject exp, PythonObject mod) {
-        return checkAndSteal(runPython(() -> PyNumber_Power(borrow(), exp.borrow(), mod.borrow())));
+        return runPython(() -> checkAndSteal( PyNumber_Power(borrow(), exp.borrow(), mod.borrow())));
     }
 
     public PythonObject negate() {
@@ -508,7 +508,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject powAndGet(PythonObject exp, PythonObject mod) {
-        return checkAndSteal(runPython(() -> PyNumber_InPlacePower(borrow(), exp.borrow(), mod.borrow())));
+        return runPython(() -> checkAndSteal( PyNumber_InPlacePower(borrow(), exp.borrow(), mod.borrow())));
     }
 
     public PythonObject leftShiftAndGet(PythonObject other) {
@@ -532,23 +532,23 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     private PythonObject unaryOp(UnaryOperator<MemorySegment> op) {
-        return checkAndSteal(runPython(() -> op.apply(borrow())));
+        return runPython(() -> checkAndSteal( op.apply(borrow())));
     }
 
     private PythonObject binOp(PythonObject other, BinaryOperator<MemorySegment> op) {
-        return checkAndSteal(runPython(() -> op.apply(borrow(), other.borrow())));
+        return runPython(() -> checkAndSteal( op.apply(borrow(), other.borrow())));
     }
 
     public PythonObject toInt() {
-        return checkAndSteal(runPython(() -> PyNumber_Long(borrow())));
+        return runPython(() -> checkAndSteal( PyNumber_Long(borrow())));
     }
 
     public PythonObject toFloat() {
-        return checkAndSteal(runPython(() -> PyNumber_Float(borrow())));
+        return runPython(() -> checkAndSteal( PyNumber_Float(borrow())));
     }
 
     public PythonObject index() {
-        return checkAndSteal(runPython(() -> PyNumber_Index(borrow())));
+        return runPython(() -> checkAndSteal( PyNumber_Index(borrow())));
     }
 
     /**

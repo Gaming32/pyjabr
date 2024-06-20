@@ -63,15 +63,18 @@ public class PythonSystem {
             .uncaughtExceptionHandler((_, t) -> LOGGER.error("Unexpected error initializing Python", t))
             .daemon()
             .start(() -> {
+                LOGGER.debug("Initializing Python (first time: {})", firstInitialize);
+
                 MANAGEMENT_THREAD.set(Thread.currentThread());
 
                 MemorySegment dlHandle = null;
+                if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
+                    final int RTLD_LAZY = 0x00001;
+                    final int RTLD_GLOBAL = 0x00100;
+                    dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
+                }
+
                 if (firstInitialize) {
-                    if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
-                        final int RTLD_LAZY = 0x00001;
-                        final int RTLD_GLOBAL = 0x00100;
-                        dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
-                    }
                     try {
                         CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
                     } catch (IllegalAccessException e) {
@@ -106,6 +109,8 @@ public class PythonSystem {
                 signalState();
 
                 waitUninterruptiblyForState(STATE_FINALIZING);
+
+                LOGGER.debug("Finalizing Python");
                 PyEval_RestoreThread(save);
                 Py_Finalize();
 
