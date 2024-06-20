@@ -1,5 +1,6 @@
-package io.github.gaming32.pyjabr;
+package io.github.gaming32.pyjabr.run;
 
+import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import io.github.gaming32.pyjabr.object.PythonException;
 
 import java.io.FileNotFoundException;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -32,8 +34,12 @@ public class PythonRun {
         runCode(Files.readAllBytes(path), path.toString(), moduleName);
     }
 
+    public static void runString(String code, String fileName, String moduleName) {
+        runCode(code.getBytes(StandardCharsets.UTF_8), fileName, moduleName);
+    }
+
     public static void runCode(byte[] source, String filename, String moduleName) {
-        PythonSystem.withGil(() -> {
+        GilStateUtil.runPython(() -> {
             final MemorySegment code;
             final MemorySegment result;
             try (Arena arena = Arena.ofConfined()) {

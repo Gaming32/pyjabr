@@ -2,6 +2,7 @@ package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropModule;
 import io.github.gaming32.pyjabr.module.CustomPythonModule;
+import io.github.gaming32.pyjabr.run.PythonRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Supplier;
 
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
@@ -37,26 +37,6 @@ public class PythonSystem {
     private static final int STATE_FINALIZING = 3;
 
     private static final AtomicReference<Thread> MANAGEMENT_THREAD = new AtomicReference<>();
-
-    public static void withGil(Runnable action) {
-        initialize();
-        final int state = PyGILState_Ensure();
-        try {
-            action.run();
-        } finally {
-            PyGILState_Release(state);
-        }
-    }
-
-    public static <T> T withGil(Supplier<T> action) {
-        initialize();
-        final int state = PyGILState_Ensure();
-        try {
-            return action.get();
-        } finally {
-            PyGILState_Release(state);
-        }
-    }
 
     public static void initialize() {
         if (!INIT_STATE.compareAndSet(STATE_SHUTDOWN, STATE_INITIALIZING)) {

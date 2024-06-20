@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr.test;
 
-import io.github.gaming32.pyjabr.PythonRun;
+import io.github.gaming32.pyjabr.run.PythonRun;
 
 import java.io.IOException;
 import java.nio.file.Path;

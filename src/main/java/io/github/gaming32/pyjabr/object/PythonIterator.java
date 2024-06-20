@@ -1,7 +1,7 @@
 package io.github.gaming32.pyjabr.object;
 
 import com.google.common.collect.AbstractIterator;
-import io.github.gaming32.pyjabr.PythonSystem;
+import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
@@ -26,7 +26,7 @@ public final class PythonIterator extends AbstractIterator<PythonObject> {
     @Nullable
     @Override
     protected PythonObject computeNext() {
-        return PythonSystem.withGil(() -> {
+        return GilStateUtil.runPython(() -> {
             final MemorySegment result = PyIter_Next(iterator.borrow());
             if (result.equals(MemorySegment.NULL)) {
                 if (!PyErr_Occurred().equals(MemorySegment.NULL)) {

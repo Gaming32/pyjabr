@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static io.github.gaming32.pyjabr.PythonSystem.withGil;
+import static io.github.gaming32.pyjabr.lowlevel.GilStateUtil.runPython;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonObjects {
@@ -28,19 +28,19 @@ public final class PythonObjects {
     }
 
     public static PythonObject pythonInt(int value) {
-        return PythonObject.checkAndSteal(withGil(() -> PyLong_FromLong(value)));
+        return PythonObject.checkAndSteal(runPython(() -> PyLong_FromLong(value)));
     }
 
     public static PythonObject pythonInt(long value) {
-        return PythonObject.checkAndSteal(withGil(() -> PyLong_FromLongLong(value)));
+        return PythonObject.checkAndSteal(runPython(() -> PyLong_FromLongLong(value)));
     }
 
     public static PythonObject pythonFloat(double value) {
-        return PythonObject.checkAndSteal(withGil(() -> PyFloat_FromDouble(value)));
+        return PythonObject.checkAndSteal(runPython(() -> PyFloat_FromDouble(value)));
     }
 
     public static PythonObject str(String value) {
-        return PythonObject.steal(withGil(() -> InteropConversions.createPythonString(value)));
+        return PythonObject.steal(runPython(() -> InteropConversions.createPythonString(value)));
     }
 
     public static PythonObject bool(boolean value) {
@@ -54,11 +54,11 @@ public final class PythonObjects {
             Py_IncRef(pyObject);
             pyObjects[i] = pyObject;
         }
-        return PythonObject.checkAndSteal(withGil(() -> TupleUtil.createTuple(pyObjects)));
+        return PythonObject.checkAndSteal(runPython(() -> TupleUtil.createTuple(pyObjects)));
     }
 
     public static PythonObject list(List<PythonObject> values) {
-        return withGil(() -> {
+        return runPython(() -> {
             final MemorySegment result = PyList_New(values.size());
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -74,7 +74,7 @@ public final class PythonObjects {
     }
 
     public static PythonObject dict(Map<PythonObject, PythonObject> values) {
-        return withGil(() -> {
+        return runPython(() -> {
             final MemorySegment result = PyDict_New();
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -92,7 +92,7 @@ public final class PythonObjects {
     }
 
     public static PythonObject stringDict(Map<String, PythonObject> values) {
-        return withGil(() -> {
+        return runPython(() -> {
             final MemorySegment result = PyDict_New();
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
@@ -112,14 +112,14 @@ public final class PythonObjects {
 
     public static PythonObject importModule(String module) {
         try (Arena arena = Arena.ofConfined()) {
-            return PythonObject.checkAndSteal(withGil(() -> PyImport_ImportModuleLevel(
+            return PythonObject.checkAndSteal(runPython(() -> PyImport_ImportModuleLevel(
                 arena.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
             )));
         }
     }
 
     public static PythonObject getBuiltins() {
-        return withGil(() -> PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
+        return runPython(() -> PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
             BUILTINS, MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
         )));
     }

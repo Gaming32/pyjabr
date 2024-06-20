@@ -1,6 +1,8 @@
-package io.github.gaming32.pyjabr.object;
+package io.github.gaming32.pyjabr.run;
 
-import io.github.gaming32.pyjabr.PythonSystem;
+import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
+import io.github.gaming32.pyjabr.object.PythonObject;
+import io.github.gaming32.pyjabr.object.PythonObjects;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -9,7 +11,6 @@ import java.util.Map;
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.PyDict_Check;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
-// Based on builtin_eval_impl
 public final class PythonEval {
     private static final MemorySegment FILENAME = Arena.global().allocateFrom("<PythonEval>");
 
@@ -33,7 +34,7 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
-        return PythonSystem.withGil(() -> {
+        return GilStateUtil.runPython(() -> {
             checkGlobalsLocals(globals, locals);
 
             final MemorySegment code;
@@ -71,7 +72,7 @@ public final class PythonEval {
     }
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
-        return PythonSystem.withGil(() -> {
+        return GilStateUtil.runPython(() -> {
             checkGlobalsLocals(globals, locals);
             return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
         });
