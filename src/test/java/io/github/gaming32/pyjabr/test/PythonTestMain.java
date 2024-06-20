@@ -1,6 +1,6 @@
 package io.github.gaming32.pyjabr.test;
 
-import io.github.gaming32.pyjabr.run.PythonRun;
+import io.github.gaming32.pyjabr.run.PythonExec;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,6 +27,6 @@ public class PythonTestMain {
 //        final Runnable action = PythonEval.eval("lambda: print(__import__('threading').current_thread())").asJavaLambda(Runnable.class);
 //        Thread.ofPlatform().start(action).join();
 
-        PythonRun.runPath(Path.of("test.py"), "__main__");
+        PythonExec.execPath(Path.of("test.py"));
     }
 }

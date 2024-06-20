@@ -1,20 +1,21 @@
 package io.github.gaming32.pyjabr.run;
 
-import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
-import io.github.gaming32.pyjabr.object.PythonException;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyImport_ExecCodeModule;
 
+/**
+ * Contains methods for injecting Python modules. Note that these methods keep modules loaded permanently. If you just
+ * want to run code without injecting a module, use the methods in {@link PythonExec}.
+ *
+ * @see PythonExec
+ */
 public class PythonRun {
     /**
      * Runs a .py resource file, loaded from the current thread's context class loader.
@@ -39,26 +40,10 @@ public class PythonRun {
     }
 
     public static void runCode(byte[] source, String filename, String moduleName) {
-        GilStateUtil.runPython(() -> {
-            final MemorySegment code;
-            final MemorySegment result;
+        PythonExec.run(source, filename, code -> {
             try (Arena arena = Arena.ofConfined()) {
-                code = Py_CompileString(
-                    arena.allocateFrom(C_CHAR, Arrays.copyOf(source, source.length + 1)),
-                    arena.allocateFrom(filename),
-                    Py_file_input()
-                );
-                if (code.equals(MemorySegment.NULL)) {
-                    throw PythonException.moveFromPython();
-                }
-
-                result = PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
+                return PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
             }
-            Py_DecRef(code);
-            if (result.equals(MemorySegment.NULL)) {
-                throw PythonException.moveFromPython();
-            }
-            Py_DecRef(result);
         });
     }
 }

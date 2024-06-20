@@ -8,7 +8,6 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.Map;
 
-import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.PyDict_Check;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonEval {
@@ -35,7 +34,7 @@ public final class PythonEval {
 
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
         return GilStateUtil.runPython(() -> {
-            checkGlobalsLocals(globals, locals);
+            PythonExec.checkGlobalsLocals(globals, locals);
 
             final MemorySegment code;
             try (Arena arena = Arena.ofConfined()) {
@@ -73,17 +72,8 @@ public final class PythonEval {
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
         return GilStateUtil.runPython(() -> {
-            checkGlobalsLocals(globals, locals);
+            PythonExec.checkGlobalsLocals(globals, locals);
             return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
         });
-    }
-
-    private static void checkGlobalsLocals(PythonObject globals, PythonObject locals) {
-        if (!PyDict_Check(globals.borrow())) {
-            throw new IllegalArgumentException("globals must be a dict");
-        }
-        if (PyMapping_Check(locals.borrow()) == 0) {
-            throw new IllegalArgumentException("locals must be a mapping");
-        }
     }
 }
