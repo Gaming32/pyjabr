@@ -61,11 +61,13 @@ public class PythonSystem {
         PythonVersion.checkAndLog();
         final boolean firstInitialize = INITIALIZED_ONCE.compareAndSet(false, true);
 
-        final Thread managementThread = Thread.ofPlatform()
+        Thread.ofPlatform()
             .name("Python Management Thread")
             .uncaughtExceptionHandler((_, t) -> LOGGER.error("Unexpected error initializing Python", t))
             .daemon()
             .start(() -> {
+                MANAGEMENT_THREAD.set(Thread.currentThread());
+
                 if (firstInitialize) {
                     if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
                         dlopenWorkaround();
@@ -114,7 +116,6 @@ public class PythonSystem {
                 }
                 signalState();
             });
-        MANAGEMENT_THREAD.set(managementThread);
 
         waitUninterruptiblyForInitialize();
         if (firstInitialize) {
