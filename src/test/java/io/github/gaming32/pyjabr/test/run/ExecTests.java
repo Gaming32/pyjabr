@@ -5,7 +5,6 @@ import io.github.gaming32.pyjabr.object.PythonException;
 import io.github.gaming32.pyjabr.object.PythonObjects;
 import io.github.gaming32.pyjabr.run.PythonExec;
 import org.intellij.lang.annotations.Language;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,11 +16,6 @@ public class ExecTests {
     @BeforeAll
     public static void initialize() {
         PythonSystem.initialize();
-    }
-
-    @AfterAll
-    public static void shutdown() {
-        PythonSystem.shutdown();
     }
 
     @Test
