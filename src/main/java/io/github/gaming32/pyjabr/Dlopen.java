@@ -34,7 +34,7 @@ class Dlopen {
     static void dlclose(MemorySegment handle) {
         if (handle.equals(MemorySegment.NULL)) return;
         final int result = callDl(
-            "dlclose", C_POINTER,
+            "dlclose", C_INT,
             C_POINTER, handle
         );
         if (result != 0) {
@@ -53,7 +53,7 @@ class Dlopen {
     @SuppressWarnings("unchecked")
     private static <T> T callDl(String name, MemoryLayout returnLayout, Object... args) {
         final MemoryLayout[] argLayouts = new MemoryLayout[args.length / 2];
-        final Object[] argValues = new MemoryLayout[args.length / 2];
+        final Object[] argValues = new Object[args.length / 2];
         for (int i = 0; i < args.length; i += 2) {
             argLayouts[i / 2] = (MemoryLayout)args[i];
             argValues[i / 2] = args[i + 1];
