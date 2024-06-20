@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.foreign.Arena;
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.Linker;
 import java.lang.foreign.MemorySegment;
-import java.lang.invoke.MethodHandle;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,9 +65,12 @@ public class PythonSystem {
             .start(() -> {
                 MANAGEMENT_THREAD.set(Thread.currentThread());
 
+                MemorySegment dlHandle = null;
                 if (firstInitialize) {
                     if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
-                        dlopenWorkaround();
+                        final int RTLD_LAZY = 0x00001;
+                        final int RTLD_GLOBAL = 0x00100;
+                        dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
                     }
                     try {
                         CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
@@ -108,6 +108,10 @@ public class PythonSystem {
                 waitUninterruptiblyForState(STATE_FINALIZING);
                 PyEval_RestoreThread(save);
                 Py_Finalize();
+
+                if (dlHandle != null) {
+                    Dlopen.dlclose(dlHandle);
+                }
 
                 MANAGEMENT_THREAD.set(null);
 
@@ -207,25 +211,6 @@ public class PythonSystem {
             STATE_COND.signalAll();
         } finally {
             STATE_LOCK.unlock();
-        }
-    }
-
-    private static void dlopenWorkaround() {
-        final int RTLD_LAZY = 0x00001;
-        final int RTLD_GLOBAL = 0x00100;
-        final MethodHandle mh = Linker.nativeLinker().downcallHandle(
-            Linker.nativeLinker().defaultLookup().find("dlopen").orElseThrow(),
-            FunctionDescriptor.of(C_POINTER, C_POINTER, C_INT)
-        );
-        try (Arena arena = Arena.ofConfined()) {
-            var _ = (MemorySegment)mh.invokeExact(
-                arena.allocateFrom(System.mapLibraryName("python3")),
-                RTLD_LAZY | RTLD_GLOBAL
-            );
-        } catch (RuntimeException | Error e) {
-            throw e;
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
         }
     }
 }
