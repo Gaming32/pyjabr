@@ -12,7 +12,7 @@ public class PythonTestMain {
             "__import__('threading').Thread(name='a_thread', target=arg.run, daemon=False).start()",
             Map.of("arg", PythonObject.fromJavaObject((Runnable)() -> {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
