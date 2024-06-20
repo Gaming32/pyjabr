@@ -9,6 +9,7 @@ import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.Py_Version;
 public class PythonVersion {
     private static final Logger LOGGER = LoggerFactory.getLogger(PythonVersion.class);
     private static final String[] LEVEL_NAMES = new String[0xF];
+    private static final int TARGET_VERSION = 0x030c00f0;
 
     private static boolean versionChecked = false;
 
@@ -21,9 +22,14 @@ public class PythonVersion {
     public static synchronized void checkAndLog() {
         if (versionChecked) return;
         versionChecked = true;
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Current Python version: {}", formatVersion(getCurrentVersion()));
+            LOGGER.debug("Targeted Python version: {}", formatVersion(getTargetVersion()));
+            LOGGER.debug("Python version compiled against: {}", formatVersion(getCompiledAgainstVersion()));
+        }
         if (getCurrentVersion() < getTargetVersion()) {
             LOGGER.warn(
-                "Loaded Python version ({}) is less than the version pyjabr was built with ({}). Issues may arise.",
+                "Loaded Python version ({}) is less than the version pyjabr is targeting ({}). Issues may arise.",
                 formatVersion(getCurrentVersion()), formatVersion(getTargetVersion())
             );
         }
@@ -34,6 +40,10 @@ public class PythonVersion {
     }
 
     public static int getTargetVersion() {
+        return TARGET_VERSION;
+    }
+
+    public static int getCompiledAgainstVersion() {
         return PY_VERSION_HEX();
     }
 

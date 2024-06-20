@@ -3,7 +3,6 @@ package io.github.gaming32.pyjabr.test;
 import io.github.gaming32.pyjabr.run.PythonExec;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 public class PythonTestMain {
     public static void main(String[] args) throws IOException {
@@ -27,6 +26,6 @@ public class PythonTestMain {
 //        final Runnable action = PythonEval.eval("lambda: print(__import__('threading').current_thread())").asJavaLambda(Runnable.class);
 //        Thread.ofPlatform().start(action).join();
 
-        PythonExec.execPath(Path.of("test.py"));
+        PythonExec.execResource("test.py");
     }
 }
