@@ -57,13 +57,13 @@ public class PythonSystem {
         }
         PythonVersion.checkAndLog();
         final boolean firstInitialize = INITIALIZED_ONCE.compareAndSet(false, true);
+        LOGGER.debug("Initializing Python (first time: {})", firstInitialize);
 
         Thread.ofPlatform()
             .name("Python Management Thread")
             .uncaughtExceptionHandler((_, t) -> LOGGER.error("Unexpected error initializing Python", t))
             .daemon()
             .start(() -> {
-                LOGGER.debug("Initializing Python (first time: {})", firstInitialize);
 
                 MANAGEMENT_THREAD.set(Thread.currentThread());
 
@@ -109,8 +109,6 @@ public class PythonSystem {
                 signalState();
 
                 waitUninterruptiblyForState(STATE_FINALIZING);
-
-                LOGGER.debug("Finalizing Python");
                 PyEval_RestoreThread(save);
                 Py_Finalize();
 
@@ -158,6 +156,7 @@ public class PythonSystem {
             return;
         }
 
+        LOGGER.debug("Finalizing Python");
         signalState();
         waitUninterruptiblyForShutdown();
     }

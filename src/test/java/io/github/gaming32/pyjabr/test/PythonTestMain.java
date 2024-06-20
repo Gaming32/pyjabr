@@ -29,6 +29,6 @@ public class PythonTestMain {
             .asJavaLambda(Runnable.class);
         Thread.ofPlatform().start(action).join();
 
-        PythonExec.execResource("test.py");
+        PythonExec.execResource("interop_test.py");
     }
 }
