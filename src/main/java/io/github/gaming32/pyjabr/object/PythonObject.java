@@ -475,59 +475,59 @@ public final class PythonObject implements Iterable<PythonObject> {
         return binOp(other, Python_h::PyNumber_Or);
     }
 
-    public PythonObject addAndGet(PythonObject other) {
+    public PythonObject inPlaceAdd(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceAdd);
     }
 
-    public PythonObject subtractAndGet(PythonObject other) {
+    public PythonObject inPlaceSubtract(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceSubtract);
     }
 
-    public PythonObject multiplyAndGet(PythonObject other) {
+    public PythonObject inPlaceMultiply(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceMultiply);
     }
 
-    public PythonObject matrixMultiplyAndGet(PythonObject other) {
+    public PythonObject inPlaceMatrixMultiply(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceMatrixMultiply);
     }
 
-    public PythonObject floorDivideAndGet(PythonObject other) {
+    public PythonObject inPlaceFloorDivide(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceFloorDivide);
     }
 
-    public PythonObject trueDivideAndGet(PythonObject other) {
+    public PythonObject inPlaceTrueDivide(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceTrueDivide);
     }
 
-    public PythonObject modulusAndGet(PythonObject other) {
+    public PythonObject inPlaceModulus(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceRemainder);
     }
 
-    public PythonObject powAndGet(PythonObject exp) {
-        return powAndGet(exp, PythonObjects.none());
+    public PythonObject inPlacePow(PythonObject exp) {
+        return inPlacePow(exp, PythonObjects.none());
     }
 
-    public PythonObject powAndGet(PythonObject exp, PythonObject mod) {
+    public PythonObject inPlacePow(PythonObject exp, PythonObject mod) {
         return runPython(() -> checkAndSteal( PyNumber_InPlacePower(borrow(), exp.borrow(), mod.borrow())));
     }
 
-    public PythonObject leftShiftAndGet(PythonObject other) {
+    public PythonObject inPlaceLeftShift(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceLshift);
     }
 
-    public PythonObject rightShiftAndGet(PythonObject other) {
+    public PythonObject inPlaceRightShift(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceRshift);
     }
 
-    public PythonObject bitAndAndGet(PythonObject other) {
+    public PythonObject inPlaceBitAnd(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceAnd);
     }
 
-    public PythonObject bitXorAndGet(PythonObject other) {
+    public PythonObject inPlaceBitXor(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceXor);
     }
 
-    public PythonObject bitOrAndGet(PythonObject other) {
+    public PythonObject inPlaceBitOr(PythonObject other) {
         return binOp(other, Python_h::PyNumber_InPlaceOr);
     }
 
