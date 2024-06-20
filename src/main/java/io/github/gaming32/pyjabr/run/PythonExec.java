@@ -79,7 +79,6 @@ public class PythonExec {
                 if (code.equals(MemorySegment.NULL)) {
                     throw PythonException.moveFromPython();
                 }
-
             }
             final MemorySegment result = runner.apply(code);
             Py_DecRef(code);

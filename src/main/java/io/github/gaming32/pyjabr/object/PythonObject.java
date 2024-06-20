@@ -1,5 +1,6 @@
 package io.github.gaming32.pyjabr.object;
 
+import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropUtils;
@@ -323,7 +324,7 @@ public final class PythonObject implements Iterable<PythonObject> {
         @Override
         public void run() {
             if (object != null) {
-                Py_DecRef(object);
+                GilStateUtil.runPython(() -> Py_DecRef(object));
                 object = null;
             }
         }
