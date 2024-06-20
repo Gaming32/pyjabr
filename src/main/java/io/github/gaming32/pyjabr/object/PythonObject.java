@@ -111,11 +111,7 @@ public final class PythonObject implements Iterable<PythonObject> {
                 return false;
             }
         }
-        final int result = runPython(() -> PyObject_RichCompareBool(borrow(), to.borrow(), operator.getConstant()));
-        if (result == -1) {
-            throw PythonException.moveFromPython();
-        }
-        return result != 0;
+        return tristateToBoolean(runPython(() -> PyObject_RichCompareBool(borrow(), to.borrow(), operator.getConstant())));
     }
 
     public boolean isInstance(PythonObject type) {

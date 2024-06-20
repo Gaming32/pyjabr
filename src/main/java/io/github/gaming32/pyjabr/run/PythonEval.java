@@ -28,10 +28,6 @@ public final class PythonEval {
         return eval(source, globals, globals);
     }
 
-    public static PythonObject eval(String source, Map<String, PythonObject> globals, Map<String, PythonObject> locals) {
-        return eval(source, PythonObjects.stringDict(globals), PythonObjects.stringDict(locals));
-    }
-
     public static PythonObject eval(String source, PythonObject globals, PythonObject locals) {
         return GilStateUtil.runPython(() -> {
             PythonExec.checkGlobalsLocals(globals, locals);
@@ -64,10 +60,6 @@ public final class PythonEval {
 
     public static PythonObject eval(PythonObject code, PythonObject globals) {
         return eval(code, globals, globals);
-    }
-
-    public static PythonObject eval(PythonObject code, Map<String, PythonObject> globals, Map<String, PythonObject> locals) {
-        return eval(code, PythonObjects.stringDict(globals), PythonObjects.stringDict(locals));
     }
 
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
