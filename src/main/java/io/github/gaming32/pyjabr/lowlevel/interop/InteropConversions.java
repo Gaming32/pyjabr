@@ -27,10 +27,10 @@ public class InteropConversions {
         if (target == Object.class) {
             return pythonToJava(obj, throwDetails);
         }
-        if (target == Void.class) {
+        if (target == void.class || target == Void.class) {
             if (!obj.equals(_Py_NoneStruct())) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Only None can be assigned to Void");
+                throw new IllegalArgumentException("Only None can be assigned to void");
             }
             return obj;
         }

@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.module;
+package io.github.gaming32.pyjabr.lowlevel.module;
 
 import com.google.common.primitives.Primitives;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;

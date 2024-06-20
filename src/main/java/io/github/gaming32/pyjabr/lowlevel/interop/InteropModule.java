@@ -1,8 +1,8 @@
 package io.github.gaming32.pyjabr.lowlevel.interop;
 
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
-import io.github.gaming32.pyjabr.module.PythonFunction;
-import io.github.gaming32.pyjabr.module.PythonModule;
+import io.github.gaming32.pyjabr.lowlevel.module.PythonFunction;
+import io.github.gaming32.pyjabr.lowlevel.module.PythonModule;
 import io.github.gaming32.pyjabr.object.PythonException;
 import org.jetbrains.annotations.Nullable;
 

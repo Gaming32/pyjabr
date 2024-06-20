@@ -1,4 +1,4 @@
-package io.github.gaming32.pyjabr.module;
+package io.github.gaming32.pyjabr.lowlevel.module;
 
 import io.github.gaming32.pyjabr.lowlevel.cpython.PyImport_AppendInittab$initfunc;
 import io.github.gaming32.pyjabr.lowlevel.cpython.PyModuleDef;

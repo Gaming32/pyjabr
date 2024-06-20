@@ -3,7 +3,6 @@ package io.github.gaming32.pyjabr.lowlevel.interop;
 import io.github.gaming32.pyjabr.util.ReflectUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
@@ -20,8 +19,6 @@ public sealed interface FieldOrMethod {
     Class<?> owner();
 
     String name();
-
-    List<? extends AccessibleObject> accessibleObjects();
 
     @Nullable
     static FieldOrMethod lookup(Class<?> owner, String name, boolean isStatic) {
@@ -60,11 +57,6 @@ public sealed interface FieldOrMethod {
         public String name() {
             return field.getName();
         }
-
-        @Override
-        public List<? extends AccessibleObject> accessibleObjects() {
-            return List.of(field);
-        }
     }
 
     record MethodWrapper(Class<?> owner, String name, List<? extends Executable> executables) implements FieldOrMethod {
@@ -90,11 +82,6 @@ public sealed interface FieldOrMethod {
                 throw new NoSuchMethodException(owner.getName() + '.' + CONSTRUCTOR_NAME);
             }
             return new MethodWrapper(owner, CONSTRUCTOR_NAME, List.of(constructors));
-        }
-
-        @Override
-        public List<? extends AccessibleObject> accessibleObjects() {
-            return executables;
         }
     }
 }
