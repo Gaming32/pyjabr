@@ -307,6 +307,14 @@ public final class PythonObject implements Iterable<PythonObject> {
         return runPython(() -> InteropConversions.createLambda(lambdaClass, borrow()));
     }
 
+    public Object asJavaObject() {
+        return InteropConversions.pythonToJava(borrow());
+    }
+
+    public <T> T asJavaObject(Class<T> target) {
+        return target.cast(InteropConversions.pythonToJava(borrow(), target));
+    }
+
     /**
      * @return The underlying {@code PyObject*}. The object's refcount is not incremented before being returned.
      */
