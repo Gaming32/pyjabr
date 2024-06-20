@@ -43,7 +43,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public static PythonObject fromJavaObject(Object o) {
-        return runPython(() -> checkAndSteal( InteropConversions.javaToPython(o)));
+        return runPython(() -> checkAndSteal(InteropConversions.javaToPython(o)));
     }
 
     @Override
