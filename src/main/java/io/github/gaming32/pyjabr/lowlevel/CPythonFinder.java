@@ -12,16 +12,16 @@ public class CPythonFinder {
         if (foundName != null) {
             return SymbolLookup.libraryLookup(foundName, arena);
         }
-        SymbolLookup result = tryName("python3", arena);
-        if (result != null) {
-            return result;
-        }
         final int targetVersion = PythonVersion.getMinor(PythonVersion.getTargetVersion());
         for (int tryVersion = targetVersion; tryVersion < targetVersion + 10; tryVersion++) {
-            result = tryName("python3." + tryVersion, arena);
+            final SymbolLookup result = tryName("python3." + tryVersion, arena);
             if (result != null) {
                 return result;
             }
+        }
+        final SymbolLookup result = tryName("python3", arena);
+        if (result != null) {
+            return result;
         }
         throw new IllegalStateException("Could not Python 3 installation");
     }
