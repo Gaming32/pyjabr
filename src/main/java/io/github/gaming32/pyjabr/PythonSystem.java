@@ -13,7 +13,6 @@ import java.lang.foreign.MemorySegment;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,8 +31,10 @@ public class PythonSystem {
     private static final int STATE_INITIALIZING = 1;
     private static final int STATE_INITIALIZED = 2;
     private static final int STATE_FINALIZING = 3;
+    private static final int STATE_ERROR = -1;
 
-    private static final AtomicReference<Thread> MANAGEMENT_THREAD = new AtomicReference<>();
+    private static volatile Thread managementThread;
+    private static volatile Throwable initError;
 
     public static void initialize() {
         if (!INIT_STATE.compareAndSet(STATE_SHUTDOWN, STATE_INITIALIZING)) {
@@ -48,7 +49,10 @@ public class PythonSystem {
                         }
                         break;
                     }
-                    if (Thread.currentThread() == MANAGEMENT_THREAD.get()) return;
+                    if (Thread.currentThread() == managementThread) return;
+                    if (state == STATE_ERROR) {
+                        throw rethrow(initError);
+                    }
                     STATE_COND.awaitUninterruptibly();
                 } finally {
                     STATE_LOCK.unlock();
@@ -61,11 +65,15 @@ public class PythonSystem {
 
         Thread.ofPlatform()
             .name("Python Management Thread")
-            .uncaughtExceptionHandler((_, t) -> LOGGER.error("Unexpected error initializing Python", t))
+            .uncaughtExceptionHandler((_, t) -> {
+                LOGGER.error("Unexpected error initializing Python", t);
+                initError = t;
+                INIT_STATE.set(STATE_ERROR);
+                signalState();
+            })
             .daemon()
             .start(() -> {
-
-                MANAGEMENT_THREAD.set(Thread.currentThread());
+                managementThread = Thread.currentThread();
 
                 MemorySegment dlHandle = null;
                 if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
@@ -116,7 +124,7 @@ public class PythonSystem {
                     Dlopen.dlclose(dlHandle);
                 }
 
-                MANAGEMENT_THREAD.set(null);
+                managementThread = null;
 
                 if (!INIT_STATE.compareAndSet(STATE_FINALIZING, STATE_SHUTDOWN)) {
                     throw new IllegalStateException("Failed to advance state to STATE_SHUTDOWN");
@@ -147,6 +155,9 @@ public class PythonSystem {
                             throw new IllegalStateException("Failed to advance state to STATE_FINALIZING");
                         }
                         break;
+                    }
+                    if (state == STATE_ERROR) {
+                        throw rethrow(initError);
                     }
                     STATE_COND.awaitUninterruptibly();
                 } finally {
@@ -181,7 +192,11 @@ public class PythonSystem {
         while (true) {
             STATE_LOCK.lock();
             try {
-                if (INIT_STATE.get() == state) break;
+                final int check = INIT_STATE.get();
+                if (check == state) break;
+                if (check == STATE_ERROR) {
+                    throw rethrow(initError);
+                }
                 STATE_COND.await();
             } finally {
                 STATE_LOCK.unlock();
@@ -201,7 +216,11 @@ public class PythonSystem {
         while (true) {
             STATE_LOCK.lock();
             try {
-                if (INIT_STATE.get() == state) break;
+                final int check = INIT_STATE.get();
+                if (check == state) break;
+                if (check == STATE_ERROR) {
+                    throw rethrow(initError);
+                }
                 STATE_COND.awaitUninterruptibly();
             } finally {
                 STATE_LOCK.unlock();
@@ -216,5 +235,10 @@ public class PythonSystem {
         } finally {
             STATE_LOCK.unlock();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> T rethrow(Throwable t) throws T {
+        throw (T)t;
     }
 }
