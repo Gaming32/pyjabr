@@ -32,7 +32,7 @@ public class InteropConversions {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
                 throw new IllegalArgumentException("Only None can be assigned to void");
             }
-            return obj;
+            return null;
         }
         if (obj.equals(_Py_NoneStruct())) {
             if (target.isPrimitive()) {
