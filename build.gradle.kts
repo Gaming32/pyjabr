@@ -40,6 +40,7 @@ tasks.compileJava {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging.showStandardStreams = true
 }
 
 tasks.javadoc {
