@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     java
     `java-library`
@@ -40,7 +42,10 @@ tasks.compileJava {
 
 tasks.test {
     useJUnitPlatform()
-    testLogging.showStandardStreams = true
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = TestExceptionFormat.FULL
+    }
 }
 
 tasks.javadoc {
