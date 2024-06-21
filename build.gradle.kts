@@ -46,6 +46,9 @@ tasks.test {
         showStandardStreams = true
         exceptionFormat = TestExceptionFormat.FULL
     }
+    if (ext.has("pyjabr.testsNeverFail")) {
+        ignoreFailures = true
+    }
 }
 
 tasks.javadoc {

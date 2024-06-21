@@ -1,9 +1,16 @@
 name: Gradle build
 on: [push, pull_request, workflow_dispatch]
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 22
@@ -13,13 +20,14 @@ jobs:
           distribution: zulu
           cache: gradle
       - name: Install libpython
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt install libpython3.12-dev
       - name: Build with Gradle
-        run: ./gradlew build -Ppyjabr.testsNeverFail --stacktrace
-      - name: Capture build artifacts
-        uses: actions/upload-artifact@v2
+        run: ./gradlew test
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
-          name: Artifact
-          path: build/libs/
+          files: build/test-results/**/*.xml
