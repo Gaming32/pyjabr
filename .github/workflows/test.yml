@@ -1,10 +1,6 @@
 name: Run tests
 on: [push, pull_request, workflow_dispatch]
 
-permissions:
-  checks: write
-  pull-requests: write
-
 jobs:
   build:
     strategy:
@@ -25,5 +21,8 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt install libpython3.12-dev
+      - name: Install Python 3.12
+        if: matrix.os == 'windows-latest'
+        run: choco install python312
       - name: Build with Gradle
         run: ./gradlew test
