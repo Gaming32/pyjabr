@@ -1,13 +1,13 @@
 name: Run tests
 on: [push, pull_request, workflow_dispatch]
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 22
@@ -17,14 +17,13 @@ jobs:
           distribution: zulu
           cache: gradle
       - name: Install libpython3.12-dev
-        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt install libpython3.12-dev
-      - name: Install Python 3.12
-        if: matrix.os == 'windows-latest'
-        run: |
-          curl -o python-installer.exe https://www.python.org/ftp/python/3.12.4/python-3.12.4-amd64.exe
-          cmd /c start /wait python-installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
       - name: Build with Gradle
         run: ./gradlew test
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: build/test-results/**/*.xml
