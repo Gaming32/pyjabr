@@ -74,57 +74,58 @@ public class PythonSystem {
             .daemon()
             .start(() -> {
                 managementThread = Thread.currentThread();
-
                 MemorySegment dlHandle = null;
-                if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
-                    final int RTLD_LAZY = 0x00001;
-                    final int RTLD_GLOBAL = 0x00100;
-                    dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
-                }
 
-                if (firstInitialize) {
-                    try {
-                        CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalStateException(e);
-                    }
-                }
-
-                Py_InitializeEx(0);
-                try (Arena arena = Arena.ofConfined()) {
-                    if (
-                        PyImport_ImportModuleLevel(
-                            arena.allocateFrom("threading"),
-                            MemorySegment.NULL,
-                            MemorySegment.NULL,
-                            MemorySegment.NULL,
-                            0
-                        ).equals(MemorySegment.NULL)
-                    ) {
-                        PyErr_Clear();
-                    }
-                }
                 try {
-                    PythonRun.runResource("java_api.py", "java_api");
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
+                    if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
+                        final int RTLD_LAZY = 0x00001;
+                        final int RTLD_GLOBAL = 0x00100;
+                        dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
+                    }
+
+                    if (firstInitialize) {
+                        try {
+                            CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException(e);
+                        }
+                    }
+
+                    Py_InitializeEx(0);
+                    try (Arena arena = Arena.ofConfined()) {
+                        if (
+                            PyImport_ImportModuleLevel(
+                                arena.allocateFrom("threading"),
+                                MemorySegment.NULL,
+                                MemorySegment.NULL,
+                                MemorySegment.NULL,
+                                0
+                            ).equals(MemorySegment.NULL)
+                        ) {
+                            PyErr_Clear();
+                        }
+                    }
+                    try {
+                        PythonRun.runResource("java_api.py", "java_api");
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                    final MemorySegment save = PyEval_SaveThread();
+
+                    if (!INIT_STATE.compareAndSet(STATE_INITIALIZING, STATE_INITIALIZED)) {
+                        throw new IllegalStateException("Failed to advance state to STATE_INITIALIZED");
+                    }
+                    signalState();
+
+                    waitUninterruptiblyForState(STATE_FINALIZING);
+                    PyEval_RestoreThread(save);
+                    Py_Finalize();
+                } finally {
+                    if (dlHandle != null) {
+                        Dlopen.dlclose(dlHandle);
+                    }
+                    managementThread = null;
                 }
-                final MemorySegment save = PyEval_SaveThread();
-
-                if (!INIT_STATE.compareAndSet(STATE_INITIALIZING, STATE_INITIALIZED)) {
-                    throw new IllegalStateException("Failed to advance state to STATE_INITIALIZED");
-                }
-                signalState();
-
-                waitUninterruptiblyForState(STATE_FINALIZING);
-                PyEval_RestoreThread(save);
-                Py_Finalize();
-
-                if (dlHandle != null) {
-                    Dlopen.dlclose(dlHandle);
-                }
-
-                managementThread = null;
 
                 if (!INIT_STATE.compareAndSet(STATE_FINALIZING, STATE_SHUTDOWN)) {
                     throw new IllegalStateException("Failed to advance state to STATE_SHUTDOWN");
