@@ -17,7 +17,9 @@ jobs:
           distribution: zulu
           cache: gradle
       - name: Install libpython
-        run: sudo apt install libpython3.12-dev
+        run: |
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
+          sudo apt install libpython3.12-dev
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
       - name: Publish Test Results
