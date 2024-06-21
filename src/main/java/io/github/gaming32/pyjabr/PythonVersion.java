@@ -48,11 +48,11 @@ public class PythonVersion {
     }
 
     public static String formatVersion(int version) {
-        final int major = version >>> 24;
-        final int minor = version >> 16 & 0xff;
-        final int micro = version >> 8 & 0xff;
-        final int level = version >> 4 & 0xf;
-        final int serial = version & 0xf;
+        final int major = getMajor(version);
+        final int minor = getMinor(version);
+        final int micro = getMicro(version);
+        final int level = getLevel(version);
+        final int serial = getSerial(version);
 
         final StringBuilder result = new StringBuilder();
         result.append(major)
@@ -62,5 +62,25 @@ public class PythonVersion {
             result.append(LEVEL_NAMES[level]).append(serial);
         }
         return result.toString();
+    }
+
+    public static int getMajor(int version) {
+        return version >>> 24;
+    }
+
+    public static int getMinor(int version) {
+        return version >> 16 & 0xff;
+    }
+
+    public static int getMicro(int version) {
+        return version >> 8 & 0xff;
+    }
+
+    public static int getLevel(int version) {
+        return version >> 4 & 0xf;
+    }
+
+    public static int getSerial(int version) {
+        return version & 0xf;
     }
 }

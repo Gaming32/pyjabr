@@ -1,5 +1,6 @@
 package io.github.gaming32.pyjabr;
 
+import io.github.gaming32.pyjabr.lowlevel.CPythonFinder;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropModule;
 import io.github.gaming32.pyjabr.lowlevel.module.CustomPythonModule;
 import io.github.gaming32.pyjabr.run.PythonRun;
@@ -80,7 +81,7 @@ public class PythonSystem {
                     if (!System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win")) {
                         final int RTLD_LAZY = 0x00001;
                         final int RTLD_GLOBAL = 0x00100;
-                        dlHandle = Dlopen.dlopen(System.mapLibraryName("python3"), RTLD_LAZY | RTLD_GLOBAL);
+                        dlHandle = Dlopen.dlopen(CPythonFinder.getFoundName(), RTLD_LAZY | RTLD_GLOBAL);
                     }
 
                     if (firstInitialize) {
