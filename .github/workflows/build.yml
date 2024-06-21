@@ -16,6 +16,8 @@ jobs:
           java-version: 22
           distribution: zulu
           cache: gradle
+      - name: Install libpython
+        run: sudo apt install libpython3.12-dev
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
       - name: Publish Test Results
