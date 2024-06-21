@@ -71,6 +71,10 @@ public class InteropConversions {
         if (target.isInstance(realObject)) {
             return realObject;
         }
+        final Object lastTry = pythonToJava(obj, throwDetails);
+        if (target.isInstance(lastTry)) {
+            return lastTry;
+        }
         NoDetailsConversionFailed.maybeThrow(throwDetails);
         throw new IllegalArgumentException("Cannot convert " + toString(Py_TYPE(obj)) + " to " + target);
     }
