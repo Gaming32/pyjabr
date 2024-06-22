@@ -1,12 +1,13 @@
 package io.github.gaming32.pyjabr.object;
 
+import com.google.common.collect.Iterables;
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Deque;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
@@ -63,7 +64,7 @@ public class PythonException extends RuntimeException {
             final StackTraceElement[] newStackTrace = Arrays.copyOf(extended, extended.length + stackTrace.length - chop);
             System.arraycopy(stackTrace, chop, newStackTrace, extended.length, stackTrace.length - chop);
             setStackTrace(newStackTrace);
-        } catch (PythonException _) {
+        } catch (Exception _) {
             // Recursive exceptions are not thrown
         } finally {
             EXTENDING_STACK_TRACE.remove();
@@ -80,30 +81,51 @@ public class PythonException extends RuntimeException {
     }
 
     public static StackTraceElement[] convertTracebackToStackTrace(PythonObject exception) {
-        final List<StackTraceElement> result = new ArrayList<>();
-        final PythonObject tracebackList = PythonObjects.importModule("traceback")
-            .callMethod("extract_tb", exception.getAttr("__traceback__"));
-        for (final PythonObject frame : tracebackList) {
-            String fileName = frame.getAttr("filename").toString().replace('\\', '/');
-            final int slashIndex = fileName.lastIndexOf('/');
-            if (slashIndex != -1) {
-                fileName = fileName.substring(slashIndex + 1);
-            }
-
-            String moduleName = fileName;
-            final int dotIndex = moduleName.lastIndexOf('.');
-            if (dotIndex != -1) {
-                moduleName = moduleName.substring(0, dotIndex);
-            }
-
-            result.add(new StackTraceElement(
-                moduleName,
-                frame.getAttr("name").toString(),
-                fileName,
-                frame.getAttr("lineno").asJavaObject(int.class)
+        final Deque<StackTraceElement> result = new ArrayDeque<>();
+        PythonObject tb = exception.getAttr("__traceback__");
+        while (!tb.equals(PythonObjects.none())) {
+            final PythonObject code = tb.getAttr("tb_frame").getAttr("f_code");
+            result.addFirst(new StackTraceElement(
+                getQualifiedName(code),
+                code.getAttr("co_name").toString(),
+                code.getAttr("co_filename").toString(),
+                getLineNumber(tb, code)
             ));
+            tb = tb.getAttr("tb_next");
         }
-        return result.reversed().toArray(new StackTraceElement[0]);
+        return result.toArray(new StackTraceElement[0]);
+    }
+
+    private static String getQualifiedName(PythonObject code) {
+        String qualName = code.getAttr("co_filename").toString();
+        int dotIndex = qualName.lastIndexOf('.');
+        if (dotIndex != -1) {
+            qualName = qualName.substring(0, dotIndex);
+        }
+        final int slashIndex = Math.max(qualName.lastIndexOf('/'), qualName.lastIndexOf('\\'));
+        if (slashIndex != -1) {
+            qualName = qualName.substring(slashIndex + 1);
+        }
+
+        final String inModuleName = code.getAttr("co_qualname").toString();
+        dotIndex = inModuleName.lastIndexOf('.');
+        if (dotIndex != -1) {
+            qualName += '.' + inModuleName.substring(0, dotIndex);
+        }
+
+        return qualName;
+    }
+
+    private static int getLineNumber(PythonObject traceback, PythonObject code) {
+        final int instructionIndex = traceback.getAttr("tb_lasti").asJavaObject(int.class);
+        if (instructionIndex >= 0) {
+            final PythonObject positionsGen = code.callMethod("co_positions");
+            final PythonObject codePos = Iterables.get(positionsGen, instructionIndex / 2, null);
+            if (codePos != null) {
+                return codePos.getItem(0).asJavaObject(int.class);
+            }
+        }
+        return traceback.getAttr("tb_lineno").asJavaObject(int.class);
     }
 
     private static String getPythonClass(MemorySegment pythonException) {
