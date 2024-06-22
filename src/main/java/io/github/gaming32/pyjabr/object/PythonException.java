@@ -4,6 +4,9 @@ import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
@@ -13,6 +16,8 @@ public class PythonException extends RuntimeException {
     private static final MemorySegment FORMAT_FUNCTION = Arena.global().allocateFrom("format_exception");
     private static final MemorySegment BLANK_STRING = Arena.global().allocateFrom("");
     private static final MemorySegment JOIN_METHOD = Arena.global().allocateFrom("join");
+
+    private static final ThreadLocal<Object> EXTENDING_STACK_TRACE = new ThreadLocal<>();
 
     private final String pythonClass;
     private final String pythonMessage;
@@ -43,7 +48,62 @@ public class PythonException extends RuntimeException {
         if (exception.equals(MemorySegment.NULL)) {
             throw new IllegalStateException("PythonException.moveFromPython called without a raised exception");
         }
-        return of(PythonObject.steal(exception));
+        final PythonException result = of(PythonObject.steal(exception));
+        result.adaptStackTrace();
+        return result;
+    }
+
+    private void adaptStackTrace() {
+        if (EXTENDING_STACK_TRACE.get() != null) return;
+        EXTENDING_STACK_TRACE.set(new Object());
+        try {
+            final StackTraceElement[] stackTrace = getStackTrace();
+            final int chop = calculateChop(stackTrace);
+            final StackTraceElement[] extended = convertTracebackToStackTrace(originalException);
+            final StackTraceElement[] newStackTrace = Arrays.copyOf(extended, extended.length + stackTrace.length - chop);
+            System.arraycopy(stackTrace, chop, newStackTrace, extended.length, stackTrace.length - chop);
+            setStackTrace(newStackTrace);
+        } catch (PythonException _) {
+            // Recursive exceptions are not thrown
+        } finally {
+            EXTENDING_STACK_TRACE.remove();
+        }
+    }
+
+    private static int calculateChop(StackTraceElement[] stackTrace) {
+        for (int chop = 0; chop < stackTrace.length; chop++) {
+            if (!stackTrace[chop].getClassName().equals(PythonException.class.getName())) continue;
+            if (!stackTrace[chop].getMethodName().equals("moveFromPython")) continue;
+            return chop + 1;
+        }
+        return 0;
+    }
+
+    public static StackTraceElement[] convertTracebackToStackTrace(PythonObject exception) {
+        final List<StackTraceElement> result = new ArrayList<>();
+        final PythonObject tracebackList = PythonObjects.importModule("traceback")
+            .callMethod("extract_tb", exception.getAttr("__traceback__"));
+        for (final PythonObject frame : tracebackList) {
+            String fileName = frame.getAttr("filename").toString().replace('\\', '/');
+            final int slashIndex = fileName.lastIndexOf('/');
+            if (slashIndex != -1) {
+                fileName = fileName.substring(slashIndex + 1);
+            }
+
+            String moduleName = fileName;
+            final int dotIndex = moduleName.lastIndexOf('.');
+            if (dotIndex != -1) {
+                moduleName = moduleName.substring(0, dotIndex);
+            }
+
+            result.add(new StackTraceElement(
+                moduleName,
+                frame.getAttr("name").toString(),
+                fileName,
+                frame.getAttr("lineno").asJavaObject(int.class)
+            ));
+        }
+        return result.reversed().toArray(new StackTraceElement[0]);
     }
 
     private static String getPythonClass(MemorySegment pythonException) {

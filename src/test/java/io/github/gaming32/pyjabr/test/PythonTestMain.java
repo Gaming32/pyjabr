@@ -30,5 +30,11 @@ public class PythonTestMain {
         Thread.ofPlatform().start(action).join();
 
         PythonExec.execResource("interop_test.py");
+
+        PythonExec.execString("""
+            def test_function() -> None:
+                raise RuntimeException('hi')
+            test_function()
+            """, "test.py");
     }
 }
