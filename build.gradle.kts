@@ -52,7 +52,7 @@ tasks.test {
 }
 
 tasks.javadoc {
-    exclude("io/github/gaming32/pyjabr/lowlevel/cpython/*")
+    exclude("io/github/gaming32/pyjabr/lowlevel/*")
 }
 
 publishing {
