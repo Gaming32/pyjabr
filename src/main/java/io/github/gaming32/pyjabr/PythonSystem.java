@@ -61,8 +61,8 @@ public class PythonSystem {
             }
         }
         PythonVersion.checkAndLog();
-        final boolean firstInitialize = INIT_COUNTER.incrementAndGet() == 1;
-        LOGGER.debug("Initializing Python (first time: {})", firstInitialize);
+        final int initCount = INIT_COUNTER.incrementAndGet();
+        LOGGER.debug("Initializing Python (init count: {})", initCount);
 
         Thread.ofPlatform()
             .name("Python Management Thread")
@@ -84,7 +84,7 @@ public class PythonSystem {
                         dlHandle = Dlopen.dlopen(CPythonFinder.getFoundName(), RTLD_LAZY | RTLD_GLOBAL);
                     }
 
-                    if (firstInitialize) {
+                    if (initCount == 1) {
                         try {
                             CustomPythonModule.fromClass(InteropModule.class).registerAsBuiltin(Arena.global());
                         } catch (IllegalAccessException e) {
@@ -136,7 +136,7 @@ public class PythonSystem {
             });
 
         waitUninterruptiblyForInitialize();
-        if (firstInitialize) {
+        if (initCount == 1) {
             Runtime.getRuntime().addShutdownHook(
                 Thread.ofPlatform()
                     .name("Python Shutdown Thread")
