@@ -84,11 +84,19 @@ public class PythonException extends RuntimeException {
         final Deque<StackTraceElement> result = new ArrayDeque<>();
         PythonObject tb = exception.getAttr("__traceback__");
         while (!tb.equals(PythonObjects.none())) {
-            final PythonObject code = tb.getAttr("tb_frame").getAttr("f_code");
+            final PythonObject frame = tb.getAttr("tb_frame");
+            final PythonObject code = frame.getAttr("f_code");
+
+            String fileName = code.getAttr("co_filename").toString();
+            final int slashIndex = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+            if (slashIndex != -1) {
+                fileName = fileName.substring(slashIndex + 1);
+            }
+
             result.addFirst(new StackTraceElement(
-                getQualifiedName(code),
+                getQualifiedName(frame, code, fileName),
                 code.getAttr("co_name").toString(),
-                code.getAttr("co_filename").toString(),
+                fileName,
                 getLineNumber(tb, code)
             ));
             tb = tb.getAttr("tb_next");
@@ -96,19 +104,23 @@ public class PythonException extends RuntimeException {
         return result.toArray(new StackTraceElement[0]);
     }
 
-    private static String getQualifiedName(PythonObject code) {
-        String qualName = code.getAttr("co_filename").toString();
-        int dotIndex = qualName.lastIndexOf('.');
-        if (dotIndex != -1) {
-            qualName = qualName.substring(0, dotIndex);
-        }
-        final int slashIndex = Math.max(qualName.lastIndexOf('/'), qualName.lastIndexOf('\\'));
-        if (slashIndex != -1) {
-            qualName = qualName.substring(slashIndex + 1);
+    private static String getQualifiedName(PythonObject frame, PythonObject code, String fileName) {
+        String qualName;
+
+        final PythonObject moduleName = frame.getAttr("f_globals")
+            .callMethod("get", PythonObjects.str("__name__"));
+        if (!moduleName.equals(PythonObjects.none())) {
+            qualName = moduleName.toString();
+        } else {
+            qualName = fileName;
+            int dotIndex = qualName.lastIndexOf('.');
+            if (dotIndex != -1) {
+                qualName = qualName.substring(0, dotIndex);
+            }
         }
 
         final String inModuleName = code.getAttr("co_qualname").toString();
-        dotIndex = inModuleName.lastIndexOf('.');
+        final int dotIndex = inModuleName.lastIndexOf('.');
         if (dotIndex != -1) {
             qualName += '.' + inModuleName.substring(0, dotIndex);
         }

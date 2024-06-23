@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.PyImport_ExecCodeModule;
+import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 /**
  * Contains methods for injecting Python modules. Note that these methods keep modules loaded permanently. If you just
@@ -33,7 +33,7 @@ public class PythonRun {
     public static void runCode(byte[] source, String filename, String moduleName) {
         PythonExec.run(source, filename, code -> {
             try (Arena arena = Arena.ofConfined()) {
-                return PyImport_ExecCodeModule(arena.allocateFrom(moduleName), code);
+                return PyImport_ExecCodeModuleEx(arena.allocateFrom(moduleName), code, arena.allocateFrom(filename));
             }
         });
     }

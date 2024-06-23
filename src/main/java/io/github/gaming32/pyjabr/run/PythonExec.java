@@ -61,7 +61,10 @@ public class PythonExec {
     }
 
     public static void execCode(byte[] source, String filename) {
-        execCode(source, filename, Map.of("__builtins__", PythonObjects.getBuiltins()));
+        execCode(source, filename, Map.of(
+            "__builtins__", PythonObjects.getBuiltins(),
+            "__file__", PythonObjects.str(filename)
+        ));
     }
 
     public static void execCode(byte[] source, String filename, Map<String, PythonObject> globals) {
