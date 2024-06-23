@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr.object;
 
 import com.google.common.primitives.Primitives;
+import io.github.gaming32.pyjabr.PythonSystem;
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
@@ -560,6 +561,7 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     private static final class ObjectHolder implements Runnable {
+        final int initCount = PythonSystem.getInitCount();
         MemorySegment object;
 
         private ObjectHolder(MemorySegment object) {
@@ -569,7 +571,9 @@ public final class PythonObject implements Iterable<PythonObject> {
         @Override
         public void run() {
             if (object != null) {
-                GilStateUtil.runPython(() -> Py_DecRef(object));
+                if (PythonSystem.getInitCount() == initCount && PythonSystem.isInitialized()) {
+                    GilStateUtil.withGIL(() -> Py_DecRef(object));
+                }
                 object = null;
             }
         }

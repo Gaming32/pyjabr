@@ -106,6 +106,30 @@ public class JavaObjectIndex {
         }
     }
 
+    public static void clear() {
+        clearClasses();
+        clearClassAttributes();
+        FIELDS.clear();
+        METHODS.clear();
+        OBJECTS.clear();
+    }
+
+    private static void clearClasses() {
+        synchronized (CLASSES_LOCK) {
+            CLASS_IDS_BY_NAME.clear();
+            CLASS_IDS_BY_CLASS.clear();
+            CLASSES_BY_ID.clear();
+            CLASS_REFCOUNTS.clear();
+            nextClassId = 0;
+        }
+    }
+
+    private static void clearClassAttributes() {
+        synchronized (CLASS_ATTRIBUTES_LOCK) {
+            CLASS_ATTRIBUTES.clear();
+        }
+    }
+
     private record ClassAttributeKey(Class<?> clazz, String name, boolean isStatic) {
     }
 
@@ -143,6 +167,13 @@ public class JavaObjectIndex {
             } else if (oldRefCount < 1) {
                 throw new IllegalStateException("refcount for " + id + " became negative");
             }
+        }
+
+        public synchronized void clear() {
+            ids.clear();
+            objects.clear();
+            refcounts.clear();
+            nextId = 0;
         }
     }
 }

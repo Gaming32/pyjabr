@@ -2,6 +2,7 @@ package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.lowlevel.CPythonFinder;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropModule;
+import io.github.gaming32.pyjabr.lowlevel.interop.JavaObjectIndex;
 import io.github.gaming32.pyjabr.lowlevel.module.CustomPythonModule;
 import io.github.gaming32.pyjabr.run.PythonRun;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import java.io.UncheckedIOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -26,7 +26,7 @@ public class PythonSystem {
     private static final Condition STATE_COND = STATE_LOCK.newCondition();
 
     private static final AtomicInteger INIT_STATE = new AtomicInteger();
-    private static final AtomicBoolean INITIALIZED_ONCE = new AtomicBoolean();
+    private static final AtomicInteger INIT_COUNTER = new AtomicInteger();
 
     private static final int STATE_SHUTDOWN = 0;
     private static final int STATE_INITIALIZING = 1;
@@ -61,7 +61,7 @@ public class PythonSystem {
             }
         }
         PythonVersion.checkAndLog();
-        final boolean firstInitialize = INITIALIZED_ONCE.compareAndSet(false, true);
+        final boolean firstInitialize = INIT_COUNTER.incrementAndGet() == 1;
         LOGGER.debug("Initializing Python (first time: {})", firstInitialize);
 
         Thread.ofPlatform()
@@ -119,6 +119,7 @@ public class PythonSystem {
                     signalState();
 
                     waitUninterruptiblyForState(STATE_FINALIZING);
+                    JavaObjectIndex.clear();
                     PyEval_RestoreThread(save);
                     Py_Finalize();
                 } finally {
@@ -180,6 +181,10 @@ public class PythonSystem {
      */
     public static boolean isInitialized() {
         return INIT_STATE.get() == STATE_INITIALIZED;
+    }
+
+    public static int getInitCount() {
+        return INIT_COUNTER.get();
     }
 
     public static void waitForInitialize() throws InterruptedException {
