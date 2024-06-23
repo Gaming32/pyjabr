@@ -60,9 +60,15 @@ public class PythonException extends RuntimeException {
         try {
             final StackTraceElement[] stackTrace = getStackTrace();
             final int chop = calculateChop(stackTrace);
-            final StackTraceElement[] extended = convertTracebackToStackTrace(originalException);
-            final StackTraceElement[] newStackTrace = Arrays.copyOf(extended, extended.length + stackTrace.length - chop);
-            System.arraycopy(stackTrace, chop, newStackTrace, extended.length, stackTrace.length - chop);
+            final StackTraceElement[] traceback = convertTracebackToStackTrace(originalException.getAttr("__traceback__"));
+            StackTraceElement[] newStackTrace = Arrays.copyOf(traceback, traceback.length + stackTrace.length - chop);
+            System.arraycopy(stackTrace, chop, newStackTrace, traceback.length, stackTrace.length - chop);
+
+            try {
+                initCause(originalException.getAttr("java_exception").asJavaObject(Throwable.class));
+            } catch (Exception _) {
+            }
+
             setStackTrace(newStackTrace);
         } catch (Exception _) {
             // Recursive exceptions are not thrown
@@ -80,9 +86,9 @@ public class PythonException extends RuntimeException {
         return 0;
     }
 
-    public static StackTraceElement[] convertTracebackToStackTrace(PythonObject exception) {
+    public static StackTraceElement[] convertTracebackToStackTrace(PythonObject traceback) {
         final Deque<StackTraceElement> result = new ArrayDeque<>();
-        PythonObject tb = exception.getAttr("__traceback__");
+        PythonObject tb = traceback;
         while (!tb.equals(PythonObjects.none())) {
             final PythonObject frame = tb.getAttr("tb_frame");
             final PythonObject code = frame.getAttr("f_code");

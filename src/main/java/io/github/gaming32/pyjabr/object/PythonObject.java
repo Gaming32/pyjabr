@@ -47,11 +47,11 @@ public final class PythonObject implements Iterable<PythonObject> {
         return runPython(() -> checkAndSteal(InteropConversions.javaToPython(o)));
     }
 
-    public Object asJavaObject() {
+    public Object asJavaObject() throws IllegalArgumentException {
         return InteropConversions.pythonToJava(borrow());
     }
 
-    public <T> T asJavaObject(Class<T> target) {
+    public <T> T asJavaObject(Class<T> target) throws IllegalArgumentException {
         return Primitives.wrap(target).cast(InteropConversions.pythonToJava(borrow(), target));
     }
 
