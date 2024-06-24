@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr.object;
 
 import com.google.common.primitives.Primitives;
+import io.github.gaming32.pyjabr.PythonSystem;
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
@@ -41,11 +42,6 @@ public final class PythonObject implements Iterable<PythonObject> {
             @Override
             public MemorySegment borrow(PythonObject object) {
                 return object.borrow();
-            }
-
-            @Override
-            public void cleanAllObjects() {
-                ObjectHolder.cleanAll();
             }
         });
     }
@@ -582,56 +578,17 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     private static final class ObjectHolder implements Runnable {
-        private static volatile ObjectHolder firstHolder;
-
+        final int initCount = PythonSystem.getInitCount();
         final MemorySegment object;
-
-        ObjectHolder prevHolder;
-        ObjectHolder nextHolder;
-        boolean cleaned;
 
         private ObjectHolder(MemorySegment object) {
             this.object = object;
-            insert();
         }
 
         @Override
         public void run() {
-            if (cleaned) return;
-            cleaned = true;
-            remove();
-            GilStateUtil.withGIL(() -> Py_DecRef(object));
-        }
-
-        private void insert() {
-            synchronized (ObjectHolder.class) {
-                nextHolder = firstHolder;
-                if (firstHolder != null) {
-                    firstHolder.prevHolder = this;
-                }
-                firstHolder = this;
-            }
-        }
-
-        private void remove() {
-            synchronized (ObjectHolder.class) {
-                if (nextHolder != null) {
-                    nextHolder.prevHolder = prevHolder;
-                }
-                if (prevHolder != null) {
-                    prevHolder.nextHolder = nextHolder;
-                }
-                if (firstHolder == this) {
-                    firstHolder = nextHolder;
-                }
-            }
-        }
-
-        static void cleanAll() {
-            ObjectHolder holder = firstHolder;
-            while (holder != null) {
-                holder.run();
-                holder = holder.nextHolder;
+            if (PythonSystem.getInitCount() == initCount && PythonSystem.isInitialized()) {
+                GilStateUtil.withGIL(() -> Py_DecRef(object));
             }
         }
     }

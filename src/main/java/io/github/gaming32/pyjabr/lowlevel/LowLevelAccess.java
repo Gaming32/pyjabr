@@ -42,13 +42,5 @@ public final class LowLevelAccess {
          * @return The underlying {@code PyObject*}. The object's refcount is not incremented before being returned.
          */
         public abstract MemorySegment borrow(PythonObject object);
-
-        /**
-         * Cleans all {@link PythonObject} instances (that is, decrementing their refcount). Note that any non-immortal
-         * objects will likely cause segfaults to operate on after calling this method. This method should only be
-         * called when future operations on these objects would cause a segfault anyway (for example, when the Python
-         * runtime is finalized).
-         */
-        public abstract void cleanAllObjects();
     }
 }
