@@ -42,6 +42,11 @@ public final class PythonObject implements Iterable<PythonObject> {
             public MemorySegment borrow(PythonObject object) {
                 return object.borrow();
             }
+
+            @Override
+            public void cleanAllObjects() {
+                ObjectHolder.cleanAll();
+            }
         });
     }
 
@@ -577,17 +582,56 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     private static final class ObjectHolder implements Runnable {
-        final int initCount = PythonSystem.getInitCount();
+        private static volatile ObjectHolder firstHolder;
+
         final MemorySegment object;
+
+        ObjectHolder prevHolder;
+        ObjectHolder nextHolder;
+        boolean cleaned;
 
         private ObjectHolder(MemorySegment object) {
             this.object = object;
+            insert();
         }
 
         @Override
         public void run() {
-            if (PythonSystem.getInitCount() == initCount && PythonSystem.isInitialized()) {
-                GilStateUtil.withGIL(() -> Py_DecRef(object));
+            if (cleaned) return;
+            cleaned = true;
+            remove();
+            GilStateUtil.withGIL(() -> Py_DecRef(object));
+        }
+
+        private void insert() {
+            synchronized (ObjectHolder.class) {
+                nextHolder = firstHolder;
+                if (firstHolder != null) {
+                    firstHolder.prevHolder = this;
+                }
+                firstHolder = this;
+            }
+        }
+
+        private void remove() {
+            synchronized (ObjectHolder.class) {
+                if (nextHolder != null) {
+                    nextHolder.prevHolder = prevHolder;
+                }
+                if (prevHolder != null) {
+                    prevHolder.nextHolder = nextHolder;
+                }
+                if (firstHolder == this) {
+                    firstHolder = nextHolder;
+                }
+            }
+        }
+
+        static void cleanAll() {
+            ObjectHolder holder = firstHolder;
+            while (holder != null) {
+                holder.run();
+                holder = holder.nextHolder;
             }
         }
     }

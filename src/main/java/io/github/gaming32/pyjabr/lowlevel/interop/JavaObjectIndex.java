@@ -89,6 +89,7 @@ public class JavaObjectIndex {
                 CLASS_IDS_BY_CLASS.removeInt(clazz);
                 CLASS_REFCOUNTS.remove(classId);
             } else if (oldRefCount < 1) {
+                CLASS_REFCOUNTS.remove(classId);
                 throw new IllegalStateException("refcount for class " + classId + " became negative");
             }
         }
@@ -165,6 +166,7 @@ public class JavaObjectIndex {
                 ids.removeInt(obj);
                 refcounts.remove(id);
             } else if (oldRefCount < 1) {
+                refcounts.remove(id);
                 throw new IllegalStateException("refcount for " + id + " became negative");
             }
         }

@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr;
 
 import io.github.gaming32.pyjabr.lowlevel.CPythonFinder;
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropModule;
 import io.github.gaming32.pyjabr.lowlevel.interop.JavaObjectIndex;
 import io.github.gaming32.pyjabr.lowlevel.module.CustomPythonModule;
@@ -119,9 +120,10 @@ public class PythonSystem {
                     signalState();
 
                     waitUninterruptiblyForState(STATE_FINALIZING);
-                    JavaObjectIndex.clear();
                     PyEval_RestoreThread(save);
+                    LowLevelAccess.pythonObject().cleanAllObjects();
                     Py_Finalize();
+                    JavaObjectIndex.clear();
                 } finally {
                     if (dlHandle != null) {
                         Dlopen.dlclose(dlHandle);
