@@ -562,7 +562,7 @@ public final class PythonObject implements Iterable<PythonObject> {
 
     private static final class ObjectHolder implements Runnable {
         final int initCount = PythonSystem.getInitCount();
-        MemorySegment object;
+        final MemorySegment object;
 
         private ObjectHolder(MemorySegment object) {
             this.object = object;
@@ -570,11 +570,8 @@ public final class PythonObject implements Iterable<PythonObject> {
 
         @Override
         public void run() {
-            if (object != null) {
-                if (PythonSystem.getInitCount() == initCount && PythonSystem.isInitialized()) {
-                    GilStateUtil.withGIL(() -> Py_DecRef(object));
-                }
-                object = null;
+            if (PythonSystem.getInitCount() == initCount && PythonSystem.isInitialized()) {
+                GilStateUtil.withGIL(() -> Py_DecRef(object));
             }
         }
     }
