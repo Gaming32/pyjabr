@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr.lowlevel.interop;
 
 import com.google.common.primitives.Primitives;
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import io.github.gaming32.pyjabr.object.PythonException;
 import io.github.gaming32.pyjabr.object.PythonObject;
@@ -59,7 +60,7 @@ public class InteropConversions {
         }
         if (target == PythonObject.class) {
             Py_IncRef(obj);
-            return PythonObject.steal(obj);
+            return LowLevelAccess.pythonObject().steal(obj);
         }
         if (target == Class.class) {
             final Class<?> realClass = fakePythonClassToJava(obj, throwDetails);
@@ -129,7 +130,7 @@ public class InteropConversions {
             return realClass;
         }
         Py_IncRef(obj);
-        return PythonObject.steal(obj);
+        return LowLevelAccess.pythonObject().steal(obj);
     }
 
     public static String toString(MemorySegment obj) {
@@ -320,7 +321,7 @@ public class InteropConversions {
             return primitiveToPython(obj);
         }
         if (obj instanceof PythonObject pyObj) {
-            final MemorySegment result = pyObj.borrow();
+            final MemorySegment result = LowLevelAccess.pythonObject().borrow(pyObj);
             Py_IncRef(result);
             return result;
         }

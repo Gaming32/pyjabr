@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr.run;
 
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.object.PythonObject;
 import io.github.gaming32.pyjabr.object.PythonObjects;
 
@@ -36,9 +37,10 @@ public final class PythonEval {
             try (Arena arena = Arena.ofConfined()) {
                 code = Py_CompileString(arena.allocateFrom(trimSource(source)), FILENAME, Py_eval_input());
             }
-            final MemorySegment result = PyEval_EvalCode(code, globals.borrow(), locals.borrow());
+            final var access = LowLevelAccess.pythonObject();
+            final MemorySegment result = PyEval_EvalCode(code, access.borrow(globals), access.borrow(locals));
             Py_DecRef(code);
-            return PythonObject.checkAndSteal(result);
+            return LowLevelAccess.pythonObject().checkAndSteal(result);
         });
     }
 
@@ -65,7 +67,8 @@ public final class PythonEval {
     public static PythonObject eval(PythonObject code, PythonObject globals, PythonObject locals) {
         return GilStateUtil.runPython(() -> {
             PythonExec.checkGlobalsLocals(globals, locals);
-            return PythonObject.checkAndSteal(PyEval_EvalCode(code.borrow(), globals.borrow(), locals.borrow()));
+            final var access = LowLevelAccess.pythonObject();
+            return access.checkAndSteal(PyEval_EvalCode(access.borrow(code), access.borrow(globals), access.borrow(locals)));
         });
     }
 }

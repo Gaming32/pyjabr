@@ -1,5 +1,6 @@
 package io.github.gaming32.pyjabr.lowlevel.interop;
 
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
 import io.github.gaming32.pyjabr.lowlevel.module.PythonFunction;
 import io.github.gaming32.pyjabr.lowlevel.module.PythonModule;
@@ -227,7 +228,7 @@ public class InteropModule {
             InteropUtils.raiseException(PyExc_TypeError(), e.getMessage());
             if (e.getCause() instanceof PythonException pythonException && pythonException.getOriginalException() != null) {
                 final MemorySegment raised = PyErr_GetRaisedException();
-                PyException_SetCause(raised, pythonException.getOriginalException().borrow());
+                PyException_SetCause(raised, LowLevelAccess.pythonObject().borrow(pythonException.getOriginalException()));
                 PyErr_SetRaisedException(raised);
             }
             return MemorySegment.NULL;

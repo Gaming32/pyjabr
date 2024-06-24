@@ -1,8 +1,8 @@
 package io.github.gaming32.pyjabr.object;
 
 import com.google.common.primitives.Primitives;
-import io.github.gaming32.pyjabr.PythonSystem;
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.lowlevel.cpython.Python_h;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropUtils;
@@ -26,6 +26,25 @@ public final class PythonObject implements Iterable<PythonObject> {
     private static final Cleaner CLEANER = Cleaner.create();
     private static final Arena ARENA = Arena.ofAuto();
 
+    static {
+        LowLevelAccess.setPythonObjectAccess(new LowLevelAccess.PythonObjectAccess() {
+            @Override
+            public PythonObject steal(MemorySegment raw) {
+                return PythonObject.steal(raw);
+            }
+
+            @Override
+            public PythonObject checkAndSteal(MemorySegment raw) {
+                return PythonObject.checkAndSteal(raw);
+            }
+
+            @Override
+            public MemorySegment borrow(PythonObject object) {
+                return object.borrow();
+            }
+        });
+    }
+
     private final ObjectHolder object;
 
     private PythonObject(MemorySegment raw) {
@@ -33,11 +52,11 @@ public final class PythonObject implements Iterable<PythonObject> {
         CLEANER.register(this, object);
     }
 
-    public static PythonObject steal(MemorySegment raw) {
+    static PythonObject steal(MemorySegment raw) {
         return new PythonObject(raw);
     }
 
-    public static PythonObject checkAndSteal(MemorySegment raw) {
+    static PythonObject checkAndSteal(MemorySegment raw) {
         if (raw.equals(MemorySegment.NULL)) {
             throw PythonException.moveFromPython();
         }
@@ -553,10 +572,7 @@ public final class PythonObject implements Iterable<PythonObject> {
         return runPython(() -> checkAndSteal(PyNumber_Index(borrow())));
     }
 
-    /**
-     * @return The underlying {@code PyObject*}. The object's refcount is not incremented before being returned.
-     */
-    public MemorySegment borrow() {
+    MemorySegment borrow() {
         return object.object;
     }
 

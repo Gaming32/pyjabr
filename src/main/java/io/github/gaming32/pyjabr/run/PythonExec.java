@@ -1,6 +1,7 @@
 package io.github.gaming32.pyjabr.run;
 
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
+import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
 import io.github.gaming32.pyjabr.object.PythonException;
 import io.github.gaming32.pyjabr.object.PythonObject;
 import io.github.gaming32.pyjabr.object.PythonObjects;
@@ -78,15 +79,17 @@ public class PythonExec {
     public static void execCode(byte[] source, String filename, PythonObject globals, PythonObject locals) {
         run(source, filename, code -> {
             checkGlobalsLocals(globals, locals);
-            return PyEval_EvalCode(code, globals.borrow(), locals.borrow());
+            final var access = LowLevelAccess.pythonObject();
+            return PyEval_EvalCode(code, access.borrow(globals), access.borrow(locals));
         });
     }
 
     static void checkGlobalsLocals(PythonObject globals, PythonObject locals) {
-        if (!PyDict_Check(globals.borrow())) {
+        final var access = LowLevelAccess.pythonObject();
+        if (!PyDict_Check(access.borrow(globals))) {
             throw new IllegalArgumentException("globals must be a dict");
         }
-        if (PyMapping_Check(locals.borrow()) == 0) {
+        if (PyMapping_Check(access.borrow(locals)) == 0) {
             throw new IllegalArgumentException("locals must be a mapping");
         }
     }
