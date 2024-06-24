@@ -3,7 +3,6 @@ package io.github.gaming32.pyjabr.object;
 import com.google.common.collect.Iterables;
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 
-import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -13,10 +12,10 @@ import static io.github.gaming32.pyjabr.lowlevel.PythonUtil.*;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public class PythonException extends RuntimeException {
-    private static final MemorySegment TRACEBACK_MODULE = Arena.global().allocateFrom("traceback");
-    private static final MemorySegment FORMAT_FUNCTION = Arena.global().allocateFrom("format_exception");
-    private static final MemorySegment BLANK_STRING = Arena.global().allocateFrom("");
-    private static final MemorySegment JOIN_METHOD = Arena.global().allocateFrom("join");
+    private static final MemorySegment TRACEBACK_MODULE = PythonObject.ARENA.allocateFrom("traceback");
+    private static final MemorySegment FORMAT_FUNCTION = PythonObject.ARENA.allocateFrom("format_exception");
+    private static final MemorySegment BLANK_STRING = PythonObject.ARENA.allocateFrom("");
+    private static final MemorySegment JOIN_METHOD = PythonObject.ARENA.allocateFrom("join");
 
     private static final ThreadLocal<Object> EXTENDING_STACK_TRACE = new ThreadLocal<>();
 

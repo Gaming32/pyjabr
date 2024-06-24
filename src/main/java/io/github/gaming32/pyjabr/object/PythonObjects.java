@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
 
-import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import static io.github.gaming32.pyjabr.lowlevel.GilStateUtil.runPython;
 import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonObjects {
-    private static final MemorySegment BUILTINS = Arena.global().allocateFrom("builtins");
+    private static final MemorySegment BUILTINS = PythonObject.ARENA.allocateFrom("builtins");
 
     private static final Supplier<PythonObject> NONE = Suppliers.memoize(() -> PythonObject.steal(_Py_NoneStruct()));
     private static final Supplier<PythonObject> FALSE = Suppliers.memoize(() -> PythonObject.steal(_Py_FalseStruct()));
@@ -97,9 +96,8 @@ public final class PythonObjects {
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
             }
-            final Arena arena = Arena.ofAuto();
             for (final var entry : values.entrySet()) {
-                final MemorySegment key = arena.allocateFrom(entry.getKey());
+                final MemorySegment key = PythonObject.ARENA.allocateFrom(entry.getKey());
                 final MemorySegment value = entry.getValue().borrow();
                 if (PyDict_SetItemString(result, key, value) == -1) {
                     Py_DecRef(result);
@@ -111,11 +109,9 @@ public final class PythonObjects {
     }
 
     public static PythonObject importModule(String module) {
-        try (Arena arena = Arena.ofConfined()) {
-            return runPython(() -> PythonObject.checkAndSteal( PyImport_ImportModuleLevel(
-                arena.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
-            )));
-        }
+        return runPython(() -> PythonObject.checkAndSteal( PyImport_ImportModuleLevel(
+            PythonObject.ARENA.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
+        )));
     }
 
     public static PythonObject getBuiltins() {

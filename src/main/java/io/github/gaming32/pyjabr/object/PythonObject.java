@@ -25,7 +25,7 @@ import static io.github.gaming32.pyjabr.lowlevel.cpython.Python_h.*;
 
 public final class PythonObject implements Iterable<PythonObject> {
     private static final Cleaner CLEANER = Cleaner.create();
-    private static final Arena ARENA = Arena.ofAuto();
+    static final Arena ARENA = Arena.ofAuto();
 
     static {
         LowLevelAccess.setPythonObjectAccess(new LowLevelAccess.PythonObjectAccess() {
@@ -176,14 +176,12 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject call(PythonObject... args) {
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length);
-            for (int i = 0; i < args.length; i++) {
-                argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
-            }
-            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return runPython(() -> checkAndSteal(PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
+        final MemorySegment argsArray = ARENA.allocate(C_POINTER, args.length);
+        for (int i = 0; i < args.length; i++) {
+            argsArray.setAtIndex(C_POINTER, i, args[i].borrow());
         }
+        final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+        return runPython(() -> checkAndSteal(PyObject_Vectorcall(borrow(), argsArray, nargsf, _Py_NULL())));
     }
 
     public boolean isCallable() {
@@ -219,17 +217,15 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public PythonObject callMethod(String method, PythonObject... args) {
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment argsArray = arena.allocate(C_POINTER, args.length + 1);
-            argsArray.setAtIndex(C_POINTER, 0, borrow());
-            for (int i = 0; i < args.length; i++) {
-                argsArray.setAtIndex(C_POINTER, i + 1, args[i].borrow());
-            }
-            final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
-            return runPython(() -> checkAndSteal(
-                PyObject_VectorcallMethod(arena.allocateFrom(method), argsArray, nargsf, _Py_NULL())
-            ));
+        final MemorySegment argsArray = ARENA.allocate(C_POINTER, args.length + 1);
+        argsArray.setAtIndex(C_POINTER, 0, borrow());
+        for (int i = 0; i < args.length; i++) {
+            argsArray.setAtIndex(C_POINTER, i + 1, args[i].borrow());
         }
+        final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+        return runPython(() -> checkAndSteal(
+            PyObject_VectorcallMethod(ARENA.allocateFrom(method), argsArray, nargsf, _Py_NULL())
+        ));
     }
 
     public PythonObject getAttr(String attr) {
@@ -396,15 +392,13 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public SendResult send(PythonObject value) {
-        try (Arena arena = Arena.ofConfined()) {
-            final MemorySegment result = arena.allocate(C_POINTER, 1);
-            final int sendResult = runPython(() -> PyIter_Send(borrow(), value.borrow(), result));
-            if (sendResult == PYGEN_RETURN() || sendResult == PYGEN_NEXT()) {
-                final SendResult.Type resultType = sendResult == PYGEN_RETURN()
-                    ? SendResult.Type.RETURN
-                    : SendResult.Type.YIELD;
-                return new SendResult(resultType, PythonObject.steal(result.get(C_POINTER, 0)));
-            }
+        final MemorySegment result = ARENA.allocate(C_POINTER, 1);
+        final int sendResult = runPython(() -> PyIter_Send(borrow(), value.borrow(), result));
+        if (sendResult == PYGEN_RETURN() || sendResult == PYGEN_NEXT()) {
+            final SendResult.Type resultType = sendResult == PYGEN_RETURN()
+                ? SendResult.Type.RETURN
+                : SendResult.Type.YIELD;
+            return new SendResult(resultType, steal(result.get(C_POINTER, 0)));
         }
         throw PythonException.moveFromPython();
     }
