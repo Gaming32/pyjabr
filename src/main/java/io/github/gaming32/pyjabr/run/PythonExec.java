@@ -103,9 +103,9 @@ public class PythonExec {
                     arena.allocateFrom(filename),
                     Py_file_input()
                 );
-                if (code.equals(MemorySegment.NULL)) {
-                    throw PythonException.moveFromPython();
-                }
+            }
+            if (code.equals(MemorySegment.NULL)) {
+                throw PythonException.moveFromPython();
             }
             final MemorySegment result = runner.apply(code);
             Py_DecRef(code);

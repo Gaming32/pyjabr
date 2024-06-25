@@ -3,6 +3,8 @@ package io.github.gaming32.pyjabr.object;
 import com.google.common.base.Suppliers;
 import io.github.gaming32.pyjabr.lowlevel.TupleUtil;
 import io.github.gaming32.pyjabr.lowlevel.interop.InteropConversions;
+import io.github.gaming32.pyjabr.lowlevel.interop.InteropPythonObjects;
+import io.github.gaming32.pyjabr.lowlevel.interop.JavaObjectIndex;
 
 import java.lang.foreign.MemorySegment;
 import java.util.List;
@@ -27,19 +29,31 @@ public final class PythonObjects {
     }
 
     public static PythonObject pythonInt(int value) {
-        return runPython(() -> PythonObject.checkAndSteal( PyLong_FromLong(value)));
+        return runPython(() -> PythonObject.checkAndSteal(PyLong_FromLong(value)));
     }
 
     public static PythonObject pythonInt(long value) {
-        return runPython(() -> PythonObject.checkAndSteal( PyLong_FromLongLong(value)));
+        return runPython(() -> PythonObject.checkAndSteal(PyLong_FromLongLong(value)));
     }
 
     public static PythonObject pythonFloat(double value) {
-        return runPython(() -> PythonObject.checkAndSteal( PyFloat_FromDouble(value)));
+        return runPython(() -> PythonObject.checkAndSteal(PyFloat_FromDouble(value)));
+    }
+
+    public static PythonObject complex(double real, double imag) {
+        return runPython(() -> PythonObject.checkAndSteal(PyComplex_FromDoubles(real, imag)));
     }
 
     public static PythonObject str(String value) {
         return PythonObject.steal(runPython(() -> InteropConversions.createPythonString(value)));
+    }
+
+    public static PythonObject true_() {
+        return TRUE.get();
+    }
+
+    public static PythonObject false_() {
+        return FALSE.get();
     }
 
     public static PythonObject bool(boolean value) {
@@ -47,18 +61,20 @@ public final class PythonObjects {
     }
 
     public static PythonObject tuple(PythonObject... values) {
-        final MemorySegment[] pyObjects = new MemorySegment[values.length];
-        for (int i = 0; i < values.length; i++) {
-            final MemorySegment pyObject = values[i].borrow();
-            Py_IncRef(pyObject);
-            pyObjects[i] = pyObject;
-        }
-        return runPython(() -> PythonObject.checkAndSteal( TupleUtil.createTuple(pyObjects)));
+        return runPython(() -> {
+            final MemorySegment[] pyObjects = new MemorySegment[values.length];
+            for (int i = 0; i < values.length; i++) {
+                final MemorySegment pyObject = values[i].borrow();
+                Py_IncRef(pyObject);
+                pyObjects[i] = pyObject;
+            }
+            return PythonObject.checkAndSteal(TupleUtil.createTuple(pyObjects));
+        });
     }
 
-    public static PythonObject list(List<PythonObject> values) {
+    public static PythonObject list(PythonObject... values) {
         return runPython(() -> {
-            final MemorySegment result = PyList_New(values.size());
+            final MemorySegment result = PyList_New(values.length);
             if (result.equals(MemorySegment.NULL)) {
                 throw PythonException.moveFromPython();
             }
@@ -67,6 +83,21 @@ public final class PythonObjects {
                 final MemorySegment pyObject = value.borrow();
                 Py_IncRef(pyObject);
                 PyList_SetItem(result, i++, pyObject);
+            }
+            return PythonObject.steal(result);
+        });
+    }
+
+    public static PythonObject list(List<PythonObject> values) {
+        return runPython(() -> {
+            final MemorySegment result = PyList_New(0);
+            if (result.equals(MemorySegment.NULL)) {
+                throw PythonException.moveFromPython();
+            }
+            for (final PythonObject value : values) {
+                if (PyList_Append(result, value.borrow()) == -1) {
+                    throw PythonException.moveFromPython();
+                }
             }
             return PythonObject.steal(result);
         });
@@ -108,8 +139,15 @@ public final class PythonObjects {
         });
     }
 
+    public static PythonObject unreflectClass(Class<?> clazz) {
+        return runPython(() -> PythonObject.checkAndSteal(InteropPythonObjects.createFakeJavaClass(
+            InteropConversions.createPythonString(clazz.getName()),
+            JavaObjectIndex.getClassId(clazz)
+        )));
+    }
+
     public static PythonObject importModule(String module) {
-        return runPython(() -> PythonObject.checkAndSteal( PyImport_ImportModuleLevel(
+        return runPython(() -> PythonObject.checkAndSteal(PyImport_ImportModuleLevel(
             PythonObject.ARENA.allocateFrom(module), MemorySegment.NULL, MemorySegment.NULL, MemorySegment.NULL, 0
         )));
     }

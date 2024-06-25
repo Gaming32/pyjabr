@@ -69,11 +69,11 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public Object asJavaObject() throws IllegalArgumentException {
-        return InteropConversions.pythonToJava(borrow());
+        return runPython(() -> InteropConversions.pythonToJava(borrow()));
     }
 
     public <T> T asJavaObject(Class<T> target) throws IllegalArgumentException {
-        return Primitives.wrap(target).cast(InteropConversions.pythonToJava(borrow(), target));
+        return Primitives.wrap(target).cast(runPython(() -> InteropConversions.pythonToJava(borrow(), target)));
     }
 
     @Override
@@ -132,8 +132,8 @@ public final class PythonObject implements Iterable<PythonObject> {
     }
 
     public boolean compare(PythonObject to, ComparisonOperator operator) {
-        // This optimization is also done in PyObject_RichCompareBool, but on the PyObject*
-        if (this == to) {
+        // This optimization is also done in PyObject_RichCompareBool
+        if (this == to || borrow().equals(to.borrow())) {
             if (operator == ComparisonOperator.EQUAL) {
                 return true;
             }
@@ -144,11 +144,11 @@ public final class PythonObject implements Iterable<PythonObject> {
         return tristateToBoolean(runPython(() -> PyObject_RichCompareBool(borrow(), to.borrow(), operator.getConstant())));
     }
 
-    public boolean isInstance(PythonObject type) {
+    public boolean isInstanceOf(PythonObject type) {
         return tristateToBoolean(runPython(() -> PyObject_IsInstance(borrow(), type.borrow())));
     }
 
-    public boolean isSubclass(PythonObject type) {
+    public boolean isSubclassOf(PythonObject type) {
         return tristateToBoolean(runPython(() -> PyObject_IsSubclass(borrow(), type.borrow())));
     }
 
@@ -222,14 +222,22 @@ public final class PythonObject implements Iterable<PythonObject> {
         for (int i = 0; i < args.length; i++) {
             argsArray.setAtIndex(C_POINTER, i + 1, args[i].borrow());
         }
-        final long nargsf = args.length | PY_VECTORCALL_ARGUMENTS_OFFSET();
+        final long nargsf = (args.length + 1) | PY_VECTORCALL_ARGUMENTS_OFFSET();
         return runPython(() -> checkAndSteal(
-            PyObject_VectorcallMethod(ARENA.allocateFrom(method), argsArray, nargsf, _Py_NULL())
+            PyObject_VectorcallMethod(InteropConversions.createPythonString(method), argsArray, nargsf, _Py_NULL())
         ));
     }
 
     public PythonObject getAttr(String attr) {
         return runPython(() -> checkAndSteal(PyObject_GetAttrString(borrow(), ARENA.allocateFrom(attr))));
+    }
+
+    public PythonObject getAttr(String... trail) {
+        PythonObject result = this;
+        for (final String attr : trail) {
+            result = result.getAttr(attr);
+        }
+        return result;
     }
 
     public void setAttr(String attr, PythonObject value) {

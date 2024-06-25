@@ -38,7 +38,7 @@ public class InteropConversions {
         if (obj.equals(_Py_NoneStruct())) {
             if (target.isPrimitive()) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
-                throw new IllegalArgumentException("Cannot pass None to primitive type " + target);
+                throw new IllegalArgumentException("Cannot convert None to primitive type " + target);
             }
             return null;
         }
@@ -105,6 +105,8 @@ public class InteropConversions {
                 } else if (!PyErr_Occurred().equals(MemorySegment.NULL)) {
                     NoDetailsConversionFailed.maybeThrow(throwDetails);
                     throw new IllegalArgumentException("Failed to convert to int", PythonException.moveFromPython());
+                } else {
+                    return asInt;
                 }
             } else {
                 return asInt;
@@ -173,6 +175,10 @@ public class InteropConversions {
             final int result = PyLong_AsLong(obj);
             if (result == -1 && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
+                if (PyErr_ExceptionMatches(PyExc_OverflowError()) != 0) {
+                    PyErr_Clear();
+                    throw new IllegalArgumentException("Could not fit " + toString(obj) + " into an int");
+                }
                 throw new IllegalArgumentException("Could not convert to " + target, PythonException.moveFromPython());
             }
             if (target == byte.class) {
@@ -195,6 +201,10 @@ public class InteropConversions {
             final long result = PyLong_AsLongLong(obj);
             if (result == -1L && !PyErr_Occurred().equals(MemorySegment.NULL)) {
                 NoDetailsConversionFailed.maybeThrow(throwDetails);
+                if (PyErr_ExceptionMatches(PyExc_OverflowError()) != 0) {
+                    PyErr_Clear();
+                    throw new IllegalArgumentException("Could not fit " + toString(obj) + " into a long");
+                }
                 throw new IllegalArgumentException("Could not convert to long", PythonException.moveFromPython());
             }
             return result;
@@ -211,7 +221,12 @@ public class InteropConversions {
             return result;
         }
         if (target == boolean.class) {
-            return PyObject_IsTrue(obj) != 0;
+            final int result = PyObject_IsTrue(obj);
+            if (result == -1) {
+                NoDetailsConversionFailed.maybeThrow(throwDetails);
+                throw new IllegalArgumentException("Could not convert to boolean", PythonException.moveFromPython());
+            }
+            return result != 0;
         }
         if (target == char.class) {
             if (PyUnicode_Check(obj)) {
@@ -317,7 +332,7 @@ public class InteropConversions {
             return createPythonString(s);
         }
         final Class<?> sourceClass = obj.getClass();
-        if (sourceClass.isPrimitive() || Primitives.isWrapperType(sourceClass)) {
+        if (Primitives.isWrapperType(sourceClass)) {
             return primitiveToPython(obj);
         }
         if (obj instanceof PythonObject pyObj) {

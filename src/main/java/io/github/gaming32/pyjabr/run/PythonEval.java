@@ -2,6 +2,7 @@ package io.github.gaming32.pyjabr.run;
 
 import io.github.gaming32.pyjabr.lowlevel.GilStateUtil;
 import io.github.gaming32.pyjabr.lowlevel.LowLevelAccess;
+import io.github.gaming32.pyjabr.object.PythonException;
 import io.github.gaming32.pyjabr.object.PythonObject;
 import io.github.gaming32.pyjabr.object.PythonObjects;
 
@@ -37,10 +38,13 @@ public final class PythonEval {
             try (Arena arena = Arena.ofConfined()) {
                 code = Py_CompileString(arena.allocateFrom(trimSource(source)), FILENAME, Py_eval_input());
             }
+            if (code.equals(MemorySegment.NULL)) {
+                throw PythonException.moveFromPython();
+            }
             final var access = LowLevelAccess.pythonObject();
             final MemorySegment result = PyEval_EvalCode(code, access.borrow(globals), access.borrow(locals));
             Py_DecRef(code);
-            return LowLevelAccess.pythonObject().checkAndSteal(result);
+            return access.checkAndSteal(result);
         });
     }
 

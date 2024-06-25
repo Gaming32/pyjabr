@@ -334,6 +334,21 @@ public class InteropModule {
     }
 
     @PythonFunction
+    public static MemorySegment unreflectClass(int objectId) {
+        final Object obj = JavaObjectIndex.OBJECTS.get(objectId);
+        if (!(obj instanceof Class<?> clazz)) {
+            return InteropUtils.raiseException(PyExc_TypeError(), obj + " is not an instance of java.lang.Class");
+        }
+        return InteropPythonObjects.createFakeJavaClass(
+            InteropConversions.createPythonString(clazz.getName()),
+            JavaObjectIndex.getClassId(clazz)
+        );
+    }
+
+    /**
+     * {@code make_lambda(class_id: int, action: Callable[..., Any]) -> FakeJavaObject}
+     */
+    @PythonFunction
     public static MemorySegment makeLambda(int classId, MemorySegment action) {
         Py_IncRef(action);
         try {
