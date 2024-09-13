@@ -21,11 +21,11 @@ public class PythonObjectTests {
     @Test
     public void testToString() {
         final PythonObject simple = PythonObjects.str("hello");
-        assertThat(simple.toString()).isEqualTo("hello");
+        assertThat(simple).hasToString("hello");
         assertThat(simple.repr()).isEqualTo("'hello'");
 
         final PythonObject quoted = PythonObjects.str("'world'");
-        assertThat(quoted.toString()).isEqualTo("'world'");
+        assertThat(quoted).hasToString("'world'");
         assertThat(quoted.repr()).isEqualTo("\"'world'\"");
     }
 
@@ -88,7 +88,18 @@ public class PythonObjectTests {
             PythonObjects.str("TestType"),
             PythonObjects.tuple(),
             PythonObjects.dict(Map.of())
-        ).toString()).isEqualTo("<class 'TestType'>");
+        )).hasToString("<class 'TestType'>");
+    }
+
+    @Test
+    public void testCallMethod() {
+        final var hello = PythonObjects.str("hello");
+        assertThat(hello.callMethod("upper"))
+            .hasToString("HELLO");
+        assertThat(hello.callMethod("center", PythonObjects.pythonInt(9)))
+            .hasToString("  hello  ");
+        assertThat(hello.callMethod("center", PythonObjects.pythonInt(9), PythonObjects.str("0")))
+            .hasToString("00hello00");
     }
 
     @Test
